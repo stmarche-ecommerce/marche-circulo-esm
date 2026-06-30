@@ -1,0 +1,40 @@
+import type { Metadata } from "next";
+import localFont from "next/font/local";
+import SiteFooter from "@/components/layout/footer";
+import { SiteHeader } from "@/components/layout/header";
+import { WhatsAppBubble } from "@/components/layout/whatsapp-bubble";
+import "./globals.css";
+
+const cera = localFont({
+  src: [
+    { path: "../../public/fonts/CeraLight.ttf", weight: "300", style: "normal" },
+    { path: "../../public/fonts/CeraBold.ttf", weight: "700", style: "normal" },
+  ],
+  variable: "--font-cera",
+  display: "swap",
+});
+
+export const metadata: Metadata = {
+  title: {
+    default: "Santa Maria Emporio",
+    template: "%s | Santa Maria Emporio",
+  },
+  description: "Landing page institucional do Santa Maria Emporio em Next.js.",
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="pt-BR">
+      <body className={`${cera.variable} min-h-screen bg-white text-[var(--color-body)]`}>
+        <SiteHeader />
+        <main className="min-h-[60vh]">{children}</main>
+        <SiteFooter />
+        <WhatsAppBubble />
+      </body>
+    </html>
+  );
+}
