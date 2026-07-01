@@ -43,7 +43,6 @@ const featureHighlights = [
 ];
 
 export default function HomePage() {
-
   return (
     <>
       <section className="relative overflow-hidden bg-[var(--color-ink)] text-white">

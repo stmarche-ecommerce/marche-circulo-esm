@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X } from "lucide-react";
+import { LogIn, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { navigationItems } from "@/lib/site-config";
 
@@ -18,12 +18,14 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-[var(--color-brown)]/95 text-white backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-4 py-5 sm:px-6 lg:px-8">
-        <Link href="/" className="shrink-0 tracking-[0.38em] text-white">
-          <span className="block text-[1.7rem] font-light uppercase leading-none">Santa Maria</span>
-          <span className="mt-1 block text-[0.82rem] font-medium uppercase tracking-[0.48em] text-white/75">
-            Emporio
-          </span>
-        </Link>
+        <div className="flex items-center gap-3 sm:gap-4">
+          <Link href="/" className="shrink-0 tracking-[0.38em] text-white">
+            <span className="block text-[1.7rem] font-light uppercase leading-none">Santa Maria</span>
+            <span className="mt-1 block text-[0.82rem] font-medium uppercase tracking-[0.48em] text-white/75">
+              Emporio
+            </span>
+          </Link>
+        </div>
 
         <nav className="hidden items-center gap-8 text-sm font-semibold uppercase tracking-[0.12em] lg:flex">
           {navigationItems.map((item) => (
@@ -31,15 +33,23 @@ export function SiteHeader() {
               key={item.slug}
               href={`/${item.slug}`}
               aria-current={isActivePath(item.slug) ? "page" : undefined}
-              className={`transition ${
-                isActivePath(item.slug)
-                  ? "text-[var(--color-accent-soft)]"
-                  : "text-white hover:text-[var(--color-accent-soft)]"
-              }`}
+              className={`transition ${isActivePath(item.slug)
+                ? "text-[var(--color-accent-soft)]"
+                : "text-white hover:text-[var(--color-accent-soft)]"
+                }`}
             >
               {item.navLabel}
             </Link>
           ))}
+
+          <Link
+            href="/login"
+            className="inline-flex w-[130px] min-h-11 items-center justify-center gap-2 rounded-full border border-[var(--color-accent)] bg-[var(--color-accent)]/12 px-4 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--color-accent-soft)] shadow-[0_0_0_1px_rgba(213,166,66,0.08)] hover:bg-[var(--color-accent)] hover:text-[var(--color-brown-dark)]"
+          >
+            <LogIn size={15} strokeWidth={2.2} />
+            Área Restrita
+          </Link>
+
         </nav>
 
         <div className="hidden items-center gap-4 border-l border-white/20 pl-6 lg:flex">
@@ -76,17 +86,27 @@ export function SiteHeader() {
 
       {open ? (
         <div className="border-t border-white/10 bg-[var(--color-brown-dark)] px-4 py-4 lg:hidden">
+          <div className="mb-5">
+            <Link
+              href="/login"
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-[var(--color-accent)] bg-[var(--color-accent)]/12 px-4 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--color-accent-soft)] shadow-[0_0_0_1px_rgba(213,166,66,0.08)] hover:bg-[var(--color-accent)] hover:text-[var(--color-brown-dark)]"
+              onClick={() => setOpen(false)}
+            >
+              <LogIn size={15} strokeWidth={2.2} />
+              Ir para login
+            </Link>
+          </div>
+
           <nav className="flex flex-col gap-4 text-sm font-semibold uppercase tracking-[0.12em]">
             {navigationItems.map((item) => (
               <Link
                 key={item.slug}
                 href={`/${item.slug}`}
                 aria-current={isActivePath(item.slug) ? "page" : undefined}
-                className={`transition ${
-                  isActivePath(item.slug)
-                    ? "text-[var(--color-accent-soft)]"
-                    : "text-white hover:text-[var(--color-accent-soft)]"
-                }`}
+                className={`transition ${isActivePath(item.slug)
+                  ? "text-[var(--color-accent-soft)]"
+                  : "text-white hover:text-[var(--color-accent-soft)]"
+                  }`}
                 onClick={() => setOpen(false)}
               >
                 {item.navLabel}

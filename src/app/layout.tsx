@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import SiteFooter from "@/components/layout/footer";
-import { SiteHeader } from "@/components/layout/header";
-import { WhatsAppBubble } from "@/components/layout/whatsapp-bubble";
+import { AppShell } from "@/components/layout/app-shell";
 import "./globals.css";
 
 const cera = localFont({
@@ -30,10 +28,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body className={`${cera.variable} min-h-screen bg-white text-[var(--color-body)]`}>
-        <SiteHeader />
-        <main className="min-h-[60vh]">{children}</main>
-        <SiteFooter />
-        <WhatsAppBubble />
+        <AppShell>{children}</AppShell>
       </body>
     </html>
   );
