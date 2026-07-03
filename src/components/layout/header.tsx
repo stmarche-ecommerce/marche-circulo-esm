@@ -12,7 +12,7 @@ export function SiteHeader() {
 
   function isActivePath(slug: string) {
     const href = `/${slug}`;
-    return pathname === href || pathname.startsWith(`${href}/`);
+    return pathname === href || pathname?.startsWith(`${href}/`) === true;
   }
 
   return (

@@ -11,7 +11,7 @@ export default function SiteFooter() {
       style={{ backgroundImage: "linear-gradient(rgba(65, 36, 30, 0.9), rgba(65, 36, 30, 0.92)), url('/images/footer-bg.jpg')" }}
     >
       <div className="content-grid py-18">
-        <div className="grid gap-12 lg:grid-cols-[1.35fr_0.9fr_0.85fr]">
+        <div className="grid gap-12 lg:grid-cols-[1.35fr_1fr_0.85fr]">
           <div>
             <FooterTitle>SANTA MARIA EMPORIO</FooterTitle>
             <p className="mt-6 max-w-xl text-lg leading-9 text-[var(--color-cream-muted)]">

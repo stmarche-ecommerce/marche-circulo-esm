@@ -58,7 +58,7 @@ export const sitePages: SitePage[] = [
     navLabel: "Brunch",
     template: "feature",
     hero: {
-      title: "Um novo espaco para celebrar a manha",
+      title: "Um novo espaco para celebrar a manhã",
       description:
         "O Santa Maria apresenta uma novidade que merece ser saboreada devagar: nosso novo brunch chegou.",
       image: "/images/branch.png",
@@ -93,7 +93,7 @@ export const sitePages: SitePage[] = [
     ],
     intro: [
       "Venha viver essa experiencia no Santa Maria Emporio. Todos os dias, a partir das 9h.",
-      "Seu cafe da manha nunca mais sera so cafe da manha.",
+      "Seu cafe da manhã nunca mais sera so cafe da manhã.",
     ],
   },
   {
@@ -377,7 +377,7 @@ export const sitePages: SitePage[] = [
         body: [
           "Em 2018, ao completar 25 anos, o emporio passou por uma grande reforma e ganhou corredores mais amplos, nova parede de geladeiras, expansao da adega, secao dedicada aos organicos e uma padaria ainda mais completa.",
           "A rotisserie incorporou novas receitas, a fabrica de massas ganhou destaque e o corner de cafes especiais reforcou a tradicao de comprar cafe moido na hora.",
-          "O restaurante no piso superior tambem foi renovado, com novo acesso, adega climatizada e experiencias que incluem buffet, cafe da manha aos finais de semana e menu japones.",
+          "O restaurante no piso superior tambem foi renovado, com novo acesso, adega climatizada e experiencias que incluem buffet, cafe da manhã aos finais de semana e menu japones.",
         ],
       },
     ],

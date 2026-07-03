@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { AppShell } from "@/components/layout/app-shell";
+import { ToastProvider } from "@/components/ui/toast-provider";
 import "./globals.css";
 
 const cera = localFont({
@@ -29,6 +30,7 @@ export default function RootLayout({
     <html lang="pt-BR">
       <body className={`${cera.variable} min-h-screen bg-white text-[var(--color-body)]`}>
         <AppShell>{children}</AppShell>
+        <ToastProvider />
       </body>
     </html>
   );
