@@ -1,0 +1,16 @@
+project_id = "meu-projeto-gcp"
+region     = "us-central1"
+
+service_name                 = "marche-circulo-esm"
+artifact_registry_repository = "marche-circulo-esm"
+
+image = "us-central1-docker.pkg.dev/meu-projeto-gcp/marche-circulo-esm/marche-circulo-esm:latest"
+
+runtime_environment_variables = {
+  NODE_ENV = "production"
+}
+
+labels = {
+  environment = "prod"
+  team        = "marketing"
+}
