@@ -128,15 +128,39 @@ export function ConsentOption({
 export function SubmitButton({
   children,
   disabled,
-}: {
+  type = "submit",
+  className,
+  ...buttonProps
+}: ComponentProps<"button"> & {
   children: ReactNode;
-  disabled?: boolean;
 }) {
   return (
     <button
-      type="submit"
+      type={type}
       disabled={disabled}
-      className="mt-0.5 inline-flex min-h-[3.15rem] items-center justify-center rounded-full bg-[var(--color-brown)] px-5 py-3 text-[0.84rem] font-bold uppercase tracking-[0.16em] text-white transition hover:bg-[var(--color-ink)] disabled:cursor-not-allowed disabled:opacity-60"
+      className={`mt-0.5 inline-flex min-h-[3.15rem] items-center justify-center rounded-full bg-[var(--color-brown)] px-5 py-3 text-[0.84rem] font-bold uppercase tracking-[0.16em] text-white transition hover:bg-[var(--color-ink)] disabled:cursor-not-allowed disabled:opacity-60 ${className ?? ""}`.trim()}
+      {...buttonProps}
+    >
+      {children}
+    </button>
+  );
+}
+
+export function SecondaryButton({
+  children,
+  disabled,
+  type = "button",
+  className,
+  ...buttonProps
+}: ComponentProps<"button"> & {
+  children: ReactNode;
+}) {
+  return (
+    <button
+      type={type}
+      disabled={disabled}
+      className={`inline-flex min-h-[3.15rem] items-center justify-center rounded-full border border-[rgba(104,64,49,0.18)] bg-transparent px-5 py-3 text-[0.84rem] font-bold uppercase tracking-[0.16em] text-[var(--color-brown)] transition hover:border-[var(--color-brown)] hover:bg-[rgba(104,64,49,0.04)] disabled:cursor-not-allowed disabled:opacity-60 ${className ?? ""}`.trim()}
+      {...buttonProps}
     >
       {children}
     </button>

@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import { ApiService } from "@/app/services/api-service";
 import { useSignUpForm } from "@/hooks/use-signup-form";
 import { useZipCodeLookup } from "@/hooks/use-via-cep";
 import { signUpSchema, type SignUpFormValues } from "@/lib/sign-up-validation";
-import { ConsentOption, ConsentSection, Field, FieldGrid, SubmitButton } from ".";
+import { ConsentOption, ConsentSection, Field, FieldGrid, SecondaryButton, SubmitButton } from ".";
 import axios from "axios";
 
 interface SignUpPayload {
@@ -31,16 +31,71 @@ interface SignUpPayload {
   complement: string;
 }
 
+type WizardStep = 1 | 2 | 3;
+
+type StepConfig = {
+  id: WizardStep;
+  title: string;
+  description: string;
+  fields: Array<keyof SignUpFormValues>;
+};
+
+const STEP_CONFIG: StepConfig[] = [
+  {
+    id: 1,
+    title: "Identificacao",
+    description: "Nome, CPF e data de nascimento.",
+    fields: ["name", "cpf", "birthDate"],
+  },
+  {
+    id: 2,
+    title: "Contato",
+    description: "E-mail, telefone e endereco completo.",
+    fields: ["email", "phone", "zipCode", "street", "number", "neighborhood", "city", "state"],
+  },
+  {
+    id: 3,
+    title: "Acesso e preferencias",
+    description: "Senha, confirmacao e comunicacao.",
+    fields: ["password", "confirmPassword", "privacyConsent"],
+  },
+];
+
 export function SignUpForm() {
   const { formData, consents, handleFieldChange, handleConsentChange } = useSignUpForm();
   const { zipCode, addressFields, cepStatus, handleZipCodeChange, handleZipCodeBlur, handleAddressFieldChange } = useZipCodeLookup();
   const [privacyConsent, setPrivacyConsent] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Partial<Record<keyof SignUpFormValues, string>>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [currentStep, setCurrentStep] = useState<WizardStep>(1);
 
   const api = new ApiService();
+  const currentStepConfig = STEP_CONFIG[currentStep - 1];
+  const progressValue = `${(currentStep / STEP_CONFIG.length) * 100}%`;
 
   const normalizeDigits = (value: string) => value.replace(/\D/g, "");
+
+  const getValidationValues = (): SignUpFormValues => ({
+    name: formData.name,
+    cpf: formData.cpf,
+    email: formData.email,
+    phone: formData.phone,
+    birthDate: formData.birthDate,
+    zipCode,
+    street: addressFields.street,
+    number: addressFields.number,
+    neighborhood: addressFields.neighborhood,
+    city: addressFields.city,
+    state: addressFields.state,
+    password: formData.password,
+    confirmPassword: formData.confirmPassword,
+    privacyConsent,
+  });
+
+  const stepErrors = useMemo(
+    () => currentStepConfig.fields.filter((field) => fieldErrors[field]),
+    [currentStepConfig.fields, fieldErrors],
+  );
 
   const clearFieldError = (fieldName: keyof SignUpFormValues) => {
     setFieldErrors((current) => {
@@ -81,6 +136,62 @@ export function SignUpForm() {
     handleAddressFieldChange("complement", value);
   };
 
+  const collectStepErrors = (step: WizardStep) => {
+    const validationResult = signUpSchema.safeParse(getValidationValues());
+
+    if (validationResult.success) {
+      setFieldErrors((current) => {
+        const nextErrors = { ...current };
+
+        for (const field of STEP_CONFIG[step - 1].fields) {
+          delete nextErrors[field];
+        }
+
+        return nextErrors;
+      });
+
+      return null;
+    }
+
+    const nextErrors: Partial<Record<keyof SignUpFormValues, string>> = {};
+    const stepFields = new Set(STEP_CONFIG[step - 1].fields);
+
+    for (const issue of validationResult.error.issues) {
+      const fieldName = issue.path[0] as keyof SignUpFormValues | undefined;
+
+      if (fieldName && stepFields.has(fieldName) && !nextErrors[fieldName]) {
+        nextErrors[fieldName] = issue.message;
+      }
+    }
+
+    setFieldErrors((current) => {
+      const mergedErrors = { ...current };
+
+      for (const field of STEP_CONFIG[step - 1].fields) {
+        delete mergedErrors[field];
+      }
+
+      return { ...mergedErrors, ...nextErrors };
+    });
+
+    return Object.keys(nextErrors).length > 0 ? nextErrors : null;
+  };
+
+  const handleNextStep = () => {
+    const nextErrors = collectStepErrors(currentStep);
+
+    if (nextErrors) {
+      toast.error("Revise os campos destacados desta etapa para continuar.");
+      return;
+    }
+
+    setCurrentStep((current) => Math.min(current + 1, STEP_CONFIG.length) as WizardStep);
+  };
+
+  const handlePreviousStep = () => {
+    setCurrentStep((current) => Math.max(current - 1, 1) as WizardStep);
+  };
+
   const buildPayload = (): SignUpPayload => {
     const trimmedName = formData.name.trim();
     const [firstName = "", ...lastNameParts] = trimmedName.split(/\s+/);
@@ -107,23 +218,6 @@ export function SignUpForm() {
       complement: addressFields.complement.trim(),
     };
   };
-
-  const getValidationValues = (): SignUpFormValues => ({
-    name: formData.name,
-    cpf: formData.cpf,
-    email: formData.email,
-    phone: formData.phone,
-    birthDate: formData.birthDate,
-    zipCode,
-    street: addressFields.street,
-    number: addressFields.number,
-    neighborhood: addressFields.neighborhood,
-    city: addressFields.city,
-    state: addressFields.state,
-    password: formData.password,
-    confirmPassword: formData.confirmPassword,
-    privacyConsent,
-  });
 
   const handleSubmit = async (event: React.SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -173,201 +267,280 @@ export function SignUpForm() {
 
   return (
     <form className="mt-5 grid gap-[0.95rem]" onSubmit={handleSubmit} noValidate>
-      <FieldGrid>
-        <Field
-          label="Nome completo"
-          name="name"
-          value={formData.name}
-          onChange={handleFormFieldChange}
-          placeholder="Seu nome completo"
-          error={fieldErrors.name}
-          required
-        />
-        <Field
-          label="CPF"
-          name="cpf"
-          value={formData.cpf}
-          onChange={handleFormFieldChange}
-          placeholder="000.000.000-00"
-          inputMode="numeric"
-          maxLength={14}
-          error={fieldErrors.cpf}
-          required
-        />
-      </FieldGrid>
-
-      <FieldGrid>
-        <Field
-          label="E-mail"
-          name="email"
-          type="email"
-          value={formData.email}
-          onChange={handleFormFieldChange}
-          placeholder="seunome@email.com"
-          error={fieldErrors.email}
-          required
-        />
-        <Field
-          label="Telefone"
-          name="phone"
-          value={formData.phone}
-          onChange={handleFormFieldChange}
-          type="tel"
-          placeholder="(11) 99999-9999"
-          error={fieldErrors.phone}
-          required
-        />
-      </FieldGrid>
-
-      <FieldGrid>
-        <Field
-          label="Data de nascimento"
-          name="birthDate"
-          value={formData.birthDate}
-          onChange={handleFormFieldChange}
-          type="date"
-          error={fieldErrors.birthDate}
-          required
-        />
-        <div className="grid gap-[0.46rem]">
-          <Field
-            label="CEP"
-            name="zipCode"
-            placeholder="00000-000"
-            value={zipCode}
-            onChange={handleZipFieldChange}
-            onBlur={handleZipCodeBlur}
-            error={fieldErrors.zipCode}
-            required
-          />
-          {!fieldErrors.zipCode && cepStatus.message ? (
-            <p
-              className={`text-[0.78rem] leading-[1.35] ${cepStatus.tone === "error"
-                ? "text-[#a14b3b]"
-                : cepStatus.tone === "success"
-                  ? "text-[#4f6b3c]"
-                  : "text-[var(--color-muted)]"
-                }`}
-            >
-              {cepStatus.message}
+      <div className="grid gap-4 rounded-[1.35rem] border border-[rgba(104,64,49,0.1)] bg-[rgba(255,255,255,0.74)] p-4">
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <p className="text-[0.78rem] font-bold uppercase tracking-[0.22em] text-[var(--color-accent)]">
+              Etapa {currentStep} de {STEP_CONFIG.length}
             </p>
-          ) : null}
+            <h2 className="mt-1 text-[1.15rem] font-bold uppercase tracking-[0.08em] text-[var(--color-brown)]">
+              {currentStepConfig.title}
+            </h2>
+            <p className="mt-1 text-[0.88rem] leading-[1.5] text-[var(--color-muted)]">{currentStepConfig.description}</p>
+          </div>
+          <div className="flex gap-2 self-stretch md:self-start">
+            {STEP_CONFIG.map((step) => {
+              const isActive = step.id === currentStep;
+              const isCompleted = step.id < currentStep;
+
+              return (
+                <button
+                  key={step.id}
+                  type="button"
+                  onClick={() => setCurrentStep(step.id)}
+                  className={`flex h-9 w-9 items-center justify-center rounded-full border text-[0.82rem] font-bold ${
+                    isActive
+                      ? "border-[var(--color-brown)] bg-[var(--color-brown)] text-white"
+                      : isCompleted
+                        ? "border-[var(--color-accent)] bg-[rgba(213,166,66,0.14)] text-[var(--color-brown)]"
+                        : "border-[rgba(104,64,49,0.14)] bg-white text-[var(--color-muted)]"
+                  }`}
+                  aria-label={`Ir para etapa ${step.id}: ${step.title}`}
+                >
+                  {step.id}
+                </button>
+              );
+            })}
+          </div>
         </div>
-      </FieldGrid>
 
-      <FieldGrid>
-        <Field
-          label="Rua/Avenida"
-          name="street"
-          placeholder="Rua ou avenida"
-          value={addressFields.street}
-          onChange={(event) => handleAddressChange("street", event.target.value)}
-          error={fieldErrors.street}
-          required
-        />
-        <Field
-          label="Numero"
-          name="number"
-          placeholder="123"
-          value={addressFields.number}
-          onChange={(event) => handleAddressChange("number", event.target.value)}
-          error={fieldErrors.number}
-          required
-        />
-      </FieldGrid>
+        <div className="h-2 overflow-hidden rounded-full bg-[rgba(104,64,49,0.08)]">
+          <div
+            className="h-full rounded-full bg-[linear-gradient(90deg,var(--color-accent),#efc76a)] transition-[width] duration-300"
+            style={{ width: progressValue }}
+          />
+        </div>
 
-      <FieldGrid>
-        <Field
-          label="Bairro"
-          name="neighborhood"
-          placeholder="Seu bairro"
-          value={addressFields.neighborhood}
-          onChange={(event) => handleAddressChange("neighborhood", event.target.value)}
-          error={fieldErrors.neighborhood}
-          required
-        />
-        <Field
-          label="Cidade"
-          name="city"
-          placeholder="Sua cidade"
-          value={addressFields.city}
-          onChange={(event) => handleAddressChange("city", event.target.value)}
-          error={fieldErrors.city}
-          required
-        />
-      </FieldGrid>
+        {stepErrors.length > 0 ? (
+          <p className="text-[0.8rem] leading-[1.4] text-[#a14b3b]">
+            Existem campos obrigatorios pendentes nesta etapa.
+          </p>
+        ) : null}
+      </div>
 
-      <Field
-        label="Estado (UF)"
-        name="state"
-        placeholder="SP"
-        maxLength={2}
-        value={addressFields.state}
-        onChange={(event) => handleAddressChange("state", event.target.value.toUpperCase())}
-        error={fieldErrors.state}
-        required
-      />
+      {currentStep === 1 ? (
+        <>
+          <FieldGrid>
+            <Field
+              label="Nome completo"
+              name="name"
+              value={formData.name}
+              onChange={handleFormFieldChange}
+              placeholder="Seu nome completo"
+              error={fieldErrors.name}
+              required
+            />
+            <Field
+              label="CPF"
+              name="cpf"
+              value={formData.cpf}
+              onChange={handleFormFieldChange}
+              placeholder="000.000.000-00"
+              inputMode="numeric"
+              maxLength={14}
+              error={fieldErrors.cpf}
+              required
+            />
+          </FieldGrid>
 
-      <Field
-        label="Complemento"
-        name="complement"
-        placeholder="Apartamento, bloco, casa 2..."
-        value={addressFields.complement}
-        onChange={(event) => handleComplementChange(event.target.value)}
-      />
+          <FieldGrid className="md:grid-cols-1">
+            <Field
+              label="Data de nascimento"
+              name="birthDate"
+              value={formData.birthDate}
+              onChange={handleFormFieldChange}
+              type="date"
+              error={fieldErrors.birthDate}
+              required
+            />
+          </FieldGrid>
+        </>
+      ) : null}
 
-      <FieldGrid className="md:grid-cols-2">
-        <Field
-          label="Senha"
-          name="password"
-          type="password"
-          value={formData.password}
-          onChange={handleFormFieldChange}
-          placeholder="Crie uma senha"
-          error={fieldErrors.password}
-          required
-        />
-        <Field
-          label="Confirmar senha"
-          name="confirmPassword"
-          type="password"
-          value={formData.confirmPassword}
-          onChange={handleFormFieldChange}
-          placeholder="Repita a senha"
-          error={fieldErrors.confirmPassword}
-          required
-        />
-      </FieldGrid>
+      {currentStep === 2 ? (
+        <>
+          <FieldGrid>
+            <Field
+              label="E-mail"
+              name="email"
+              type="email"
+              value={formData.email}
+              onChange={handleFormFieldChange}
+              placeholder="seunome@email.com"
+              error={fieldErrors.email}
+              required
+            />
+            <Field
+              label="Telefone"
+              name="phone"
+              value={formData.phone}
+              onChange={handleFormFieldChange}
+              type="tel"
+              placeholder="(11) 99999-9999"
+              error={fieldErrors.phone}
+              required
+            />
+          </FieldGrid>
 
-      <ConsentSection
-        privacyConsentChecked={privacyConsent}
-        onPrivacyConsentChange={handlePrivacyConsentChange}
-        privacyConsentError={fieldErrors.privacyConsent}
-      >
-        <ConsentOption
-          name="optInEmail"
-          title="E-mail"
-          description="Novidades, beneficios e comunicados."
-          checked={consents.optInEmail}
-          handleConsentChange={handleConsentChange}
-        />
-        <ConsentOption
-          name="optInWhatsApp"
-          title="WhatsApp"
-          description="Alertas e mensagens diretas no celular."
-          checked={consents.optInWhatsApp}
-          handleConsentChange={handleConsentChange}
-        />
-        <ConsentOption
-          name="optInSms"
-          title="SMS"
-          description="Avisos curtos e confirmacoes importantes."
-          checked={consents.optInSms}
-          handleConsentChange={handleConsentChange}
-        />
-      </ConsentSection>
+          <FieldGrid>
+            <div className="grid gap-[0.46rem]">
+              <Field
+                label="CEP"
+                name="zipCode"
+                placeholder="00000-000"
+                value={zipCode}
+                onChange={handleZipFieldChange}
+                onBlur={handleZipCodeBlur}
+                error={fieldErrors.zipCode}
+                required
+              />
+              {!fieldErrors.zipCode && cepStatus.message ? (
+                <p
+                  className={`text-[0.78rem] leading-[1.35] ${
+                    cepStatus.tone === "error"
+                      ? "text-[#a14b3b]"
+                      : cepStatus.tone === "success"
+                        ? "text-[#4f6b3c]"
+                        : "text-[var(--color-muted)]"
+                  }`}
+                >
+                  {cepStatus.message}
+                </p>
+              ) : null}
+            </div>
+            <Field
+              label="Complemento"
+              name="complement"
+              placeholder="Apartamento, bloco, casa 2..."
+              value={addressFields.complement}
+              onChange={(event) => handleComplementChange(event.target.value)}
+            />
+          </FieldGrid>
 
-      <SubmitButton disabled={isSubmitting}>{isSubmitting ? "Enviando..." : "Criar conta"}</SubmitButton>
+          <FieldGrid>
+            <Field
+              label="Rua/Avenida"
+              name="street"
+              placeholder="Rua ou avenida"
+              value={addressFields.street}
+              onChange={(event) => handleAddressChange("street", event.target.value)}
+              error={fieldErrors.street}
+              required
+            />
+            <Field
+              label="Numero"
+              name="number"
+              placeholder="123"
+              value={addressFields.number}
+              onChange={(event) => handleAddressChange("number", event.target.value)}
+              error={fieldErrors.number}
+              required
+            />
+          </FieldGrid>
+
+          <FieldGrid>
+            <Field
+              label="Bairro"
+              name="neighborhood"
+              placeholder="Seu bairro"
+              value={addressFields.neighborhood}
+              onChange={(event) => handleAddressChange("neighborhood", event.target.value)}
+              error={fieldErrors.neighborhood}
+              required
+            />
+            <Field
+              label="Cidade"
+              name="city"
+              placeholder="Sua cidade"
+              value={addressFields.city}
+              onChange={(event) => handleAddressChange("city", event.target.value)}
+              error={fieldErrors.city}
+              required
+            />
+          </FieldGrid>
+
+          <FieldGrid className="md:grid-cols-1">
+            <Field
+              label="Estado (UF)"
+              name="state"
+              placeholder="SP"
+              maxLength={2}
+              value={addressFields.state}
+              onChange={(event) => handleAddressChange("state", event.target.value.toUpperCase())}
+              error={fieldErrors.state}
+              required
+            />
+          </FieldGrid>
+        </>
+      ) : null}
+
+      {currentStep === 3 ? (
+        <>
+          <FieldGrid className="md:grid-cols-2">
+            <Field
+              label="Senha"
+              name="password"
+              type="password"
+              value={formData.password}
+              onChange={handleFormFieldChange}
+              placeholder="Crie uma senha"
+              error={fieldErrors.password}
+              required
+            />
+            <Field
+              label="Confirmar senha"
+              name="confirmPassword"
+              type="password"
+              value={formData.confirmPassword}
+              onChange={handleFormFieldChange}
+              placeholder="Repita a senha"
+              error={fieldErrors.confirmPassword}
+              required
+            />
+          </FieldGrid>
+
+          <ConsentSection
+            privacyConsentChecked={privacyConsent}
+            onPrivacyConsentChange={handlePrivacyConsentChange}
+            privacyConsentError={fieldErrors.privacyConsent}
+          >
+            <ConsentOption
+              name="optInEmail"
+              title="E-mail"
+              description="Novidades, beneficios e comunicados."
+              checked={consents.optInEmail}
+              handleConsentChange={handleConsentChange}
+            />
+            <ConsentOption
+              name="optInWhatsApp"
+              title="WhatsApp"
+              description="Alertas e mensagens diretas no celular."
+              checked={consents.optInWhatsApp}
+              handleConsentChange={handleConsentChange}
+            />
+            <ConsentOption
+              name="optInSms"
+              title="SMS"
+              description="Avisos curtos e confirmacoes importantes."
+              checked={consents.optInSms}
+              handleConsentChange={handleConsentChange}
+            />
+          </ConsentSection>
+        </>
+      ) : null}
+
+      <div className="flex flex-col gap-3 pt-1 sm:flex-row sm:justify-between">
+        <SecondaryButton disabled={currentStep === 1 || isSubmitting} onClick={handlePreviousStep}>
+          Voltar
+        </SecondaryButton>
+        {currentStep < STEP_CONFIG.length ? (
+          <SubmitButton type="button" disabled={isSubmitting} onClick={handleNextStep}>
+            Proxima etapa
+          </SubmitButton>
+        ) : (
+          <SubmitButton disabled={isSubmitting}>{isSubmitting ? "Enviando..." : "Criar conta"}</SubmitButton>
+        )}
+      </div>
     </form>
   );
 }
