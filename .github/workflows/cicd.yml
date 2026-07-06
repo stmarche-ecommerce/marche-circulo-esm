@@ -1,0 +1,95 @@
+name: Build and deploy marche-circulo-esm
+
+on:
+  push:
+    branches:
+      - develop
+      - master
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy-staging:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        deploy-environment:
+          ["${{ github.ref_name == 'master' && 'prod' || 'stg' }}"]
+
+    env:
+      TF_INPUT: "false"
+      IMAGE_TAG: ${{ github.sha }}
+
+    concurrency:
+      group: marche-circulo-esm-${{ matrix.deploy-environment }}-terraform
+      cancel-in-progress: false
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Authenticate to GCP
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: projects/809550202314/locations/global/workloadIdentityPools/github-pool/providers/github-provider
+          service_account: ${{ secrets.SERVICE_ACCOUNT }}
+
+      - name: Set up gcloud
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Configure Docker for Artifact Registry
+        run: gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.9.5"
+
+      - name: Terraform Init
+        run: terraform init
+        working-directory: terraform
+
+      - name: Select Workspace
+        run: |
+          if terraform workspace select ${{ matrix.deploy-environment }}; then
+            echo "Workspace ${{ matrix.deploy-environment }} selected."
+          else
+            terraform workspace new ${{ matrix.deploy-environment }}
+          fi
+        working-directory: terraform
+
+      - name: Validate environment tfvars file
+        run: |
+          test -f "${{ matrix.deploy-environment }}.tfvars" || {
+            echo "Missing terraform/${{ matrix.deploy-environment }}.tfvars"
+            exit 1
+          }
+        working-directory: terraform
+
+      - name: Ensure Artifact Registry exists
+        run: terraform apply -auto-approve -input=false -lock-timeout=10m -var-file=${{ matrix.deploy-environment }}.tfvars -target=google_artifact_registry_repository.docker
+        working-directory: terraform
+
+      - name: Resolve image repository
+        id: image-repository
+        run: |
+          SERVICE_NAME="marche-circulo-esm"
+          ENV_NAME="${{ matrix.deploy-environment }}"
+          REPOSITORY_NAME="${SERVICE_NAME}-${ENV_NAME}"
+          IMAGE_REPOSITORY="us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${REPOSITORY_NAME}/${REPOSITORY_NAME}"
+          echo "image_repository=$IMAGE_REPOSITORY" >> $GITHUB_OUTPUT
+
+      - name: Build and push container image
+        run: |
+          docker build -t ${{ steps.image-repository.outputs.image_repository }}:${IMAGE_TAG} .
+          docker push ${{ steps.image-repository.outputs.image_repository }}:${IMAGE_TAG}
+
+      - name: Apply Terraform
+        run: terraform apply -auto-approve -input=false -lock-timeout=10m -var-file=${{ matrix.deploy-environment }}.tfvars -var="image_tag=${{ env.IMAGE_TAG }}"
+        working-directory: terraform

@@ -1,0 +1,12 @@
+.git
+.gitignore
+.next
+node_modules
+npm-debug.log
+terraform/.terraform
+terraform/.terraform.lock.hcl
+README.md
+AGENTS.md
+.env
+.env.*
+gha-creds-*.json
