@@ -44,12 +44,12 @@ function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-export async function getActivePromotions(_userId: string) {
+export async function getActivePromotions() {
   await delay(200);
   return promotions.filter((promotion) => promotion.status === "active");
 }
 
-export async function getUsedPromotions(_userId: string) {
+export async function getUsedPromotions() {
   await delay(200);
   return promotions.filter((promotion) => promotion.status === "used");
 }

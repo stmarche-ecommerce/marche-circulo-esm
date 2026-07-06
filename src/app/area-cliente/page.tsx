@@ -23,12 +23,11 @@ export default function AreaClientePage() {
     }
 
     let cancelled = false;
-    const userId = user.id;
 
     async function loadSummary() {
       const [active, used] = await Promise.all([
-        getActivePromotions(userId),
-        getUsedPromotions(userId),
+        getActivePromotions(),
+        getUsedPromotions(),
       ]);
 
       if (!cancelled) {

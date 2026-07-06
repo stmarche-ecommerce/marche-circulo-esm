@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { ChangeEvent, useState } from "react";
 import { toast } from "react-toastify";
 import { useAuth } from "@/app/context/auth-context";
-import { ApiService } from "@/app/services/api-service";
+
 import {
   createLoginPayload,
   formatCpf,
@@ -14,6 +14,7 @@ import {
   resolveLoginEndpoint,
   validateCpfLoginValues,
 } from "@/lib/auth-login";
+import { ApiService } from "@/services/api-service";
 
 export function useLoginForm() {
   const router = useRouter();

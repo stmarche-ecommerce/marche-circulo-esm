@@ -39,13 +39,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const storedSession = readStoredAuthSession();
-    if (storedSession) {
-      setUser(storedSession.user);
-      setToken(storedSession.token);
-    }
+    queueMicrotask(() => {
+      const storedSession = readStoredAuthSession();
 
-    setLoading(false);
+      if (storedSession) {
+        setUser(storedSession.user);
+        setToken(storedSession.token);
+      }
+
+      setLoading(false);
+    });
   }, []);
 
   const login = (session: AuthSession) => {
