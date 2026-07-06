@@ -67,6 +67,28 @@ jobs:
           }
         working-directory: terraform
 
+      - name: Import existing Artifact Registry repository
+        run: |
+          if terraform state show google_artifact_registry_repository.app >/dev/null 2>&1; then
+            echo "Artifact Registry repository already tracked in Terraform state."
+            exit 0
+          fi
+
+          if gcloud artifacts repositories describe marche-circulo-esm \
+            --location=us-central1 \
+            --project=${{ secrets.GCP_PROJECT_ID }} >/dev/null 2>&1; then
+            terraform import \
+              -input=false \
+              -var-file=${{ env.TF_ENV_FILE }} \
+              -var="project_id=${{ secrets.GCP_PROJECT_ID }}" \
+              -var="image=us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/bootstrap/bootstrap:placeholder" \
+              google_artifact_registry_repository.app \
+              projects/${{ secrets.GCP_PROJECT_ID }}/locations/us-central1/repositories/marche-circulo-esm
+          else
+            echo "Artifact Registry repository does not exist yet; Terraform will create it."
+          fi
+        working-directory: terraform
+
       - name: Bootstrap Terraform resources
         run: |
           terraform apply -auto-approve -input=false -lock-timeout=10m \
