@@ -74,7 +74,7 @@ jobs:
 
       - name: Import existing Artifact Registry repository
         run: |
-          if terraform state show -lock=false google_artifact_registry_repository.app >/dev/null 2>&1; then
+         if terraform state list -no-color 2>/dev/null | grep -qx "google_artifact_registry_repository.app"; then
             echo "Artifact Registry repository already tracked in Terraform state."
             exit 0
           fi
@@ -96,7 +96,7 @@ jobs:
 
       - name: Import existing Cloud Run service account
         run: |
-          if terraform state show -lock=false google_service_account.cloud_run >/dev/null 2>&1; then
+          if terraform state list -no-color 2>/dev/null | grep -qx "google_service_account.cloud_run"; then
             echo "Cloud Run service account already tracked in Terraform state."
             exit 0
           fi
