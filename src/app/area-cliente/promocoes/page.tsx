@@ -19,14 +19,13 @@ export default function PromocoesPage() {
     }
 
     let cancelled = false;
-    const userId = user.id;
 
     async function loadPromotions() {
       try {
         setLoading(true);
         const [activeData, usedData] = await Promise.all([
-          getActivePromotions(userId),
-          getUsedPromotions(userId),
+          getActivePromotions(),
+          getUsedPromotions(),
         ]);
 
         if (!cancelled) {
