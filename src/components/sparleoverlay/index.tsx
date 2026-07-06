@@ -77,11 +77,11 @@ export default function SparkleOverlay({
   colors = DEFAULT_COLORS,
   sizes = DEFAULT_SIZES,
   className = "",
-  concavity = 0.16,
 }: SparkleOverlayProps) {
   const [seed, setSeed] = useState(0);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSeed((s) => s + 1);
   }, []);
 
