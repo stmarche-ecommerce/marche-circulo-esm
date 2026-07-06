@@ -94,6 +94,29 @@ jobs:
           fi
         working-directory: terraform
 
+      - name: Import existing Cloud Run service account
+        run: |
+          if terraform state show -lock=false google_service_account.cloud_run >/dev/null 2>&1; then
+            echo "Cloud Run service account already tracked in Terraform state."
+            exit 0
+          fi
+
+          SERVICE_ACCOUNT_EMAIL="marche-circulo-esm-${{ matrix.deploy-environment }}-run@${{ secrets.GCP_PROJECT_ID }}.iam.gserviceaccount.com"
+
+          if gcloud iam service-accounts describe "$SERVICE_ACCOUNT_EMAIL" \
+            --project=${{ secrets.GCP_PROJECT_ID }} >/dev/null 2>&1; then
+            terraform import \
+              -input=false \
+              -var-file=${{ env.TF_ENV_FILE }} \
+              -var="project_id=${{ secrets.GCP_PROJECT_ID }}" \
+              -var="image=us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/bootstrap/bootstrap:placeholder" \
+              google_service_account.cloud_run \
+              projects/${{ secrets.GCP_PROJECT_ID }}/serviceAccounts/$SERVICE_ACCOUNT_EMAIL
+          else
+            echo "Cloud Run service account does not exist yet; Terraform will create it."
+          fi
+        working-directory: terraform
+
       - name: Bootstrap Terraform resources
         run: |
           terraform apply -auto-approve -input=false -lock-timeout=10m \
