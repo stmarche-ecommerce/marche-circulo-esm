@@ -2,7 +2,7 @@
 
 import React, { useMemo, useState } from "react";
 import { toast } from "react-toastify";
-import { ApiService } from "@/app/services/api-service";
+import { ApiService } from "@/services/api-service";
 import { useSignUpForm } from "@/hooks/use-signup-form";
 import { useZipCodeLookup } from "@/hooks/use-via-cep";
 import { signUpSchema, type SignUpFormValues } from "@/lib/sign-up-validation";
@@ -29,6 +29,11 @@ interface SignUpPayload {
   state: string;
   zip_code: string;
   complement: string;
+}
+
+interface SignupConfirmationPayload {
+  email: string;
+  name: string;
 }
 
 type WizardStep = 1 | 2 | 3;
@@ -241,6 +246,23 @@ export function SignUpForm() {
     };
   };
 
+  const sendSignupConfirmation = async ({
+    email,
+    name,
+  }: SignupConfirmationPayload) => {
+    const response = await fetch("/api/signup-confirmation", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, name }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Falha ao enviar e-mail de confirmacao.");
+    }
+  };
+
   const handleSubmit = async () => {
     const validationResult = signUpSchema.safeParse(getValidationValues());
 
@@ -267,6 +289,16 @@ export function SignUpForm() {
       const response = await api.post("/users-v2", payload);
 
       if (response.status === 201) {
+        // try {
+        //   await sendSignupConfirmation({
+        //     email: payload.email,
+        //     name: formData.name.trim(),
+        //   });
+        // } catch (emailError) {
+        //   console.error("Erro ao enviar e-mail de confirmacao:", emailError);
+        //   toast.warn("Cadastro realizado, mas o e-mail de confirmacao nao foi enviado.");
+        // }
+
         toast.success("Cadastro realizado com sucesso! Seus dados foram enviados e seu acesso esta em processamento.");
         return;
       }
@@ -312,13 +344,12 @@ export function SignUpForm() {
                   key={step.id}
                   type="button"
                   onClick={() => setCurrentStep(step.id)}
-                  className={`flex h-9 w-9 items-center justify-center rounded-full border text-[0.82rem] font-bold ${
-                    isActive
+                  className={`flex h-9 w-9 items-center justify-center rounded-full border text-[0.82rem] font-bold ${isActive
                       ? "border-[var(--color-brown)] bg-[var(--color-brown)] text-white"
                       : isCompleted
                         ? "border-[var(--color-accent)] bg-[rgba(213,166,66,0.14)] text-[var(--color-brown)]"
                         : "border-[rgba(104,64,49,0.14)] bg-white text-[var(--color-muted)]"
-                  }`}
+                    }`}
                   aria-label={`Ir para etapa ${step.id}: ${step.title}`}
                 >
                   {step.id}
@@ -420,13 +451,12 @@ export function SignUpForm() {
               />
               {!fieldErrors.zipCode && cepStatus.message ? (
                 <p
-                  className={`text-[0.78rem] leading-[1.35] ${
-                    cepStatus.tone === "error"
+                  className={`text-[0.78rem] leading-[1.35] ${cepStatus.tone === "error"
                       ? "text-[#a14b3b]"
                       : cepStatus.tone === "success"
                         ? "text-[#4f6b3c]"
                         : "text-[var(--color-muted)]"
-                  }`}
+                    }`}
                 >
                   {cepStatus.message}
                 </p>
