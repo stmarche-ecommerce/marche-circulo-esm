@@ -6,13 +6,15 @@ import SiteFooter from "@/components/layout/footer";
 import { SiteHeader } from "@/components/layout/header";
 import { WhatsAppBubble } from "@/components/layout/whatsapp-bubble";
 
-const AUTH_ROUTES = new Set(["/login", "/criar-conta"]);
+const STANDALONE_ROUTES = new Set(["/login", "/criar-conta"]);
 
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-  const isAuthRoute = pathname ? AUTH_ROUTES.has(pathname) : false;
+  const isStandaloneRoute = pathname
+    ? STANDALONE_ROUTES.has(pathname) || pathname.startsWith("/area-cliente")
+    : false;
 
-  if (isAuthRoute) {
+  if (isStandaloneRoute) {
     return children;
   }
 

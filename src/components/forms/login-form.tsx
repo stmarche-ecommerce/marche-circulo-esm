@@ -1,14 +1,24 @@
+"use client";
+
 import Link from "next/link";
+import { useLoginForm } from "@/hooks/use-login-form";
 
 export function LoginForm() {
+  const { formData, isSubmitting, handleChange, handleSubmit } = useLoginForm();
+
   return (
-    <form className="mt-5 grid gap-4">
+    <form className="mt-5 grid gap-4" onSubmit={handleSubmit}>
       <label className="grid gap-2 text-[0.9rem] font-bold text-[var(--color-brown)]">
-        <span>E-mail ou CPF</span>
+        <span>CPF</span>
         <input
           type="text"
           name="login"
-          placeholder="seunome@email.com"
+          value={formData.login}
+          onChange={handleChange}
+          placeholder="000.000.000-00"
+          inputMode="numeric"
+          maxLength={14}
+          autoComplete="username"
           className="w-full rounded-[0.95rem] border border-[rgba(104,64,49,0.16)] bg-white px-4 py-3 text-[0.95rem] text-[var(--color-body)] outline-none transition placeholder:text-[rgba(117,105,98,0.9)] focus:border-[var(--color-accent)] focus:shadow-[0_0_0_4px_rgba(213,166,66,0.14)]"
         />
       </label>
@@ -18,7 +28,10 @@ export function LoginForm() {
         <input
           type="password"
           name="password"
+          value={formData.password}
+          onChange={handleChange}
           placeholder="Digite sua senha"
+          autoComplete="current-password"
           className="w-full rounded-[0.95rem] border border-[rgba(104,64,49,0.16)] bg-white px-4 py-3 text-[0.95rem] text-[var(--color-body)] outline-none transition placeholder:text-[rgba(117,105,98,0.9)] focus:border-[var(--color-accent)] focus:shadow-[0_0_0_4px_rgba(213,166,66,0.14)]"
         />
       </label>
@@ -36,9 +49,11 @@ export function LoginForm() {
 
       <button
         type="submit"
+        disabled={isSubmitting}
+        aria-busy={isSubmitting}
         className="mt-1 inline-flex min-h-[3.15rem] items-center justify-center rounded-full bg-[var(--color-brown)] px-5 py-3 text-[0.84rem] font-bold uppercase tracking-[0.16em] text-white hover:bg-[var(--color-ink)]"
       >
-        Entrar
+        {isSubmitting ? "Entrando..." : "Entrar"}
       </button>
     </form>
   );
