@@ -137,8 +137,8 @@ jobs:
 
       - name: Build and push container image
         env:
-          NEXT_PUBLIC_API_USERS_V2: ${{ matrix.deploy-environment == 'prod' && secrets.NEXT_PUBLIC_API_USERS_V2_PROD || secrets.NEXT_PUBLIC_API_USERS_V2_STG }}
-          NEXT_PUBLIC_USERS_V2_API_KEY: ${{ matrix.deploy-environment == 'prod' && secrets.NEXT_PUBLIC_USERS_V2_API_KEY_PROD || secrets.NEXT_PUBLIC_USERS_V2_API_KEY_STG }}
+          NEXT_PUBLIC_API_USERS_V2: ${{ matrix.deploy-environment == 'prod' && secrets.NEXT_PUBLIC_API_USERS_V2_PROD || secrets.NEXT_PUBLIC_API_USERS_V2 }}
+          NEXT_PUBLIC_USERS_V2_API_KEY: ${{ matrix.deploy-environment == 'prod' && secrets.NEXT_PUBLIC_USERS_V2_API_KEY_PROD || secrets.NEXT_PUBLIC_USERS_V2_API_KEY }}
         run: |
           docker build \
             --build-arg NEXT_PUBLIC_API_USERS_V2="${NEXT_PUBLIC_API_USERS_V2}" \
