@@ -192,6 +192,28 @@ export function SignUpForm() {
     setCurrentStep((current) => Math.max(current - 1, 1) as WizardStep);
   };
 
+  const handleStepKeyDown = (event: React.KeyboardEvent<HTMLFormElement>) => {
+    if (event.key !== "Enter") {
+      return;
+    }
+
+    const target = event.target as HTMLElement | null;
+    const tagName = target?.tagName;
+
+    if (tagName === "BUTTON" || tagName === "TEXTAREA") {
+      return;
+    }
+
+    event.preventDefault();
+
+    if (currentStep < STEP_CONFIG.length) {
+      handleNextStep();
+      return;
+    }
+
+    void handleSubmit();
+  };
+
   const buildPayload = (): SignUpPayload => {
     const trimmedName = formData.name.trim();
     const [firstName = "", ...lastNameParts] = trimmedName.split(/\s+/);
@@ -219,9 +241,7 @@ export function SignUpForm() {
     };
   };
 
-  const handleSubmit = async (event: React.SubmitEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
+  const handleSubmit = async () => {
     const validationResult = signUpSchema.safeParse(getValidationValues());
 
     if (!validationResult.success) {
@@ -266,7 +286,11 @@ export function SignUpForm() {
   };
 
   return (
-    <form className="mt-5 grid gap-[0.95rem]" onSubmit={handleSubmit} noValidate>
+    <form
+      className="mt-5 grid gap-[0.95rem]"
+      onKeyDown={handleStepKeyDown}
+      noValidate
+    >
       <div className="grid gap-4 rounded-[1.35rem] border border-[rgba(104,64,49,0.1)] bg-[rgba(255,255,255,0.74)] p-4">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
@@ -538,7 +562,9 @@ export function SignUpForm() {
             Proxima etapa
           </SubmitButton>
         ) : (
-          <SubmitButton disabled={isSubmitting}>{isSubmitting ? "Enviando..." : "Criar conta"}</SubmitButton>
+          <SubmitButton type="button" disabled={isSubmitting} onClick={() => void handleSubmit()}>
+            {isSubmitting ? "Enviando..." : "Criar conta"}
+          </SubmitButton>
         )}
       </div>
     </form>
