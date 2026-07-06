@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import Slider from "react-slick";
+import SparkleOverlay from "../sparleoverlay";
 
 const slides = [
   {
@@ -62,6 +63,13 @@ export function HeroCarousel() {
                   className="object-cover"
                 />
                 <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(22,15,12,0.18),rgba(22,15,12,0.7)),linear-gradient(90deg,rgba(47,44,82,0.84),rgba(47,44,82,0.36))]" />
+              </div>
+
+              <div className="absolute inset-0 z-[5]">
+                <SparkleOverlay
+                  count={35}
+                  colors={["#e8c674", "#f4dfa3", "#ffffff", "#c9a35c"]}
+                />
               </div>
 
               <div className="content-grid relative z-10 flex min-h-[clamp(32rem,72vh,46rem)] items-center py-24">

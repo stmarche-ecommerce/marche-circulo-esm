@@ -21,7 +21,7 @@ export function AuthShell({
   helperLinkHref,
   helperLinkLabel,
   children,
-  centerPanelContent = false,
+  centerPanelContent = true,
 }: AuthShellProps) {
   return (
     <section className="bg-[#120f18] lg:grid lg:h-screen lg:grid-cols-[minmax(0,1fr)_minmax(40rem,0.98fr)]">
@@ -56,9 +56,8 @@ export function AuthShell({
         </div>
 
         <div
-          className={`mx-auto flex min-h-full w-full max-w-[36rem] justify-center py-0 lg:py-4 ${
-            centerPanelContent ? "items-center" : "items-start"
-          }`}
+          className={`mx-auto flex min-h-full w-full max-w-[36rem] justify-center py-0 lg:py-4 ${centerPanelContent ? "items-center" : "items-start"
+            }`}
         >
           <div className="w-full rounded-[2rem] border border-[rgba(104,64,49,0.12)] bg-[rgba(255,253,250,0.9)] p-[clamp(1.2rem,2vw,2rem)] shadow-[0_26px_80px_rgba(30,24,21,0.12)]">
             <p className="text-[0.78rem] font-bold uppercase tracking-[0.28em] text-[var(--color-accent)]">{eyebrow}</p>
