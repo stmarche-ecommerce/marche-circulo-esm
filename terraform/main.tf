@@ -1,7 +1,10 @@
 terraform {
   required_version = ">= 1.6.0"
 
-  backend "gcs" {}
+  backend "gcs" {
+    bucket = "marche-terraform"
+    prefix = "marche-circulo-esm"
+  }
 
   required_providers {
     google = {
