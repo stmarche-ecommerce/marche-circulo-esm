@@ -1,11 +1,12 @@
 "use client";
 
-import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import { createContext, ReactNode, useContext, useSyncExternalStore } from "react";
 import {
   AuthSession,
   AuthUser,
   clearStoredAuthSession,
   readStoredAuthSession,
+  subscribeToAuthSession,
   writeStoredAuthSession,
 } from "@/lib/auth-session";
 
@@ -37,65 +38,58 @@ const fallbackAuthContext: AuthContextType = {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const EMPTY_AUTH_STATE = {
+  user: null,
+  token: undefined,
+} satisfies {
+  user: AuthUser | null;
+  token?: string;
+};
+
+function getAuthSnapshot() {
+  const storedSession = readStoredAuthSession();
+
+  if (!storedSession) {
+    return EMPTY_AUTH_STATE;
+  }
+
+  return {
+    user: storedSession.user,
+    token: storedSession.token,
+  };
+}
+
+function getAuthServerSnapshot() {
+  return EMPTY_AUTH_STATE;
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [authState, setAuthState] = useState<{
-    user: AuthUser | null;
-    token?: string;
-  }>({
-    user: null,
-    token: undefined,
-  });
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const storedSession = readStoredAuthSession();
-
-    if (storedSession) {
-      setAuthState({
-        user: storedSession.user,
-        token: storedSession.token,
-      });
-    }
-
-    setLoading(false);
-  }, []);
+  const authState = useSyncExternalStore(
+    subscribeToAuthSession,
+    getAuthSnapshot,
+    getAuthServerSnapshot,
+  );
+  const loading = typeof window === "undefined";
 
   const login = (session: AuthSession) => {
-    setAuthState({
-      user: session.user,
-      token: session.token,
-    });
     writeStoredAuthSession(session);
   };
 
   const updateUser = (updates: Partial<AuthUser>) => {
-    setAuthState((current) => {
-      if (!current.user) {
-        return current;
-      }
+    if (!authState.user) {
+      return;
+    }
 
-      const nextState = {
-        ...current,
-        user: {
-          ...current.user,
-          ...updates,
-        },
-      };
-
-      writeStoredAuthSession({
-        user: nextState.user,
-        token: nextState.token,
-      });
-
-      return nextState;
+    writeStoredAuthSession({
+      user: {
+        ...authState.user,
+        ...updates,
+      },
+      token: authState.token,
     });
   };
 
   const logout = () => {
-    setAuthState({
-      user: null,
-      token: undefined,
-    });
     clearStoredAuthSession();
   };
 
