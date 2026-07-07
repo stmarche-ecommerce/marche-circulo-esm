@@ -156,17 +156,24 @@ jobs:
           SIGNUP_CONFIRMATION_FROM_EMAIL: ${{ matrix.deploy-environment == 'prod' && secrets.SIGNUP_CONFIRMATION_FROM_EMAIL_PROD || secrets.SIGNUP_CONFIRMATION_FROM_EMAIL }}
           SIGNUP_CONFIRMATION_REPLY_TO: ${{ matrix.deploy-environment == 'prod' && secrets.SIGNUP_CONFIRMATION_REPLY_TO_PROD || secrets.SIGNUP_CONFIRMATION_REPLY_TO }}
         run: |
+          cat <<EOF > runtime.auto.tfvars.json
+          {
+            "runtime_environment_variables": {
+              "NODE_ENV": "production",
+              "SMTP_ENDERECO": "${SMTP_ENDERECO}",
+              "SMTP_PORTA": "${SMTP_PORTA}",
+              "SMTP_SENDGRID_TOKEN": "${SMTP_SENDGRID_TOKEN}",
+              "SMTP_USUARIO": "${SMTP_USUARIO}",
+              "SIGNUP_CONFIRMATION_FROM_EMAIL": "${SIGNUP_CONFIRMATION_FROM_EMAIL}",
+              "SIGNUP_CONFIRMATION_REPLY_TO": "${SIGNUP_CONFIRMATION_REPLY_TO}"
+            }
+          }
+          EOF
+
           terraform apply -auto-approve -input=false -lock-timeout=10m \
             -var-file=${{ env.TF_ENV_FILE }} \
+            -var-file=runtime.auto.tfvars.json \
             -var="project_id=${{ secrets.GCP_PROJECT_ID }}" \
-            -var="image=${{ steps.image-repository.outputs.image_repository }}:${{ env.IMAGE_TAG }}" \
-            -var='runtime_environment_variables={
-              NODE_ENV="production",
-              SMTP_ENDERECO="'${SMTP_ENDERECO}'",
-              SMTP_PORTA="'${SMTP_PORTA}'",
-              SMTP_SENDGRID_TOKEN="'${SMTP_SENDGRID_TOKEN}'",
-              SMTP_USUARIO="'${SMTP_USUARIO}'",
-              SIGNUP_CONFIRMATION_FROM_EMAIL="'${SIGNUP_CONFIRMATION_FROM_EMAIL}'",
-              SIGNUP_CONFIRMATION_REPLY_TO="'${SIGNUP_CONFIRMATION_REPLY_TO}'"
-            }'
+            -var="image=${{ steps.image-repository.outputs.image_repository }}:${{ env.IMAGE_TAG }}"
         working-directory: terraform
+
