@@ -16,21 +16,23 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        deploy-environment:
-          ["${{ github.ref_name == 'main' && 'prod' || 'stg' }}"]
-
     env:
+      DEPLOY_ENV: ${{ github.ref_name == 'main' && 'prod' || 'stg' }}
       TF_INPUT: "false"
       TF_IN_AUTOMATION: "true"
       IMAGE_TAG: ${{ github.sha }}
-      TF_ENV_FILE: environments/${{ matrix.deploy-environment }}.tfvars
+      TF_ENV_FILE: environments/${{ github.ref_name == 'main' && 'prod' || 'stg' }}.tfvars
       TF_STATE_BUCKET: marche-terraform
-      TF_STATE_PREFIX: marche-circulo-esm/${{ matrix.deploy-environment }}
+      TF_STATE_PREFIX: marche-circulo-esm/${{ github.ref_name == 'main' && 'prod' || 'stg' }}
+      PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+      IMAGE_REPOSITORY: us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/marche-circulo-esm/marche-circulo-esm-${{ github.ref_name == 'main' && 'prod' || 'stg' }}
+      NEXT_PUBLIC_API_USERS_V2: ${{ github.ref_name == 'main' && secrets.NEXT_PUBLIC_API_USERS_V2_PROD || secrets.NEXT_PUBLIC_API_USERS_V2 }}
+      NEXT_PUBLIC_USERS_V2_API_KEY: ${{ github.ref_name == 'main' && secrets.NEXT_PUBLIC_USERS_V2_API_KEY_PROD || secrets.NEXT_PUBLIC_USERS_V2_API_KEY }}
+      TF_VAR_runtime_environment_variables: >-
+        {"NODE_ENV":"production","SMTP_ENDERECO":${{ toJSON(github.ref_name == 'main' && secrets.SMTP_ENDERECO_PROD || secrets.SMTP_ENDERECO) }},"SMTP_PORTA":${{ toJSON(github.ref_name == 'main' && secrets.SMTP_PORTA_PROD || secrets.SMTP_PORTA) }},"SMTP_SENDGRID_TOKEN":${{ toJSON(github.ref_name == 'main' && secrets.SMTP_SENDGRID_TOKEN_PROD || secrets.SMTP_SENDGRID_TOKEN) }},"SMTP_USUARIO":${{ toJSON(github.ref_name == 'main' && secrets.SMTP_USUARIO_PROD || secrets.SMTP_USUARIO) }},"SIGNUP_CONFIRMATION_FROM_EMAIL":${{ toJSON(github.ref_name == 'main' && secrets.SIGNUP_CONFIRMATION_FROM_EMAIL_PROD || secrets.SIGNUP_CONFIRMATION_FROM_EMAIL) }},"SIGNUP_CONFIRMATION_REPLY_TO":${{ toJSON(github.ref_name == 'main' && secrets.SIGNUP_CONFIRMATION_REPLY_TO_PROD || secrets.SIGNUP_CONFIRMATION_REPLY_TO) }}}
 
     concurrency:
-      group: marche-circulo-esm-${{ matrix.deploy-environment }}-terraform
+      group: marche-circulo-esm-${{ github.ref_name == 'main' && 'prod' || 'stg' }}-terraform
       cancel-in-progress: false
 
     steps:
@@ -57,132 +59,74 @@ jobs:
         with:
           terraform_version: "1.9.5"
 
-      - name: Terraform Init
-        run: |
-          terraform init -input=false -reconfigure \
-            -backend-config="bucket=${{ env.TF_STATE_BUCKET }}" \
-            -backend-config="prefix=${{ env.TF_STATE_PREFIX }}"
+      - name: Prepare Terraform prerequisites
         working-directory: terraform
-
-      - name: Validate environment tfvars file
         run: |
-          test -f "${{ env.TF_ENV_FILE }}" || {
-            echo "Missing terraform/${{ env.TF_ENV_FILE }}"
+          set -euo pipefail
+
+          test -f "$TF_ENV_FILE" || {
+            echo "Missing terraform/$TF_ENV_FILE"
             exit 1
           }
-        working-directory: terraform
 
-      - name: Import existing Artifact Registry repository
-        run: |
-         if terraform state list -no-color 2>/dev/null | grep -qx "google_artifact_registry_repository.app"; then
-            echo "Artifact Registry repository already tracked in Terraform state."
-            exit 0
-          fi
+          terraform init -input=false -reconfigure \
+            -backend-config="bucket=$TF_STATE_BUCKET" \
+            -backend-config="prefix=$TF_STATE_PREFIX"
+
+          import_if_exists() {
+            local address="$1"
+            local resource_id="$2"
+
+            if terraform state list -no-color 2>/dev/null | grep -qx "$address"; then
+              echo "$address already tracked in Terraform state."
+              return
+            fi
+
+            terraform import \
+              -input=false \
+              -var-file="$TF_ENV_FILE" \
+              -var="project_id=$PROJECT_ID" \
+              -var="image=us-central1-docker.pkg.dev/$PROJECT_ID/bootstrap/bootstrap:placeholder" \
+              "$address" \
+              "$resource_id"
+          }
 
           if gcloud artifacts repositories describe marche-circulo-esm \
             --location=us-central1 \
-            --project=${{ secrets.GCP_PROJECT_ID }} >/dev/null 2>&1; then
-            terraform import \
-              -input=false \
-              -var-file=${{ env.TF_ENV_FILE }} \
-              -var="project_id=${{ secrets.GCP_PROJECT_ID }}" \
-              -var="image=us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/bootstrap/bootstrap:placeholder" \
+            --project="$PROJECT_ID" >/dev/null 2>&1; then
+            import_if_exists \
               google_artifact_registry_repository.app \
-              projects/${{ secrets.GCP_PROJECT_ID }}/locations/us-central1/repositories/marche-circulo-esm
-          else
-            echo "Artifact Registry repository does not exist yet; Terraform will create it."
-          fi
-        working-directory: terraform
-
-      - name: Import existing Cloud Run service account
-        run: |
-          if terraform state list -no-color 2>/dev/null | grep -qx "google_service_account.cloud_run"; then
-            echo "Cloud Run service account already tracked in Terraform state."
-            exit 0
+              "projects/$PROJECT_ID/locations/us-central1/repositories/marche-circulo-esm"
           fi
 
-          SERVICE_ACCOUNT_EMAIL="marche-circulo-esm-${{ matrix.deploy-environment }}-run@${{ secrets.GCP_PROJECT_ID }}.iam.gserviceaccount.com"
-
-          if gcloud iam service-accounts describe "$SERVICE_ACCOUNT_EMAIL" \
-            --project=${{ secrets.GCP_PROJECT_ID }} >/dev/null 2>&1; then
-            terraform import \
-              -input=false \
-              -var-file=${{ env.TF_ENV_FILE }} \
-              -var="project_id=${{ secrets.GCP_PROJECT_ID }}" \
-              -var="image=us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/bootstrap/bootstrap:placeholder" \
+          SERVICE_ACCOUNT_EMAIL="marche-circulo-esm-$DEPLOY_ENV-run@$PROJECT_ID.iam.gserviceaccount.com"
+          if gcloud iam service-accounts describe "$SERVICE_ACCOUNT_EMAIL" --project="$PROJECT_ID" >/dev/null 2>&1; then
+            import_if_exists \
               google_service_account.cloud_run \
-              projects/${{ secrets.GCP_PROJECT_ID }}/serviceAccounts/$SERVICE_ACCOUNT_EMAIL
-          else
-            echo "Cloud Run service account does not exist yet; Terraform will create it."
+              "projects/$PROJECT_ID/serviceAccounts/$SERVICE_ACCOUNT_EMAIL"
           fi
-        working-directory: terraform
 
-      - name: Bootstrap Terraform resources
-        run: |
           terraform apply -auto-approve -input=false -lock-timeout=10m \
-            -var-file=${{ env.TF_ENV_FILE }} \
-            -var="project_id=${{ secrets.GCP_PROJECT_ID }}" \
-            -var="image=us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/bootstrap/bootstrap:placeholder" \
+            -var-file="$TF_ENV_FILE" \
+            -var="project_id=$PROJECT_ID" \
+            -var="image=us-central1-docker.pkg.dev/$PROJECT_ID/bootstrap/bootstrap:placeholder" \
             -target=google_project_service.required \
             -target=google_artifact_registry_repository.app \
             -target=google_service_account.cloud_run
-        working-directory: terraform
-
-      - name: Resolve image repository
-        id: image-repository
-        run: |
-          ENV_NAME="${{ matrix.deploy-environment }}"
-          IMAGE_REPOSITORY="us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/marche-circulo-esm/marche-circulo-esm-${ENV_NAME}"
-          echo "image_repository=$IMAGE_REPOSITORY" >> $GITHUB_OUTPUT
 
       - name: Build and push container image
-        env:
-          NEXT_PUBLIC_API_USERS_V2: ${{ matrix.deploy-environment == 'prod' && secrets.NEXT_PUBLIC_API_USERS_V2_PROD || secrets.NEXT_PUBLIC_API_USERS_V2 }}
-          NEXT_PUBLIC_USERS_V2_API_KEY: ${{ matrix.deploy-environment == 'prod' && secrets.NEXT_PUBLIC_USERS_V2_API_KEY_PROD || secrets.NEXT_PUBLIC_USERS_V2_API_KEY }}
         run: |
           docker build \
-            --build-arg NEXT_PUBLIC_API_USERS_V2="${NEXT_PUBLIC_API_USERS_V2}" \
-            --build-arg NEXT_PUBLIC_USERS_V2_API_KEY="${NEXT_PUBLIC_USERS_V2_API_KEY}" \
-            -t ${{ steps.image-repository.outputs.image_repository }}:${IMAGE_TAG} \
+            --build-arg NEXT_PUBLIC_API_USERS_V2="$NEXT_PUBLIC_API_USERS_V2" \
+            --build-arg NEXT_PUBLIC_USERS_V2_API_KEY="$NEXT_PUBLIC_USERS_V2_API_KEY" \
+            -t "$IMAGE_REPOSITORY:$IMAGE_TAG" \
             .
-          docker push ${{ steps.image-repository.outputs.image_repository }}:${IMAGE_TAG}
+          docker push "$IMAGE_REPOSITORY:$IMAGE_TAG"
 
       - name: Apply Terraform
-        env:
-          SMTP_ENDERECO: ${{ matrix.deploy-environment == 'prod' && secrets.SMTP_ENDERECO_PROD || secrets.SMTP_ENDERECO }}
-          SMTP_PORTA: ${{ matrix.deploy-environment == 'prod' && secrets.SMTP_PORTA_PROD || secrets.SMTP_PORTA }}
-          SMTP_SENDGRID_TOKEN: ${{ matrix.deploy-environment == 'prod' && secrets.SMTP_SENDGRID_TOKEN_PROD || secrets.SMTP_SENDGRID_TOKEN }}
-          SMTP_USUARIO: ${{ matrix.deploy-environment == 'prod' && secrets.SMTP_USUARIO_PROD || secrets.SMTP_USUARIO }}
-          SIGNUP_CONFIRMATION_FROM_EMAIL: ${{ matrix.deploy-environment == 'prod' && secrets.SIGNUP_CONFIRMATION_FROM_EMAIL_PROD || secrets.SIGNUP_CONFIRMATION_FROM_EMAIL }}
-          SIGNUP_CONFIRMATION_REPLY_TO: ${{ matrix.deploy-environment == 'prod' && secrets.SIGNUP_CONFIRMATION_REPLY_TO_PROD || secrets.SIGNUP_CONFIRMATION_REPLY_TO }}
-        run: |
-          python3 - <<'PY'
-          import json
-          import os
-
-          with open("runtime.auto.tfvars.json", "w", encoding="utf-8") as file:
-              json.dump(
-                  {
-                      "runtime_environment_variables": {
-                          "NODE_ENV": "production",
-                          "SMTP_ENDERECO": os.environ["SMTP_ENDERECO"],
-                          "SMTP_PORTA": os.environ["SMTP_PORTA"],
-                          "SMTP_SENDGRID_TOKEN": os.environ["SMTP_SENDGRID_TOKEN"],
-                          "SMTP_USUARIO": os.environ["SMTP_USUARIO"],
-                          "SIGNUP_CONFIRMATION_FROM_EMAIL": os.environ["SIGNUP_CONFIRMATION_FROM_EMAIL"],
-                          "SIGNUP_CONFIRMATION_REPLY_TO": os.environ["SIGNUP_CONFIRMATION_REPLY_TO"],
-                      }
-                  },
-                  file,
-              )
-          PY
-
-          terraform apply -auto-approve -input=false -lock-timeout=10m \
-            -var-file=${{ env.TF_ENV_FILE }} \
-            -var-file=runtime.auto.tfvars.json \
-            -var="project_id=${{ secrets.GCP_PROJECT_ID }}" \
-            -var="image=${{ steps.image-repository.outputs.image_repository }}:${{ env.IMAGE_TAG }}"
         working-directory: terraform
-
-
-
+        run: |
+          terraform apply -auto-approve -input=false -lock-timeout=10m \
+            -var-file="$TF_ENV_FILE" \
+            -var="project_id=$PROJECT_ID" \
+            -var="image=$IMAGE_REPOSITORY:$IMAGE_TAG"
