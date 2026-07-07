@@ -6,11 +6,15 @@ interface SignupConfirmationRequestBody {
   name?: string;
 }
 
+export const runtime = "nodejs";
+
 export async function POST(request: Request) {
   try {
     const body = (await request.json()) as SignupConfirmationRequestBody;
+    const email = body.email?.trim();
+    const name = body.name?.trim();
 
-    if (!body.email || !body.name) {
+    if (!email || !name) {
       return NextResponse.json(
         { success: false, message: "Nome e e-mail sao obrigatorios." },
         { status: 400 },
@@ -18,8 +22,8 @@ export async function POST(request: Request) {
     }
 
     await sendSignupConfirmationEmail({
-      email: body.email,
-      name: body.name,
+      email,
+      name,
     });
 
     return NextResponse.json({ success: true });

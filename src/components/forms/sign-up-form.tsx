@@ -259,7 +259,13 @@ export function SignUpForm() {
     });
 
     if (!response.ok) {
-      throw new Error("Falha ao enviar e-mail de confirmacao.");
+      const responseBody = (await response.json().catch(() => null)) as
+        | { message?: string }
+        | null;
+
+      throw new Error(
+        responseBody?.message || "Falha ao enviar e-mail de confirmacao.",
+      );
     }
   };
 
@@ -289,15 +295,15 @@ export function SignUpForm() {
       const response = await api.post("/users-v2", payload);
 
       if (response.status === 201) {
-        // try {
-        //   await sendSignupConfirmation({
-        //     email: payload.email,
-        //     name: formData.name.trim(),
-        //   });
-        // } catch (emailError) {
-        //   console.error("Erro ao enviar e-mail de confirmacao:", emailError);
-        //   toast.warn("Cadastro realizado, mas o e-mail de confirmacao nao foi enviado.");
-        // }
+        try {
+          await sendSignupConfirmation({
+            email: payload.email,
+            name: formData.name.trim(),
+          });
+        } catch (emailError) {
+          console.error("Erro ao enviar e-mail de confirmacao:", emailError);
+          toast.warn("Cadastro realizado, mas o e-mail de confirmacao nao foi enviado.");
+        }
 
         toast.success("Cadastro realizado com sucesso! Seus dados foram enviados e seu acesso esta em processamento.");
         return;

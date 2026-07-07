@@ -15,6 +15,7 @@ interface AuthContextType {
   loading: boolean;
   isAuthenticated: boolean;
   login: (session: AuthSession) => void;
+  updateUser: (updates: Partial<AuthUser>) => void;
   logout: () => void;
 }
 
@@ -26,6 +27,9 @@ const fallbackAuthContext: AuthContextType = {
   login: (session: AuthSession) => {
     writeStoredAuthSession(session);
   },
+  updateUser: () => {
+    // no-op fallback for components rendered outside the provider
+  },
   logout: () => {
     clearStoredAuthSession();
   },
@@ -34,38 +38,78 @@ const fallbackAuthContext: AuthContextType = {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<AuthUser | null>(null);
-  const [token, setToken] = useState<string | undefined>(undefined);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [authState, setAuthState] = useState<{
+    user: AuthUser | null;
+    token?: string;
+  }>({
+    user: null,
+    token: undefined,
+  });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    queueMicrotask(() => {
-      const storedSession = readStoredAuthSession();
+    const storedSession = readStoredAuthSession();
 
-      if (storedSession) {
-        setUser(storedSession.user);
-        setToken(storedSession.token);
-      }
+    if (storedSession) {
+      setAuthState({
+        user: storedSession.user,
+        token: storedSession.token,
+      });
+    }
 
-      setLoading(false);
-    });
+    setLoading(false);
   }, []);
 
   const login = (session: AuthSession) => {
-    setUser(session.user);
-    setToken(session.token);
+    setAuthState({
+      user: session.user,
+      token: session.token,
+    });
     writeStoredAuthSession(session);
   };
 
+  const updateUser = (updates: Partial<AuthUser>) => {
+    setAuthState((current) => {
+      if (!current.user) {
+        return current;
+      }
+
+      const nextState = {
+        ...current,
+        user: {
+          ...current.user,
+          ...updates,
+        },
+      };
+
+      writeStoredAuthSession({
+        user: nextState.user,
+        token: nextState.token,
+      });
+
+      return nextState;
+    });
+  };
+
   const logout = () => {
-    setUser(null);
-    setToken(undefined);
+    setAuthState({
+      user: null,
+      token: undefined,
+    });
     clearStoredAuthSession();
   };
 
   return (
     <AuthContext.Provider
-      value={{ user, token, loading, isAuthenticated: Boolean(user), login, logout }}
+      value={{
+        user: authState.user,
+        token: authState.token,
+        loading,
+        isAuthenticated: Boolean(authState.user),
+        login,
+        updateUser,
+        logout,
+      }}
     >
       {children}
     </AuthContext.Provider>

@@ -6,6 +6,7 @@ export interface AuthUser {
   id: string;
   email: string;
   name: string;
+  cpf?: string;
   employee?: boolean;
   roles?: string[];
 }
