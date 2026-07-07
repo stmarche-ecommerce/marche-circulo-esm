@@ -5,9 +5,9 @@ export default function LoginPage() {
   return (
     <AuthShell
       eyebrow="Login"
-      title="Acesse sua area restrita"
-      description="Entre com seus dados para visualizar sua conta, acompanhar solicitacoes e continuar sua jornada."
-      helperText="Ainda nao possui cadastro?"
+      title="Acesse sua área restrita"
+      description="Entre com seus dados para visualizar sua conta, acompanhar solicitações e continuar sua jornada."
+      helperText="Ainda não possui cadastro?"
       helperLinkHref="/criar-conta"
       helperLinkLabel="Criar conta"
       centerPanelContent

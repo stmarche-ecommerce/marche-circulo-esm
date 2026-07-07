@@ -148,9 +148,25 @@ jobs:
           docker push ${{ steps.image-repository.outputs.image_repository }}:${IMAGE_TAG}
 
       - name: Apply Terraform
+        env:
+          SMTP_ENDERECO: ${{ matrix.deploy-environment == 'prod' && secrets.SMTP_ENDERECO_PROD || secrets.SMTP_ENDERECO }}
+          SMTP_PORTA: ${{ matrix.deploy-environment == 'prod' && secrets.SMTP_PORTA_PROD || secrets.SMTP_PORTA }}
+          SMTP_SENDGRID_TOKEN: ${{ matrix.deploy-environment == 'prod' && secrets.SMTP_SENDGRID_TOKEN_PROD || secrets.SMTP_SENDGRID_TOKEN }}
+          SMTP_USUARIO: ${{ matrix.deploy-environment == 'prod' && secrets.SMTP_USUARIO_PROD || secrets.SMTP_USUARIO }}
+          SIGNUP_CONFIRMATION_FROM_EMAIL: ${{ matrix.deploy-environment == 'prod' && secrets.SIGNUP_CONFIRMATION_FROM_EMAIL_PROD || secrets.SIGNUP_CONFIRMATION_FROM_EMAIL }}
+          SIGNUP_CONFIRMATION_REPLY_TO: ${{ matrix.deploy-environment == 'prod' && secrets.SIGNUP_CONFIRMATION_REPLY_TO_PROD || secrets.SIGNUP_CONFIRMATION_REPLY_TO }}
         run: |
           terraform apply -auto-approve -input=false -lock-timeout=10m \
             -var-file=${{ env.TF_ENV_FILE }} \
             -var="project_id=${{ secrets.GCP_PROJECT_ID }}" \
-            -var="image=${{ steps.image-repository.outputs.image_repository }}:${{ env.IMAGE_TAG }}"
+            -var="image=${{ steps.image-repository.outputs.image_repository }}:${{ env.IMAGE_TAG }}" \
+            -var='runtime_environment_variables={
+              NODE_ENV="production",
+              SMTP_ENDERECO="'${SMTP_ENDERECO}'",
+              SMTP_PORTA="'${SMTP_PORTA}'",
+              SMTP_SENDGRID_TOKEN="'${SMTP_SENDGRID_TOKEN}'",
+              SMTP_USUARIO="'${SMTP_USUARIO}'",
+              SIGNUP_CONFIRMATION_FROM_EMAIL="'${SIGNUP_CONFIRMATION_FROM_EMAIL}'",
+              SIGNUP_CONFIRMATION_REPLY_TO="'${SIGNUP_CONFIRMATION_REPLY_TO}'"
+            }'
         working-directory: terraform

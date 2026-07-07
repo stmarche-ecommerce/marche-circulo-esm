@@ -62,7 +62,6 @@ export const sitePages: SitePage[] = [
       description:
         "O Santa Maria apresenta uma novidade que merece ser saboreada devagar: nosso novo brunch chegou.",
       image: "/images/branch.png",
-      compact: true,
     },
     alternatingSections: [
       {

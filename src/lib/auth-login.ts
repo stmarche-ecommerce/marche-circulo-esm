@@ -10,6 +10,7 @@ interface LoginApiResponse {
   id: string;
   name: string;
   email: string;
+  username?: string;
   employee?: boolean;
   roles?: string[];
   token?: string;
@@ -100,13 +101,17 @@ export function validateCpfLoginValues(values: LoginFormValues) {
   return { valid: true };
 }
 
-export function mapLoginResponseToSession(data: unknown): AuthSession {
+export function mapLoginResponseToSession(
+  data: unknown,
+  options?: { cpf?: string },
+): AuthSession {
   const response = data as Partial<LoginApiResponse>;
 
   const user: AuthUser = {
     id: String(response.id ?? ""),
     name: String(response.name ?? ""),
     email: String(response.email ?? ""),
+    cpf: normalizeCpf(String(response.username ?? options?.cpf ?? "")) || undefined,
     employee: Boolean(response.employee),
     roles: Array.isArray(response.roles)
       ? response.roles.filter(

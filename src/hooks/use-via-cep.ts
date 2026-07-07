@@ -85,9 +85,7 @@ export function useZipCodeLookup(): UseZipCodeLookupReturn {
       try {
         const response = await fetch(`https://viacep.com.br/ws/${digits}/json/`);
 
-        if (!response.ok) {
-          throw new Error("request_failed");
-        }
+        if (!response.ok) throw new Error("request_failed");
 
         const data = (await response.json()) as ViaCepResponse;
 

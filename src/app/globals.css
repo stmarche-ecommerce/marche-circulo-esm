@@ -68,12 +68,12 @@ textarea {
 .hero-shell {
   position: relative;
   overflow: hidden;
-  min-height: 30rem;
+  height: clamp(28rem, 42vw, 30rem);
   color: white;
 }
 
 .hero-shell--compact {
-  min-height: 22rem;
+  height: clamp(20rem, 32vw, 22rem);
 }
 
 .hero-shell__image {
@@ -94,7 +94,8 @@ textarea {
   width: min(100% - 2rem, 980px);
   margin-inline: auto;
   display: flex;
-  min-height: inherit;
+  height: 100%;
+  box-sizing: border-box;
   flex-direction: column;
   justify-content: center;
   padding-block: clamp(5rem, 11vw, 8rem);

@@ -48,12 +48,13 @@ export function useLoginForm() {
         resolveLoginEndpoint(),
         createLoginPayload(formData),
       );
-      const session = mapLoginResponseToSession(response.data);
+      const session = mapLoginResponseToSession(response.data, {
+        cpf: formData.login,
+      });
 
       authenticate(session);
-      toast.success("Login realizado com sucesso.");
+      // toast.success("Login realizado com sucesso.");
       router.push("/area-cliente");
-      router.refresh();
     } catch (error) {
       toast.error(getLoginErrorMessage(error));
     } finally {
