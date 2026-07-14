@@ -6,7 +6,7 @@ import SiteFooter from "@/components/layout/footer";
 import { SiteHeader } from "@/components/layout/header";
 import { WhatsAppBubble } from "@/components/layout/whatsapp-bubble";
 
-const STANDALONE_ROUTES = new Set(["/login", "/criar-conta"]);
+const STANDALONE_ROUTES = new Set(["/login", "/criar-conta", "/recuperar-senha"]);
 
 export function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
