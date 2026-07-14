@@ -49,8 +49,8 @@ const STEP_CONFIG: StepConfig[] = [
   {
     id: 1,
     title: "Identificacao",
-    description: "Nome, CPF e data de nascimento.",
-    fields: ["name", "cpf", "birthDate"],
+    description: "Nome, sobrenome, CPF e data de nascimento.",
+    fields: ["firstName", "lastName", "cpf", "birthDate"],
   },
   {
     id: 2,
@@ -81,7 +81,8 @@ export function SignUpForm() {
   const normalizeDigits = (value: string) => value.replace(/\D/g, "");
 
   const getValidationValues = (): SignUpFormValues => ({
-    name: formData.name,
+    firstName: formData.firstName,
+    lastName: formData.lastName,
     cpf: formData.cpf,
     email: formData.email,
     phone: formData.phone,
@@ -220,15 +221,12 @@ export function SignUpForm() {
   };
 
   const buildPayload = (): SignUpPayload => {
-    const trimmedName = formData.name.trim();
-    const [firstName = "", ...lastNameParts] = trimmedName.split(/\s+/);
-
     return {
       username: normalizeDigits(formData.cpf),
       email: formData.email.trim(),
       birth_date: formData.birthDate,
-      first_name: firstName,
-      last_name: lastNameParts.join(" "),
+      first_name: formData.firstName.trim(),
+      last_name: formData.lastName.trim(),
       telephone: normalizeDigits(formData.phone),
       password: formData.password,
       allow_communications: consents.optInEmail || consents.optInWhatsApp || consents.optInSms,
@@ -298,7 +296,7 @@ export function SignUpForm() {
         try {
           await sendSignupConfirmation({
             email: payload.email,
-            name: formData.name.trim(),
+            name: `${formData.firstName.trim()} ${formData.lastName.trim()}`.trim(),
           });
         } catch (emailError) {
           console.error("Erro ao enviar e-mail de confirmacao:", emailError);
@@ -383,14 +381,26 @@ export function SignUpForm() {
         <>
           <FieldGrid>
             <Field
-              label="Nome completo"
-              name="name"
-              value={formData.name}
+              label="Nome"
+              name="firstName"
+              value={formData.firstName}
               onChange={handleFormFieldChange}
-              placeholder="Seu nome completo"
-              error={fieldErrors.name}
+              placeholder="Seu nome"
+              error={fieldErrors.firstName}
               required
             />
+            <Field
+              label="Sobrenome"
+              name="lastName"
+              value={formData.lastName}
+              onChange={handleFormFieldChange}
+              placeholder="Seu sobrenome"
+              error={fieldErrors.lastName}
+              required
+            />
+          </FieldGrid>
+
+          <FieldGrid className="md:grid-cols-1">
             <Field
               label="CPF"
               name="cpf"
@@ -606,3 +616,8 @@ export function SignUpForm() {
     </form>
   );
 }
+
+
+
+
+

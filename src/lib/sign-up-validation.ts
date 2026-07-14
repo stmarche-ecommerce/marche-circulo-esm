@@ -62,7 +62,8 @@ const isPastOrToday = (value: string) => {
 
 export const signUpSchema = z
   .object({
-    name: z.string().trim().min(1, "Informe seu nome completo."),
+    firstName: z.string().trim().min(1, "Informe seu nome."),
+    lastName: z.string().trim().min(1, "Informe seu sobrenome."),
     cpf: z
       .string()
       .trim()

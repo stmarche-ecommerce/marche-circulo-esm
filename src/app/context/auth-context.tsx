@@ -20,6 +20,11 @@ interface AuthContextType {
   logout: () => void;
 }
 
+interface AuthSnapshot {
+  user: AuthUser | null;
+  token?: string;
+}
+
 const fallbackAuthContext: AuthContextType = {
   user: null,
   token: undefined,
@@ -38,25 +43,34 @@ const fallbackAuthContext: AuthContextType = {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const EMPTY_AUTH_STATE = {
+const EMPTY_AUTH_STATE: AuthSnapshot = {
   user: null,
   token: undefined,
-} satisfies {
-  user: AuthUser | null;
-  token?: string;
 };
+
+let lastAuthSession: AuthSession | null = null;
+let lastAuthSnapshot: AuthSnapshot = EMPTY_AUTH_STATE;
 
 function getAuthSnapshot() {
   const storedSession = readStoredAuthSession();
 
   if (!storedSession) {
+    lastAuthSession = null;
+    lastAuthSnapshot = EMPTY_AUTH_STATE;
     return EMPTY_AUTH_STATE;
   }
 
-  return {
+  if (storedSession === lastAuthSession) {
+    return lastAuthSnapshot;
+  }
+
+  lastAuthSession = storedSession;
+  lastAuthSnapshot = {
     user: storedSession.user,
     token: storedSession.token,
   };
+
+  return lastAuthSnapshot;
 }
 
 function getAuthServerSnapshot() {
