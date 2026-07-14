@@ -75,20 +75,45 @@ function buildEmailText(name: string, applicationUrl: string) {
   ].join("\n");
 }
 
-function resolveSmtpConfig(): SmtpConfig {
-  const host = process.env.SMTP_ENDERECO?.trim();
-  const portValue = process.env.SMTP_PORTA?.trim();
-  const username = process.env.SMTP_USUARIO?.trim();
-  const password = process.env.SMTP_SENDGRID_TOKEN?.trim();
+function resolveEnvValue(...keys: string[]) {
+  for (const key of keys) {
+    const value = process.env[key]?.trim();
 
-  if (!host || !portValue || !username || !password) {
-    throw new Error("Configuracao SMTP incompleta para envio de e-mail.");
+    if (value) {
+      return value;
+    }
+  }
+
+  return "";
+}
+
+function resolveSmtpConfig(): SmtpConfig {
+  const host = resolveEnvValue("SMTP_ENDERECO", "SMTP_HOST");
+  const portValue = resolveEnvValue("SMTP_PORTA", "SMTP_PORT");
+  const username = resolveEnvValue("SMTP_USUARIO", "SMTP_USER", "SENDGRID_USERNAME");
+  const password = resolveEnvValue(
+    "SMTP_SENDGRID_TOKEN",
+    "SMTP_PASSWORD",
+    "SENDGRID_API_KEY",
+  );
+
+  const missingVariables = [
+    !host && "SMTP_ENDERECO/SMTP_HOST",
+    !portValue && "SMTP_PORTA/SMTP_PORT",
+    !username && "SMTP_USUARIO/SMTP_USER/SENDGRID_USERNAME",
+    !password && "SMTP_SENDGRID_TOKEN/SMTP_PASSWORD/SENDGRID_API_KEY",
+  ].filter(Boolean);
+
+  if (missingVariables.length > 0) {
+    throw new Error(
+      `Configuracao SMTP incompleta para envio de e-mail. Variaveis ausentes: ${missingVariables.join(", ")}.`,
+    );
   }
 
   const port = Number(portValue);
 
   if (!Number.isFinite(port) || port <= 0) {
-    throw new Error("SMTP_PORTA invalida.");
+    throw new Error("SMTP_PORTA/SMTP_PORT invalida.");
   }
 
   return {
