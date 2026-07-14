@@ -291,8 +291,9 @@ export function SignUpForm() {
       setFieldErrors({});
       const payload = buildPayload();
       const response = await api.post("/users-v2", payload);
+      const isSignupSuccessful = response.status >= 200 && response.status < 300;
 
-      if (response.status === 201) {
+      if (isSignupSuccessful) {
         try {
           await sendSignupConfirmation({
             email: payload.email,
@@ -300,7 +301,10 @@ export function SignUpForm() {
           });
         } catch (emailError) {
           console.error("Erro ao enviar e-mail de confirmacao:", emailError);
-          toast.warn("Cadastro realizado, mas o e-mail de confirmacao nao foi enviado.");
+          const warningMessage = emailError instanceof Error
+            ? emailError.message
+            : "Cadastro realizado, mas o e-mail de confirmacao nao foi enviado.";
+          toast.warn(warningMessage);
         }
 
         toast.success("Cadastro realizado com sucesso! Seus dados foram enviados e seu acesso esta em processamento.");
@@ -616,6 +620,8 @@ export function SignUpForm() {
     </form>
   );
 }
+
+
 
 
 

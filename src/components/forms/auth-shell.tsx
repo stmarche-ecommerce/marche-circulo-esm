@@ -24,17 +24,18 @@ export function AuthShell({
   centerPanelContent = true,
 }: AuthShellProps) {
   return (
-    <section className="bg-[#120f18] lg:grid lg:h-screen lg:grid-cols-[minmax(0,1fr)_minmax(40rem,0.98fr)]">
-      <div className="relative min-h-[21rem] overflow-hidden lg:sticky lg:top-0 lg:h-screen">
+    <section className="relative isolate bg-[#120f18] lg:grid lg:min-h-screen lg:grid-cols-[minmax(0,1.08fr)_minmax(0,42rem)]">
+      <div className="relative min-h-[24rem] overflow-hidden lg:min-h-screen">
         <Image
           src="/images/loja.jpg"
           alt="Ambiente do Santa Maria Emporio"
           fill
           priority
+          sizes="(min-width: 1024px) 52vw, 100vw"
           className="object-cover"
         />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,15,24,0.08),rgba(18,15,24,0.68)),linear-gradient(135deg,rgba(47,44,82,0.28),rgba(104,64,49,0.22))]" />
-        <div className="relative z-1 flex min-h-[21rem] flex-col justify-end p-[clamp(2rem,5vw,4rem)] text-left text-white lg:min-h-screen lg:items-start lg:justify-end">
+        <div className="relative z-10 flex min-h-[24rem] flex-col justify-end p-[clamp(2rem,5vw,4rem)] text-left text-white lg:min-h-screen lg:justify-end">
           <p className="text-[0.78rem] font-bold uppercase tracking-[0.28em] text-white/72">Area Restrita</p>
           <h2 className="mt-4 max-w-[20rem] text-[clamp(2.3rem,4vw,4rem)] leading-[0.94] font-bold uppercase tracking-[0.08em]">
             Santa Maria Emporio
@@ -45,7 +46,7 @@ export function AuthShell({
         </div>
       </div>
 
-      <div className="bg-[radial-gradient(circle_at_top,rgba(213,166,66,0.08),transparent_24%),linear-gradient(180deg,#fcfaf7_0%,#f3ece4_100%)] p-[clamp(1rem,2.5vw,2rem)] lg:h-screen lg:overflow-y-auto">
+      <div className="relative z-10 flex min-h-screen flex-col bg-[radial-gradient(circle_at_top,rgba(213,166,66,0.08),transparent_24%),linear-gradient(180deg,#fcfaf7_0%,#f3ece4_100%)] p-[clamp(1rem,2.5vw,2rem)] lg:min-h-screen lg:overflow-y-auto">
         <div className="mx-auto flex w-full max-w-[36rem] justify-end pb-4 lg:pb-6">
           <Link
             href="/"
@@ -56,10 +57,10 @@ export function AuthShell({
         </div>
 
         <div
-          className={`mx-auto flex min-h-full w-full max-w-[36rem] justify-center py-0 lg:py-4 ${centerPanelContent ? "items-center" : "items-start"
+          className={`mx-auto flex w-full max-w-[36rem] flex-1 justify-center py-0 lg:py-4 ${centerPanelContent ? "items-center" : "items-start"
             }`}
         >
-          <div className="w-full rounded-[2rem] border border-[rgba(104,64,49,0.12)] bg-[rgba(255,253,250,0.9)] p-[clamp(1.2rem,2vw,2rem)] shadow-[0_26px_80px_rgba(30,24,21,0.12)]">
+          <div className="w-full rounded-[2rem] border border-[rgba(104,64,49,0.12)] bg-[rgba(255,253,250,0.92)] p-[clamp(1.2rem,2vw,2rem)] shadow-[0_26px_80px_rgba(30,24,21,0.12)]">
             <p className="text-[0.78rem] font-bold uppercase tracking-[0.28em] text-[var(--color-accent)]">{eyebrow}</p>
             <h1 className="mt-[0.55rem] text-[clamp(1.85rem,3vw,2.85rem)] leading-[0.94] font-bold uppercase tracking-[0.06em] text-[var(--color-brown)]">
               {title}
