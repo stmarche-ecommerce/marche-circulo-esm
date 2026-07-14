@@ -8,7 +8,7 @@ memory             = "512Mi"
 min_instance_count = 1
 max_instance_count = 4
 
-runtime_environment_variables = {
+base_runtime_environment_variables = {
   NODE_ENV = "production"
 }
 

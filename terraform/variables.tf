@@ -86,6 +86,12 @@ variable "runtime_environment_variables" {
   default     = {}
 }
 
+variable "base_runtime_environment_variables" {
+  description = "Variaveis de ambiente base definidas por ambiente Terraform."
+  type        = map(string)
+  default     = {}
+}
+
 variable "labels" {
   description = "Labels adicionais aplicadas aos recursos."
   type        = map(string)

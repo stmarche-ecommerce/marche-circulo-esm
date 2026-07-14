@@ -90,7 +90,10 @@ resource "google_cloud_run_v2_service" "app" {
       }
 
       dynamic "env" {
-        for_each = var.runtime_environment_variables
+        for_each = merge(
+          var.base_runtime_environment_variables,
+          var.runtime_environment_variables,
+        )
         content {
           name  = env.key
           value = env.value
