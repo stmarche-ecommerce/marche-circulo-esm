@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+
 import { ArrowRight, Gift, Sparkles, TicketPercent } from "lucide-react";
 import { useAuth } from "@/app/context/auth-context";
 import { getActivePromotions, getUsedPromotions } from "@/services/promotions";
@@ -43,6 +44,10 @@ export default function AreaClientePage() {
     };
   }, [user]);
 
+  if (!user) {
+    return null;
+  }
+
   return (
     <div className="grid gap-6">
       <section className="overflow-hidden rounded-[2rem] border border-[rgba(104,64,49,0.08)] bg-[linear-gradient(135deg,rgba(255,251,245,0.96),rgba(245,239,232,0.94))] p-6 shadow-[0_24px_60px_rgba(71,42,35,0.08)] md:p-8">
@@ -52,7 +57,7 @@ export default function AreaClientePage() {
               Painel exclusivo
             </p>
             <h1 className="mt-4 max-w-3xl text-3xl font-bold uppercase tracking-[0.08em] text-[var(--color-brown)] md:text-5xl md:leading-[1.02]">
-              {user?.name ? `${user.name}, seu circulo está ativo.` : "Seu circulo está ativo."}
+              {user.name ? `${user.name}, seu circulo esta ativo.` : "Seu circulo esta ativo."}
             </h1>
             <p className="mt-4 max-w-2xl text-base leading-8 text-[var(--color-muted)] md:text-lg">
               Um espaco interno com beneficios de boas-vindas, curadoria de ofertas e experiencias disponiveis para o seu cadastro recem-aprovado.

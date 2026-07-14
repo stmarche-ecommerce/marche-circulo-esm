@@ -42,7 +42,7 @@ export function LoginForm() {
           <span>Lembrar acesso</span>
         </label>
 
-        <Link href="/criar-conta" className="text-[0.95rem] font-bold text-[var(--color-brown)] hover:text-[var(--color-accent)]">
+        <Link href="/recuperar-senha" className="text-[0.95rem] font-bold text-[var(--color-brown)] hover:text-[var(--color-accent)]">
           Esqueci minha senha
         </Link>
       </div>

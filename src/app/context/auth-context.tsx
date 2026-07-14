@@ -77,13 +77,31 @@ function getAuthServerSnapshot() {
   return EMPTY_AUTH_STATE;
 }
 
+function subscribeToHydration() {
+  return () => undefined;
+}
+
+function getHydrationSnapshot() {
+  return true;
+}
+
+function getHydrationServerSnapshot() {
+  return false;
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const authState = useSyncExternalStore(
     subscribeToAuthSession,
     getAuthSnapshot,
     getAuthServerSnapshot,
   );
-  const loading = typeof window === "undefined";
+  const hydrated = useSyncExternalStore(
+    subscribeToHydration,
+    getHydrationSnapshot,
+    getHydrationServerSnapshot,
+  );
+
+  const loading = !hydrated;
 
   const login = (session: AuthSession) => {
     writeStoredAuthSession(session);

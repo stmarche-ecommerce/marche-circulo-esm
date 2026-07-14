@@ -6,6 +6,7 @@ import tls from "node:tls";
 interface SignupConfirmationEmailParams {
   email: string;
   name: string;
+  applicationUrl: string;
 }
 
 type SmtpConfig = {
@@ -20,7 +21,7 @@ function getFirstName(name: string) {
   return name.trim().split(/\s+/)[0] || "cliente";
 }
 
-function buildEmailHtml(name: string) {
+function buildEmailHtml(name: string, applicationUrl: string) {
   const firstName = getFirstName(name);
 
   return `
@@ -33,13 +34,25 @@ function buildEmailHtml(name: string) {
         <div style="padding:32px;">
           <p style="margin:0 0 16px; font-size:16px; line-height:1.7;">Ola, ${firstName}.</p>
           <p style="margin:0 0 16px; font-size:16px; line-height:1.7;">
-            Seu cadastro foi concluído com sucesso e seu acesso já esta liberado.
+            Seu cadastro foi concluido com sucesso e seu acesso ja esta liberado.
           </p>
-          <p style="margin:0 0 16px; font-size:16px; line-height:1.7;">
-            A partir de agora você pode entrar na área do cliente e aproveitar as promocoes e benefícios exclusivos do Circulo Santa Maria.
+          <p style="margin:0 0 24px; font-size:16px; line-height:1.7;">
+            A partir de agora voce pode entrar na area do cliente e aproveitar as promocoes e beneficios exclusivos do Circulo Santa Maria.
+          </p>
+          <p style="margin:0 0 24px;">
+            <a
+              href="${applicationUrl}"
+              style="display:inline-block; border-radius:999px; background:#684031; color:#ffffff; padding:14px 24px; font-size:14px; font-weight:700; letter-spacing:0.12em; text-decoration:none; text-transform:uppercase;"
+            >
+              Acessar a aplicacao
+            </a>
+          </p>
+          <p style="margin:0 0 16px; font-size:14px; line-height:1.7; color:#756962;">
+            Se preferir, copie e cole este link no navegador:<br />
+            <a href="${applicationUrl}" style="color:#684031; word-break:break-all;">${applicationUrl}</a>
           </p>
           <p style="margin:0; font-size:14px; line-height:1.7; color:#756962;">
-            Se voce não reconhece este cadastro, responda este e-mail ou entre em contato com nosso time.
+            Se voce nao reconhece este cadastro, responda este e-mail ou entre em contato com nosso time.
           </p>
         </div>
       </div>
@@ -47,7 +60,7 @@ function buildEmailHtml(name: string) {
   `;
 }
 
-function buildEmailText(name: string) {
+function buildEmailText(name: string, applicationUrl: string) {
   const firstName = getFirstName(name);
 
   return [
@@ -55,6 +68,8 @@ function buildEmailText(name: string) {
     "",
     "Recebemos sua solicitacao de cadastro na area restrita do Circulo Santa Maria.",
     "Seus dados foram enviados com sucesso e seu acesso esta em processamento.",
+    "",
+    `Acesse a aplicacao em: ${applicationUrl}`,
     "",
     "Se voce nao reconhece esta solicitacao, responda este e-mail ou entre em contato com nosso time.",
   ].join("\n");
@@ -266,6 +281,7 @@ async function sendSmtpData(
 export async function sendSignupConfirmationEmail({
   email,
   name,
+  applicationUrl,
 }: SignupConfirmationEmailParams) {
   const config = resolveSmtpConfig();
   const from =
@@ -274,8 +290,8 @@ export async function sendSignupConfirmationEmail({
   const replyTo =
     process.env.SIGNUP_CONFIRMATION_REPLY_TO ?? "contato@emporiosantamaria.com.br";
   const subject = "Recebemos seu cadastro no Circulo Santa Maria";
-  const text = buildEmailText(name);
-  const html = buildEmailHtml(name);
+  const text = buildEmailText(name, applicationUrl);
+  const html = buildEmailHtml(name, applicationUrl);
   const fromMailbox = parseMailbox(from);
 
   if (!fromMailbox.email) {

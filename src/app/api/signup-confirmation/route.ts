@@ -8,6 +8,17 @@ interface SignupConfirmationRequestBody {
 
 export const runtime = "nodejs";
 
+function resolveApplicationUrl(request: Request) {
+  const forwardedProto = request.headers.get("x-forwarded-proto")?.trim();
+  const forwardedHost = request.headers.get("x-forwarded-host")?.trim();
+
+  if (forwardedProto && forwardedHost) {
+    return `${forwardedProto}://${forwardedHost.replace(/\/+$/, "")}/login`;
+  }
+
+  return new URL("/login", request.url).toString();
+}
+
 export async function POST(request: Request) {
   try {
     const body = (await request.json()) as SignupConfirmationRequestBody;
@@ -24,10 +35,13 @@ export async function POST(request: Request) {
     await sendSignupConfirmationEmail({
       email,
       name,
+      applicationUrl: resolveApplicationUrl(request),
     });
 
     return NextResponse.json({ success: true });
   } catch (error) {
+    console.error("Signup confirmation email failed:", error);
+
     const message =
       error instanceof Error
         ? error.message
