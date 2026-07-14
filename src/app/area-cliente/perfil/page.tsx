@@ -37,7 +37,7 @@ type ProfileFieldErrors = Partial<Record<keyof ProfileFormValues, string>>;
 type SectionId = "identification" | "contact" | "address" | "preferences";
 
 const SECTION_FIELDS: Record<SectionId, Array<keyof ProfileFormValues>> = {
-  identification: ["name", "cpf"],
+  identification: ["firstName", "lastName", "cpf"],
   contact: ["email", "phone", "birthDate", "password"],
   address: ["zipCode", "street", "number", "neighborhood", "city", "state", "complement"],
   preferences: ["optInEmail", "optInPush", "optInSms", "optInWhatsApp"],
@@ -137,9 +137,9 @@ const formatZipCode = (value: string) => {
   return digits.replace(/^(\d{5})(\d)/, "$1-$2");
 };
 
-const splitName = (name: string) => {
-  const trimmedName = name.trim();
-  const [firstName = "", ...lastNameParts] = trimmedName.split(/\s+/);
+const splitDisplayName = (value: string) => {
+  const trimmedValue = value.trim();
+  const [firstName = "", ...lastNameParts] = trimmedValue.split(/\s+/);
 
   return {
     firstName,
@@ -147,14 +147,22 @@ const splitName = (name: string) => {
   };
 };
 
-const buildFullName = (profile: ProfileApiResponse) => {
-  if (profile.name?.trim()) {
-    return profile.name.trim();
+const buildProfileNames = (profile: ProfileApiResponse, fallbackName?: string) => {
+  const firstName = profile.first_name?.trim();
+  const lastName = profile.last_name?.trim();
+
+  if (firstName || lastName) {
+    return {
+      firstName: firstName ?? "",
+      lastName: lastName ?? "",
+    };
   }
 
-  return [profile.first_name?.trim(), profile.last_name?.trim()]
-    .filter(Boolean)
-    .join(" ");
+  if (profile.name?.trim()) {
+    return splitDisplayName(profile.name);
+  }
+
+  return splitDisplayName(fallbackName ?? "");
 };
 
 const getApiErrorMessage = (error: unknown, fallback: string) => {
@@ -194,12 +202,12 @@ const sectionHasErrors = (sectionId: SectionId, errors: ProfileFieldErrors) =>
 
 const sectionIsComplete = (
   sectionId: SectionId,
-  formData: { name: string; cpf: string; email: string; phone: string; birthDate: string },
+  formData: { firstName: string; lastName: string; cpf: string; email: string; phone: string; birthDate: string },
   address: AddressFields,
 ) => {
   switch (sectionId) {
     case "identification":
-      return Boolean(formData.name.trim() && formData.cpf.trim());
+      return Boolean(formData.firstName.trim() && formData.lastName.trim() && formData.cpf.trim());
     case "contact":
       return Boolean(formData.email.trim() && formData.phone.trim() && formData.birthDate.trim());
     case "address":
@@ -257,7 +265,8 @@ export default function PerfilPage() {
   const api = useMemo(() => new ApiService(), []);
   const { user, updateUser } = useAuth();
   const [formData, setFormData] = useState({
-    name: user?.name ?? "",
+    firstName: user?.name ? splitDisplayName(user.name).firstName : "",
+    lastName: user?.name ? splitDisplayName(user.name).lastName : "",
     cpf: user?.cpf ? formatCpf(user.cpf) : "",
     email: user?.email ?? "",
     phone: "",
@@ -293,8 +302,8 @@ export default function PerfilPage() {
         const profile = response.data as ProfileApiResponse;
         const notifications = profile.data?.notifications;
         const nestedAddress = profile.data?.address;
-        const fullName = buildFullName(profile);
         const currentUser = userRef.current;
+        const profileNames = buildProfileNames(profile, currentUser?.name);
         const resolvedCpf = onlyDigits(profile.username ?? currentUser?.cpf ?? "");
 
         if (cancelled) {
@@ -302,7 +311,8 @@ export default function PerfilPage() {
         }
 
         setFormData({
-          name: fullName || currentUser?.name || "",
+          firstName: profileNames.firstName,
+          lastName: profileNames.lastName,
           cpf: resolvedCpf
             ? formatCpf(resolvedCpf)
             : currentUser?.cpf
@@ -369,7 +379,7 @@ export default function PerfilPage() {
               : Boolean(profile.data?.allow_communications ?? profile.allow_communications),
         });
 
-        const nextName = fullName || currentUser?.name || "";
+        const nextName = `${profileNames.firstName} ${profileNames.lastName}`.trim();
         const nextEmail = profile.email?.trim() ?? currentUser?.email ?? "";
         const nextCpf = resolvedCpf || currentUser?.cpf;
 
@@ -415,7 +425,8 @@ export default function PerfilPage() {
 
   const getValidationValues = useCallback(
     (): ProfileFormValues => ({
-      name: formData.name,
+      firstName: formData.firstName,
+      lastName: formData.lastName,
       cpf: formData.cpf,
       email: formData.email,
       phone: formData.phone,
@@ -528,8 +539,6 @@ export default function PerfilPage() {
       return;
     }
 
-    const { firstName, lastName } = splitName(formData.name);
-
     try {
       setIsSubmitting(true);
       setFieldErrors({});
@@ -537,8 +546,8 @@ export default function PerfilPage() {
       const payload: Record<string, unknown> = {
         email: formData.email.trim(),
         birth_date: formData.birthDate,
-        first_name: firstName,
-        last_name: lastName,
+        first_name: formData.firstName.trim(),
+        last_name: formData.lastName.trim(),
         telephone: onlyDigits(formData.phone),
         allow_communications:
           consents.optInEmail || consents.optInPush || consents.optInSms || consents.optInWhatsApp,
@@ -568,7 +577,7 @@ export default function PerfilPage() {
       await api.put(`/users-v2/${cpf}`, payload);
 
       updateUser({
-        name: formData.name.trim(),
+        name: `${formData.firstName.trim()} ${formData.lastName.trim()}`.trim(),
         email: formData.email.trim(),
         cpf,
       });
@@ -689,14 +698,26 @@ export default function PerfilPage() {
             </p>
             <FieldGrid className="mt-4 md:grid-cols-2">
               <Field
-                label="Nome completo"
-                name="name"
-                value={formData.name}
+                label="Nome"
+                name="firstName"
+                value={formData.firstName}
                 onChange={handleFieldChange}
-                placeholder="Seu nome completo"
-                error={fieldErrors.name}
+                placeholder="Seu nome"
+                error={fieldErrors.firstName}
                 required
               />
+              <Field
+                label="Sobrenome"
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleFieldChange}
+                placeholder="Seu sobrenome"
+                error={fieldErrors.lastName}
+                required
+              />
+            </FieldGrid>
+
+            <FieldGrid className="mt-4 md:grid-cols-1">
               <Field
                 label="CPF"
                 name="cpf"
@@ -902,3 +923,9 @@ export default function PerfilPage() {
     </section>
   );
 }
+
+
+
+
+
+

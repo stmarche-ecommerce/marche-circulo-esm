@@ -16,7 +16,8 @@ const isPastOrToday = (value: string) => {
 };
 
 export const profileSchema = z.object({
-  name: z.string().trim().min(1, "Informe seu nome completo."),
+  firstName: z.string().trim().min(1, "Informe seu nome."),
+  lastName: z.string().trim().min(1, "Informe seu sobrenome."),
   cpf: z.string().trim().min(11, "CPF nao disponivel para atualizacao."),
   email: z.string().trim().min(1, "Informe seu e-mail.").email("Informe um e-mail valido."),
   phone: z

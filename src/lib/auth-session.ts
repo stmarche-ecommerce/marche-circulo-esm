@@ -17,40 +17,93 @@ export interface AuthSession {
   token?: string;
 }
 
-export function readStoredAuthSession(): AuthSession | null {
+let memoryAuthSession: AuthSession | null = null;
+let lastSerializedSession: string | null = null;
+let lastParsedSession: AuthSession | null = null;
+
+function dispatchAuthSessionChange() {
   if (typeof window === "undefined") {
-    return null;
+    return;
   }
 
-  const rawValue = window.localStorage.getItem(AUTH_STORAGE_KEY);
-  if (!rawValue) {
-    return null;
+  window.dispatchEvent(new Event(AUTH_SESSION_EVENT));
+}
+
+export function readStoredAuthSession(): AuthSession | null {
+  if (typeof window === "undefined") {
+    return memoryAuthSession;
   }
 
   try {
-    return JSON.parse(rawValue) as AuthSession;
+    const rawValue = window.localStorage.getItem(AUTH_STORAGE_KEY);
+
+    if (!rawValue) {
+      memoryAuthSession = null;
+      lastSerializedSession = null;
+      lastParsedSession = null;
+      return null;
+    }
+
+    if (rawValue === lastSerializedSession) {
+      return lastParsedSession;
+    }
+
+    const parsedSession = JSON.parse(rawValue) as AuthSession;
+
+    memoryAuthSession = parsedSession;
+    lastSerializedSession = rawValue;
+    lastParsedSession = parsedSession;
+
+    return parsedSession;
   } catch {
-    window.localStorage.removeItem(AUTH_STORAGE_KEY);
-    return null;
+    memoryAuthSession = null;
+    lastSerializedSession = null;
+    lastParsedSession = null;
+
+    try {
+      window.localStorage.removeItem(AUTH_STORAGE_KEY);
+    } catch {
+      // Ignore storage cleanup errors and fall back to memory state.
+    }
+
+    return memoryAuthSession;
   }
 }
 
 export function writeStoredAuthSession(session: AuthSession) {
+  memoryAuthSession = session;
+  lastSerializedSession = JSON.stringify(session);
+  lastParsedSession = session;
+
   if (typeof window === "undefined") {
     return;
   }
 
-  window.localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(session));
-  window.dispatchEvent(new Event(AUTH_SESSION_EVENT));
+  try {
+    window.localStorage.setItem(AUTH_STORAGE_KEY, lastSerializedSession);
+  } catch {
+    // Keep the in-memory session when storage is unavailable.
+  }
+
+  dispatchAuthSessionChange();
 }
 
 export function clearStoredAuthSession() {
+  memoryAuthSession = null;
+  lastSerializedSession = null;
+  lastParsedSession = null;
+
   if (typeof window === "undefined") {
     return;
   }
 
-  window.localStorage.removeItem(AUTH_STORAGE_KEY);
-  window.dispatchEvent(new Event(AUTH_SESSION_EVENT));
+  try {
+    window.localStorage.removeItem(AUTH_STORAGE_KEY);
+  } catch {
+    // Ignore storage cleanup failures and clear the in-memory session.
+  }
+
+  dispatchAuthSessionChange();
 }
 
 export function subscribeToAuthSession(onChange: () => void) {

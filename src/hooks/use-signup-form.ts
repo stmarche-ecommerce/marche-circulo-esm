@@ -2,7 +2,8 @@ import { useCallback, useState, type ChangeEvent } from "react";
 import { formatCpf } from "@/lib/sign-up-validation";
 
 interface SignUpFormData {
-  name: string;
+  firstName: string;
+  lastName: string;
   cpf: string;
   email: string;
   phone: string;
@@ -27,7 +28,8 @@ interface UseSignUpFormReturn {
 }
 
 const INITIAL_FORM_DATA: SignUpFormData = {
-  name: "",
+  firstName: "",
+  lastName: "",
   cpf: "",
   email: "",
   phone: "",
