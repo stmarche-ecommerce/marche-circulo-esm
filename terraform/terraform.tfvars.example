@@ -6,7 +6,7 @@ artifact_registry_repository = "marche-circulo-esm"
 
 image = "us-central1-docker.pkg.dev/meu-projeto-gcp/marche-circulo-esm/marche-circulo-esm:latest"
 
-runtime_environment_variables = {
+base_runtime_environment_variables = {
   NODE_ENV = "production"
 }
 
