@@ -59,6 +59,35 @@ jobs:
         with:
           terraform_version: "1.9.5"
 
+      - name: Validate runtime email secrets
+        env:
+          SMTP_ENDERECO_SELECTED: ${{ github.ref_name == 'main' && secrets.SMTP_ENDERECO_PROD || secrets.SMTP_ENDERECO }}
+          SMTP_PORTA_SELECTED: ${{ github.ref_name == 'main' && secrets.SMTP_PORTA_PROD || secrets.SMTP_PORTA }}
+          SMTP_SENDGRID_TOKEN_SELECTED: ${{ github.ref_name == 'main' && secrets.SMTP_SENDGRID_TOKEN_PROD || secrets.SMTP_SENDGRID_TOKEN }}
+          SMTP_USUARIO_SELECTED: ${{ github.ref_name == 'main' && secrets.SMTP_USUARIO_PROD || secrets.SMTP_USUARIO }}
+          SIGNUP_CONFIRMATION_FROM_EMAIL_SELECTED: ${{ github.ref_name == 'main' && secrets.SIGNUP_CONFIRMATION_FROM_EMAIL_PROD || secrets.SIGNUP_CONFIRMATION_FROM_EMAIL }}
+          SIGNUP_CONFIRMATION_REPLY_TO_SELECTED: ${{ github.ref_name == 'main' && secrets.SIGNUP_CONFIRMATION_REPLY_TO_PROD || secrets.SIGNUP_CONFIRMATION_REPLY_TO }}
+        run: |
+          set -euo pipefail
+          missing=()
+
+          for key in \
+            SMTP_ENDERECO_SELECTED \
+            SMTP_PORTA_SELECTED \
+            SMTP_SENDGRID_TOKEN_SELECTED \
+            SMTP_USUARIO_SELECTED \
+            SIGNUP_CONFIRMATION_FROM_EMAIL_SELECTED \
+            SIGNUP_CONFIRMATION_REPLY_TO_SELECTED; do
+            if [ -z "${!key}" ]; then
+              missing+=("$key")
+            fi
+          done
+
+          if [ "${#missing[@]}" -gt 0 ]; then
+            echo "Missing deploy secrets: ${missing[*]}"
+            exit 1
+          fi
+
       - name: Prepare Terraform prerequisites
         working-directory: terraform
         run: |
