@@ -1,11 +1,13 @@
-import React, { useEffect, useMemo, useState } from "react";
+﻿"use client";
+
+import React, { useEffect, useState } from "react";
 
 type SparkleColor = string;
 
 interface SparkleData {
   id: number;
-  x: number; // %
-  y: number; // %
+  x: number;
+  y: number;
   size: number;
   color: SparkleColor;
   opacity: number;
@@ -31,11 +33,7 @@ function randomBetween(min: number, max: number) {
   return min + Math.random() * (max - min);
 }
 
-function generateSparkles(
-  count: number,
-  colors: SparkleColor[],
-  sizes: number[]
-): SparkleData[] {
+function generateSparkles(count: number, colors: SparkleColor[], sizes: number[]): SparkleData[] {
   return Array.from({ length: count }, (_, i) => ({
     id: i,
     x: randomBetween(0, 100),
@@ -52,44 +50,35 @@ function generateSparkles(
   }));
 }
 
-
 function SparkleShape({ size, color }: { size: number; color: string }) {
   const s = size;
-  const c = s * 0.30; // "pinch": controla o quanto a cintura da estrela se afina
-  const path = `M${s / 2},0 C${s / 2},${c} ${s - c},${s / 2} ${s},${s / 2
-    } C${s - c},${s / 2} ${s / 2},${s - c} ${s / 2},${s} C${s / 2},${s - c
-    } ${c},${s / 2} 0,${s / 2} C${c},${s / 2} ${s / 2},${c} ${s / 2},0 Z`;
+  const c = s * 0.3;
+  const path = `M${s / 2},0 C${s / 2},${c} ${s - c},${s / 2} ${s},${s / 2} C${s - c},${s / 2} ${s / 2},${s - c} ${s / 2},${s} C${s / 2},${s - c} ${c},${s / 2} 0,${s / 2} C${c},${s / 2} ${s / 2},${c} ${s / 2},0 Z`;
 
   return (
-    <svg width={s} height={s} viewBox={`0 0 ${s} ${s}`}>
+    <svg width={s} height={s} viewBox={`0 0 ${s} ${s}`} aria-hidden="true" focusable="false">
       <path d={path} fill={color} />
     </svg>
   );
 }
 
-/**
- * Camada de sparkles (estrelas de 4 pontas) para sobrepor em heros, banners e carousels.
- * Uso: posicionar dentro de um container com position: relative,
- * como primeiro elemento, para que fique atrás do conteúdo.
- */
 export default function SparkleOverlay({
   count = 30,
   colors = DEFAULT_COLORS,
   sizes = DEFAULT_SIZES,
   className = "",
 }: SparkleOverlayProps) {
-  const [seed, setSeed] = useState(0);
+  const [isMounted, setIsMounted] = useState(false);
+  const [sparkles, setSparkles] = useState<SparkleData[]>([]);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setSeed((s) => s + 1);
-  }, []);
+    setSparkles(generateSparkles(count, colors, sizes));
+    setIsMounted(true);
+  }, [count, colors, sizes]);
 
-  const sparkles = useMemo(
-    () => generateSparkles(count, colors, sizes),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [count, seed]
-  );
+  if (!isMounted) {
+    return null;
+  }
 
   return (
     <div
@@ -113,12 +102,10 @@ export default function SparkleOverlay({
             ["--base-opacity" as string]: sp.opacity,
             ["--drift-x" as string]: `${sp.driftX}px`,
             ["--drift-y" as string]: `${sp.driftY}px`,
-            animation: `
-              sparkle-twinkle ${sp.duration}s ease-in-out infinite,
-              sparkle-float ${sp.floatDuration}s ease-in-out infinite
-            `,
+            animation: `sparkle-twinkle ${sp.duration}s ease-in-out infinite, sparkle-float ${sp.floatDuration}s ease-in-out infinite`,
             animationDelay: `${sp.delay}s, ${sp.floatDelay}s`,
             transformOrigin: "center",
+            willChange: "transform, opacity",
           } as React.CSSProperties}
         >
           <SparkleShape size={sp.size} color={sp.color} />
@@ -128,16 +115,16 @@ export default function SparkleOverlay({
       <style>{`
         @keyframes sparkle-twinkle {
           0%, 100% { opacity: var(--base-opacity, 0.6); }
-          50%      { opacity: calc(var(--base-opacity, 0.6) * 0.4); }
+          50% { opacity: calc(var(--base-opacity, 0.6) * 0.4); }
         }
 
         @keyframes sparkle-float {
-          0%, 100% {
-            transform: translate(0, 0) scale(1);
-          }
-          50% {
-            transform: translate(var(--drift-x, 0px), var(--drift-y, 0px)) scale(0.9);
-          }
+          0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+          50% { transform: translate3d(var(--drift-x, 0px), var(--drift-y, 0px), 0) scale(0.9); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .sparkle-overlay { display: none; }
         }
       `}</style>
     </div>

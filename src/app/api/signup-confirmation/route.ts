@@ -27,7 +27,7 @@ export async function POST(request: Request) {
 
     if (!email || !name) {
       return NextResponse.json(
-        { success: false, message: "Nome e e-mail sao obrigatorios." },
+        { success: false, message: "Nome e e-mail são obrigatórios." },
         { status: 400 },
       );
     }
@@ -45,7 +45,7 @@ export async function POST(request: Request) {
     const message =
       error instanceof Error
         ? error.message
-        : "Falha ao enviar e-mail de confirmacao.";
+        : "Falha ao enviar e-mail de confirmação.";
 
     return NextResponse.json(
       { success: false, message },
