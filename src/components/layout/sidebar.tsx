@@ -7,7 +7,7 @@ import { useAuth } from "@/app/context/auth-context";
 
 const navigation = [
   { href: "/area-cliente", label: "Visao geral", icon: Home },
-  { href: "/area-cliente/promocoes", label: "Promocoes", icon: Gift },
+  { href: "/area-cliente/promocoes", label: "Promoções", icon: Gift },
   { href: "/area-cliente/perfil", label: "Meu cadastro", icon: UserCircle2 },
 ];
 
@@ -77,7 +77,7 @@ export default function Sidebar({ userName }: SidebarProps) {
           Curadoria ativa
         </p>
         <p className="mt-3 text-sm leading-6 text-white/78">
-          Seu acesso libera promoções sazonais, experiências exclusivas e conteudos escolhidos pelo time Santa Maria.
+          Seu acesso libera promoções sazonais, experiências exclusivas e conteúdos escolhidos pelo time Santa Maria.
         </p>
 
         <button

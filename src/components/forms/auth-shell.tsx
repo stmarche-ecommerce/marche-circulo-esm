@@ -1,4 +1,4 @@
-import Image from "next/image";
+﻿import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
@@ -24,43 +24,54 @@ export function AuthShell({
   centerPanelContent = true,
 }: AuthShellProps) {
   return (
-    <section className="relative isolate bg-[#120f18] lg:grid lg:min-h-screen lg:grid-cols-[minmax(0,1.08fr)_minmax(0,42rem)]">
-      <div className="relative min-h-[24rem] overflow-hidden lg:min-h-screen">
+    <section className="relative isolate overflow-hidden bg-[#120f18] lg:grid lg:min-h-screen lg:grid-cols-[minmax(0,1.08fr)_minmax(0,42rem)]">
+      <div className="absolute inset-0 lg:hidden" aria-hidden="true">
+        <Image
+          src="/images/loja.jpg"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-center"
+        />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,15,24,0.18),rgba(18,15,24,0.72)),linear-gradient(135deg,rgba(47,44,82,0.42),rgba(104,64,49,0.26))]" />
+      </div>
+
+      <div className="relative hidden overflow-hidden lg:block lg:min-h-screen">
         <Image
           src="/images/loja.jpg"
           alt="Ambiente do Santa Maria Emporio"
           fill
           priority
           sizes="(min-width: 1024px) 52vw, 100vw"
-          className="object-cover"
+          className="object-cover object-center"
         />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,15,24,0.08),rgba(18,15,24,0.68)),linear-gradient(135deg,rgba(47,44,82,0.28),rgba(104,64,49,0.22))]" />
-        <div className="relative z-10 flex min-h-[24rem] flex-col justify-end p-[clamp(2rem,5vw,4rem)] text-left text-white lg:min-h-screen lg:justify-end">
-          <p className="text-[0.78rem] font-bold uppercase tracking-[0.28em] text-white/72">Area Restrita</p>
+        <div className="relative z-10 flex min-h-screen flex-col justify-end p-[clamp(2rem,5vw,4rem)] text-left text-white">
+          <p className="text-[0.78rem] font-bold uppercase tracking-[0.28em] text-white/72">Área Restrita</p>
           <h2 className="mt-4 max-w-[20rem] text-[clamp(2.3rem,4vw,4rem)] leading-[0.94] font-bold uppercase tracking-[0.08em]">
-            Santa Maria Emporio
+            Santa Maria Empório
           </h2>
           <p className="mt-5 max-w-[28rem] text-base leading-[1.9] text-white/78">
-            Acesse sua area exclusiva para acompanhar cadastros, beneficios e comunicacoes da plataforma.
+            Acesse sua área exclusiva para acompanhar cadastros, benefícios e comunicações da plataforma.
           </p>
         </div>
       </div>
 
-      <div className="relative z-10 flex min-h-screen flex-col bg-[radial-gradient(circle_at_top,rgba(213,166,66,0.08),transparent_24%),linear-gradient(180deg,#fcfaf7_0%,#f3ece4_100%)] p-[clamp(1rem,2.5vw,2rem)] lg:min-h-screen lg:overflow-y-auto">
-        <div className="mx-auto flex w-full max-w-[36rem] justify-end pb-4 lg:pb-6">
+      <div className="relative z-20 flex min-h-screen flex-col bg-transparent px-4 py-6 sm:px-6 lg:min-h-screen lg:bg-[radial-gradient(circle_at_top,rgba(213,166,66,0.08),transparent_24%),linear-gradient(180deg,#fcfaf7_0%,#f3ece4_100%)] lg:p-[clamp(1rem,2.5vw,2rem)] lg:overflow-y-auto">
+        <div className="mx-auto flex w-full max-w-[36rem] justify-end pb-4 text-right lg:pb-6">
           <Link
             href="/"
-            className="inline-flex text-[0.85rem] font-bold uppercase tracking-[0.18em] text-[var(--color-muted)] hover:text-[var(--color-brown)]"
+            className="inline-flex text-[0.85rem] font-bold uppercase tracking-[0.18em] text-white/88 drop-shadow-[0_6px_20px_rgba(0,0,0,0.22)] hover:text-[var(--color-accent-soft)] lg:text-[var(--color-muted)] lg:drop-shadow-none lg:hover:text-[var(--color-brown)]"
           >
             Voltar ao site
           </Link>
         </div>
 
         <div
-          className={`mx-auto flex w-full max-w-[36rem] flex-1 justify-center py-0 lg:py-4 ${centerPanelContent ? "items-center" : "items-start"
-            }`}
+          className={`mx-auto flex w-full max-w-[36rem] flex-1 justify-center py-0 lg:py-4 ${centerPanelContent ? "items-center" : "items-start lg:items-start"}`}
         >
-          <div className="w-full rounded-[2rem] border border-[rgba(104,64,49,0.12)] bg-[rgba(255,253,250,0.92)] p-[clamp(1.2rem,2vw,2rem)] shadow-[0_26px_80px_rgba(30,24,21,0.12)]">
+          <div className="w-full rounded-[2rem] border border-[rgba(255,255,255,0.28)] bg-[rgba(255,253,250,0.96)] p-[clamp(1.2rem,2vw,2rem)] shadow-[0_26px_80px_rgba(30,24,21,0.16)] backdrop-blur lg:border-[rgba(104,64,49,0.12)] lg:bg-[rgba(255,253,250,0.92)] lg:shadow-[0_26px_80px_rgba(30,24,21,0.12)]">
             <p className="text-[0.78rem] font-bold uppercase tracking-[0.28em] text-[var(--color-accent)]">{eyebrow}</p>
             <h1 className="mt-[0.55rem] text-[clamp(1.85rem,3vw,2.85rem)] leading-[0.94] font-bold uppercase tracking-[0.06em] text-[var(--color-brown)]">
               {title}

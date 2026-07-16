@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useRouter } from "next/navigation";
 import { ChangeEvent, useState } from "react";
@@ -16,6 +16,8 @@ import {
 } from "@/lib/auth-login";
 import { ApiService } from "@/services/api-service";
 
+const trimPasswordEdges = (value: string) => value.replace(/^\s+|\s+$/g, "");
+
 export function useLoginForm() {
   const router = useRouter();
   const api = new ApiService();
@@ -28,7 +30,7 @@ export function useLoginForm() {
 
     setFormData((current) => ({
       ...current,
-      [name]: name === "login" ? formatCpf(value) : value,
+      [name]: name === "login" ? formatCpf(value) : name === "password" ? trimPasswordEdges(value) : value,
     }));
   }
 
@@ -44,16 +46,12 @@ export function useLoginForm() {
     try {
       setIsSubmitting(true);
 
-      const response = await api.post(
-        resolveLoginEndpoint(),
-        createLoginPayload(formData),
-      );
+      const response = await api.post(resolveLoginEndpoint(), createLoginPayload(formData));
       const session = mapLoginResponseToSession(response.data, {
         cpf: formData.login,
       });
 
       authenticate(session);
-      // toast.success("Login realizado com sucesso.");
       router.push("/area-cliente");
     } catch (error) {
       toast.error(getLoginErrorMessage(error));

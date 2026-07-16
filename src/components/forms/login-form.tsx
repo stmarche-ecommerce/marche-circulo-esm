@@ -1,6 +1,7 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
+import { Field } from ".";
 import { useLoginForm } from "@/hooks/use-login-form";
 
 export function LoginForm() {
@@ -23,18 +24,17 @@ export function LoginForm() {
         />
       </label>
 
-      <label className="grid gap-2 text-[0.9rem] font-bold text-[var(--color-brown)]">
-        <span>Senha</span>
-        <input
-          type="password"
-          name="password"
-          value={formData.password}
-          onChange={handleChange}
-          placeholder="Digite sua senha"
-          autoComplete="current-password"
-          className="w-full rounded-[0.95rem] border border-[rgba(104,64,49,0.16)] bg-white px-4 py-3 text-[0.95rem] text-[var(--color-body)] outline-none transition placeholder:text-[rgba(117,105,98,0.9)] focus:border-[var(--color-accent)] focus:shadow-[0_0_0_4px_rgba(213,166,66,0.14)]"
-        />
-      </label>
+      <Field
+        label="Senha"
+        type="password"
+        name="password"
+        value={formData.password}
+        onChange={handleChange}
+        placeholder="Digite sua senha"
+        autoComplete="current-password"
+        allowPasswordToggle
+        className="px-4 py-3"
+      />
 
       <div className="mt-1 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <label className="inline-flex items-center gap-2.5 text-[0.95rem] text-[var(--color-muted)]">

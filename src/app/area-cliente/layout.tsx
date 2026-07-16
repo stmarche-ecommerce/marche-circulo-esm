@@ -3,13 +3,10 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Sidebar from "@/components/layout/sidebar";
+import { AppClientProviders } from "@/components/ui/app-client-providers";
 import { useAuth } from "@/app/context/auth-context";
 
-export default function AreaClienteLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+function AreaClienteLayoutContent({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
   const router = useRouter();
 
@@ -24,5 +21,17 @@ export default function AreaClienteLayout({
       <Sidebar userName={user?.name} />
       <main className="flex-1 p-5 md:p-8 xl:p-10">{children}</main>
     </div>
+  );
+}
+
+export default function AreaClienteLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <AppClientProviders>
+      <AreaClienteLayoutContent>{children}</AreaClienteLayoutContent>
+    </AppClientProviders>
   );
 }

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useMemo, useState } from "react";
 import { toast } from "react-toastify";
@@ -48,20 +48,20 @@ type StepConfig = {
 const STEP_CONFIG: StepConfig[] = [
   {
     id: 1,
-    title: "Identificacao",
+    title: "Identificação",
     description: "Nome, sobrenome, CPF e data de nascimento.",
     fields: ["firstName", "lastName", "cpf", "birthDate"],
   },
   {
     id: 2,
     title: "Contato",
-    description: "E-mail, telefone e endereco completo.",
+    description: "E-mail, WhatsApp e endereço completo.",
     fields: ["email", "phone", "zipCode", "street", "number", "neighborhood", "city", "state"],
   },
   {
     id: 3,
-    title: "Acesso e preferencias",
-    description: "Senha, confirmacao e comunicacao.",
+    title: "Acesso e preferências",
+    description: "Senha, confirmação e comunicação.",
     fields: ["password", "confirmPassword", "privacyConsent"],
   },
 ];
@@ -228,7 +228,7 @@ export function SignUpForm() {
       first_name: formData.firstName.trim(),
       last_name: formData.lastName.trim(),
       telephone: normalizeDigits(formData.phone),
-      password: formData.password,
+      password: formData.password.trim(),
       allow_communications: consents.optInEmail || consents.optInWhatsApp || consents.optInSms,
       data: {
         origin: "App",
@@ -262,7 +262,7 @@ export function SignUpForm() {
         | null;
 
       throw new Error(
-        responseBody?.message || "Falha ao enviar e-mail de confirmacao.",
+        responseBody?.message || "Falha ao enviar e-mail de confirmação.",
       );
     }
   };
@@ -282,7 +282,7 @@ export function SignUpForm() {
       }
 
       setFieldErrors(nextErrors);
-      toast.error("Revise os campos obrigatorios destacados para continuar.");
+      toast.error("Revise os campos obrigatórios destacados para continuar.");
       return;
     }
 
@@ -300,14 +300,14 @@ export function SignUpForm() {
             name: `${formData.firstName.trim()} ${formData.lastName.trim()}`.trim(),
           });
         } catch (emailError) {
-          console.error("Erro ao enviar e-mail de confirmacao:", emailError);
+          console.error("Erro ao enviar e-mail de confirmação:", emailError);
           const warningMessage = emailError instanceof Error
             ? emailError.message
-            : "Cadastro realizado, mas o e-mail de confirmacao nao foi enviado.";
+            : "Cadastro realizado, mas o e-mail de confirmação não foi enviado.";
           toast.warn(warningMessage);
         }
 
-        toast.success("Cadastro realizado com sucesso! Seus dados foram enviados e seu acesso esta em processamento.");
+        toast.success("Cadastro realizado com sucesso! Seus dados foram enviados e seu acesso está em processamento.");
         return;
       }
     } catch (err) {
@@ -376,7 +376,7 @@ export function SignUpForm() {
 
         {stepErrors.length > 0 ? (
           <p className="text-[0.8rem] leading-[1.4] text-[#a14b3b]">
-            Existem campos obrigatorios pendentes nesta etapa.
+            Existem campos obrigatórios pendentes nesta etapa.
           </p>
         ) : null}
       </div>
@@ -446,7 +446,7 @@ export function SignUpForm() {
               required
             />
             <Field
-              label="Telefone"
+              label="WhatsApp"
               name="phone"
               value={formData.phone}
               onChange={handleFormFieldChange}
@@ -457,7 +457,7 @@ export function SignUpForm() {
             />
           </FieldGrid>
 
-          <FieldGrid>
+          <FieldGrid className="md:grid-cols-1">
             <div className="grid gap-[0.46rem]">
               <Field
                 label="CEP"
@@ -482,13 +482,6 @@ export function SignUpForm() {
                 </p>
               ) : null}
             </div>
-            <Field
-              label="Complemento"
-              name="complement"
-              placeholder="Apartamento, bloco, casa 2..."
-              value={addressFields.complement}
-              onChange={(event) => handleComplementChange(event.target.value)}
-            />
           </FieldGrid>
 
           <FieldGrid>
@@ -502,7 +495,7 @@ export function SignUpForm() {
               required
             />
             <Field
-              label="Numero"
+              label="Número"
               name="number"
               placeholder="123"
               value={addressFields.number}
@@ -514,6 +507,13 @@ export function SignUpForm() {
 
           <FieldGrid>
             <Field
+              label="Complemento"
+              name="complement"
+              placeholder="Apartamento, bloco, casa 2..."
+              value={addressFields.complement}
+              onChange={(event) => handleComplementChange(event.target.value)}
+            />
+            <Field
               label="Bairro"
               name="neighborhood"
               placeholder="Seu bairro"
@@ -522,6 +522,9 @@ export function SignUpForm() {
               error={fieldErrors.neighborhood}
               required
             />
+          </FieldGrid>
+
+          <FieldGrid>
             <Field
               label="Cidade"
               name="city"
@@ -531,9 +534,6 @@ export function SignUpForm() {
               error={fieldErrors.city}
               required
             />
-          </FieldGrid>
-
-          <FieldGrid className="md:grid-cols-1">
             <Field
               label="Estado (UF)"
               name="state"
@@ -559,6 +559,7 @@ export function SignUpForm() {
               onChange={handleFormFieldChange}
               placeholder="Crie uma senha"
               error={fieldErrors.password}
+              allowPasswordToggle
               required
             />
             <Field
@@ -569,6 +570,7 @@ export function SignUpForm() {
               onChange={handleFormFieldChange}
               placeholder="Repita a senha"
               error={fieldErrors.confirmPassword}
+              allowPasswordToggle
               required
             />
           </FieldGrid>
@@ -581,7 +583,7 @@ export function SignUpForm() {
             <ConsentOption
               name="optInEmail"
               title="E-mail"
-              description="Novidades, beneficios e comunicados."
+              description="Novidades, benefícios e comunicados."
               checked={consents.optInEmail}
               handleConsentChange={handleConsentChange}
             />
@@ -595,7 +597,7 @@ export function SignUpForm() {
             <ConsentOption
               name="optInSms"
               title="SMS"
-              description="Avisos curtos e confirmacoes importantes."
+              description="Avisos curtos e confirmações importantes."
               checked={consents.optInSms}
               handleConsentChange={handleConsentChange}
             />
@@ -609,7 +611,7 @@ export function SignUpForm() {
         </SecondaryButton>
         {currentStep < STEP_CONFIG.length ? (
           <SubmitButton type="button" disabled={isSubmitting} onClick={handleNextStep}>
-            Proxima etapa
+            Próxima etapa
           </SubmitButton>
         ) : (
           <SubmitButton type="button" disabled={isSubmitting} onClick={() => void handleSubmit()}>
@@ -620,6 +622,9 @@ export function SignUpForm() {
     </form>
   );
 }
+
+
+
 
 
 

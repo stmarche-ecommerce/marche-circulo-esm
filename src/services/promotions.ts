@@ -3,8 +3,8 @@ import type { Promotion } from "@/types/promotion";
 const promotions: Promotion[] = [
   {
     id: "welcome-20",
-    title: "Boas-vindas no Emporio",
-    description: "Ative 20% OFF na primeira compra em padaria, confeitaria e itens selecionados do emporio.",
+    title: "Boas-vindas no Empório",
+    description: "Ative 20% OFF na primeira compra em padaria, confeitaria e itens selecionados do empório.",
     discountLabel: "20% OFF",
     validUntil: "2026-07-31",
     status: "active",
@@ -13,7 +13,7 @@ const promotions: Promotion[] = [
   {
     id: "wine-week",
     title: "Curadoria de Vinhos",
-    description: "Leve 3 rotulos participantes e receba um desconto especial no fechamento.",
+    description: "Leve 3 rótulos participantes e receba um desconto especial no fechamento.",
     discountLabel: "15% OFF",
     validUntil: "2026-07-20",
     status: "active",
@@ -31,7 +31,7 @@ const promotions: Promotion[] = [
   {
     id: "cheese-board",
     title: "Tabua de Frios",
-    description: "Beneficio ja utilizado em uma montagem especial com itens da nossa curadoria.",
+    description: "Benefício já utilizado em uma montagem especial com itens da nossa curadoria.",
     discountLabel: "Beneficio usado",
     validUntil: "2026-06-30",
     usedAt: "2026-06-28",

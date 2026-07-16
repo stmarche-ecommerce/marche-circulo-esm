@@ -1,4 +1,4 @@
-import { useCallback, useState, type ChangeEvent } from "react";
+﻿import { useCallback, useState, type ChangeEvent } from "react";
 import { formatCpf } from "@/lib/sign-up-validation";
 
 interface SignUpFormData {
@@ -44,13 +44,20 @@ const INITIAL_CONSENTS: SignUpConsents = {
   optInSms: false,
 };
 
+const trimPasswordEdges = (value: string) => value.replace(/^\s+|\s+$/g, "");
+
 export function useSignUpForm(): UseSignUpFormReturn {
   const [formData, setFormData] = useState<SignUpFormData>(INITIAL_FORM_DATA);
   const [consents, setConsents] = useState<SignUpConsents>(INITIAL_CONSENTS);
 
   const handleFieldChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    const nextValue = name === "cpf" ? formatCpf(value) : value;
+    const nextValue =
+      name === "cpf"
+        ? formatCpf(value)
+        : name === "password" || name === "confirmPassword"
+          ? trimPasswordEdges(value)
+          : value;
 
     setFormData((current) => ({
       ...current,

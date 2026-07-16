@@ -1,4 +1,4 @@
-import axios from "axios";
+﻿import axios from "axios";
 import type { AuthSession, AuthUser } from "@/lib/auth-session";
 
 export interface LoginFormValues {
@@ -75,7 +75,7 @@ export function isValidCpf(value: string) {
 export function createLoginPayload(values: LoginFormValues) {
   return {
     username: normalizeCpf(values.login),
-    password: values.password,
+    password: values.password.trim(),
   };
 }
 
@@ -147,3 +147,4 @@ export function getLoginErrorMessage(error: unknown) {
 
   return DEFAULT_LOGIN_ERROR;
 }
+

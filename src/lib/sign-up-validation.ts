@@ -1,4 +1,4 @@
-import { z } from "zod";
+﻿import { z } from "zod";
 
 const onlyDigits = (value: string) => value.replace(/\D/g, "");
 
@@ -96,13 +96,14 @@ export const signUpSchema = z
       .trim()
       .length(2, "Informe a UF com 2 letras.")
       .refine((value) => /^[A-Za-z]{2}$/.test(value), "Informe uma UF valida."),
-    password: z.string().min(8, "A senha deve ter pelo menos 8 caracteres."),
-    confirmPassword: z.string().min(1, "Confirme sua senha."),
-    privacyConsent: z.boolean().refine((value) => value, "Voce precisa concordar com a politica de privacidade."),
+    password: z.string().trim().min(8, "A senha deve ter pelo menos 8 caracteres."),
+    confirmPassword: z.string().trim().min(1, "Confirme sua senha."),
+    privacyConsent: z.boolean().refine((value) => value, "Voce precisa concordar com a polÃ­tica de privacidade."),
   })
   .refine((data) => data.password === data.confirmPassword, {
     path: ["confirmPassword"],
-    message: "As senhas nao coincidem.",
+    message: "As senhas nÃ£o coincidem.",
   });
 
 export type SignUpFormValues = z.infer<typeof signUpSchema>;
+
