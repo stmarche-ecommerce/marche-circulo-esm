@@ -72,6 +72,7 @@ export default function SparkleOverlay({
   const [sparkles, setSparkles] = useState<SparkleData[]>([]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSparkles(generateSparkles(count, colors, sizes));
     setIsMounted(true);
   }, [count, colors, sizes]);
