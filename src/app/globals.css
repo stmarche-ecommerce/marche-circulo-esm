@@ -442,11 +442,12 @@ textarea {
 .hero-carousel .slick-track,
 .hero-carousel .slick-slide,
 .hero-carousel .slick-slide > div {
-  min-height: inherit;
+  height: 100%;
 }
 
 .hero-carousel__slide {
-  min-height: inherit;
+  height: 100%;
   width: 100%;
 }
+
 

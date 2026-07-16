@@ -87,7 +87,7 @@ const sliderSettings = {
 
 export function HeroCarousel() {
   return (
-    <section className="hero-carousel relative min-h-[clamp(32rem,72vh,46rem)] overflow-hidden bg-[var(--color-ink)] text-white" aria-label="Destaques do Santa Maria Empório">
+    <section className="hero-carousel relative h-[clamp(32rem,72vh,46rem)] overflow-hidden bg-[var(--color-ink)] text-white" aria-label="Destaques do Santa Maria Empório">
       <Slider {...sliderSettings}>
         {slides.map((slide, index) => {
           const content = (
@@ -110,7 +110,7 @@ export function HeroCarousel() {
                 <SparkleOverlay count={16} colors={["#e8c674", "#f4dfa3", "#ffffff", "#c9a35c"]} />
               </div>
 
-              <div className="content-grid relative z-10 flex min-h-[clamp(32rem,72vh,46rem)] items-center py-24">
+              <div className="content-grid relative z-10 flex h-full items-center py-24">
                 <div className="max-w-3xl">
                   <p className="section-eyebrow text-[var(--color-accent-soft)]">{slide.eyebrow}</p>
                   <h1 className="mt-5 text-4xl font-semibold uppercase tracking-[0.16em] md:text-6xl">
@@ -151,3 +151,4 @@ export function HeroCarousel() {
     </section>
   );
 }
+
