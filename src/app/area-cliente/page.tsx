@@ -10,7 +10,7 @@ import { getActivePromotions, getUsedPromotions } from "@/services/promotions";
 const highlights = [
   "Padaria artesanal",
   "Adega selecionada",
-  "Brunch e experiencias",
+  "Brunch e experiências",
 ];
 
 export default function AreaClientePage() {
@@ -60,7 +60,7 @@ export default function AreaClientePage() {
               {user.name ? `${user.name}, seu circulo esta ativo.` : "Seu circulo esta ativo."}
             </h1>
             <p className="mt-4 max-w-2xl text-base leading-8 text-[var(--color-muted)] md:text-lg">
-              Um espaco interno com beneficios de boas-vindas, curadoria de ofertas e experiencias disponiveis para o seu cadastro recem-aprovado.
+              Um espaço interno com benefícios de boas-vindas, curadoria de ofertas e experiências disponíveis para o seu cadastro recém-aprovado.
             </p>
 
             <div className="mt-6 flex flex-wrap gap-3">
@@ -79,7 +79,7 @@ export default function AreaClientePage() {
                 href="/area-cliente/promocoes"
                 className="inline-flex items-center gap-2 rounded-full bg-[var(--color-brown)] px-5 py-3 text-xs font-bold uppercase tracking-[0.18em] text-white hover:bg-[var(--color-ink)]"
               >
-                Ver promocoes
+                Ver promoções
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
@@ -95,7 +95,7 @@ export default function AreaClientePage() {
               </div>
               <p className="mt-4 text-2xl font-bold">Cadastro confirmado</p>
               <p className="mt-2 text-sm leading-6 text-white/70">
-                Seu acesso ja pode navegar pela curadoria e pelos beneficios do Circulo Santa Maria.
+                Seu acesso já pode navegar pela curadoria e pelos benefícios do Círculo Santa Maria.
               </p>
             </article>
 
@@ -138,9 +138,9 @@ export default function AreaClientePage() {
           </h2>
           <div className="mt-6 grid gap-4">
             {[
-              "Ative sua promocao de boas-vindas na proxima visita.",
-              "Explore as ofertas sazonais em promocoes.",
-              "Use o painel para acompanhar beneficios ja utilizados.",
+              "Ative sua promoção de boas-vindas na próxima visita.",
+              "Explore as ofertas sazonais em promoções.",
+              "Use o painel para acompanhar benefícios já utilizados.",
             ].map((item, index) => (
               <div
                 key={item}
@@ -163,13 +163,13 @@ export default function AreaClientePage() {
             Curadoria brunch
           </h2>
           <p className="mt-4 text-sm leading-7 text-[var(--color-muted)]">
-            Seu cadastro ja entrou na janela de beneficios para experiencias de brunch, adega e emporio. O painel de promocoes traz os detalhes completos para resgate.
+            Seu cadastro já entrou na janela de benefícios para experiências de brunch, adega e empório. O painel de promoções traz os detalhes completos para resgate.
           </p>
           <Link
             href="/area-cliente/promocoes"
             className="mt-6 inline-flex items-center gap-2 text-sm font-bold uppercase tracking-[0.16em] text-[var(--color-brown)] hover:text-[var(--color-accent)]"
           >
-            Abrir painel de beneficios
+            Abrir painel de benefícios
             <ArrowRight className="h-4 w-4" />
           </Link>
         </article>

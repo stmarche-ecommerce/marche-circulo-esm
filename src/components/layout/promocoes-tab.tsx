@@ -42,8 +42,8 @@ export default function PromocoesTabs({
       {list.length === 0 ? (
         <p className="py-12 text-center text-sm text-[var(--color-muted)]">
           {tab === "active"
-            ? "Voce nao tem promocoes ativas no momento."
-            : "Nenhuma promocao utilizada ainda."}
+            ? "Você não tem promoções ativas no momento."
+            : "Nenhuma promoção utilizada ainda."}
         </p>
       ) : (
         <div className="grid gap-4 xl:grid-cols-2">

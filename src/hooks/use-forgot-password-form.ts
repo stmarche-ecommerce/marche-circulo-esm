@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { toast } from "react-toastify";
 import { formatCpf } from "@/lib/auth-login";
 import {

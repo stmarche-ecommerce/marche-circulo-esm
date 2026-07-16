@@ -32,19 +32,19 @@ function buildEmailHtml(name: string, applicationUrl: string) {
           <h1 style="margin:12px 0 0; font-size:28px; line-height:1.2;">Bem-vindo(a) ao Circulo Santa Maria</h1>
         </div>
         <div style="padding:32px;">
-          <p style="margin:0 0 16px; font-size:16px; line-height:1.7;">Ola, ${firstName}.</p>
+          <p style="margin:0 0 16px; font-size:16px; line-height:1.7;">Olá, ${firstName}.</p>
           <p style="margin:0 0 16px; font-size:16px; line-height:1.7;">
-            Seu cadastro foi concluido com sucesso e seu acesso ja esta liberado.
+            Seu cadastro foi concluído com sucesso e seu acesso já está liberado.
           </p>
           <p style="margin:0 0 24px; font-size:16px; line-height:1.7;">
-            A partir de agora voce pode entrar na area do cliente e aproveitar as promocoes e beneficios exclusivos do Circulo Santa Maria.
+            A partir de agora você pode entrar na área do cliente e aproveitar as promoções e benefícios exclusivos do Círculo Santa Maria.
           </p>
           <p style="margin:0 0 24px;">
             <a
               href="${applicationUrl}"
               style="display:inline-block; border-radius:999px; background:#684031; color:#ffffff; padding:14px 24px; font-size:14px; font-weight:700; letter-spacing:0.12em; text-decoration:none; text-transform:uppercase;"
             >
-              Acessar a aplicacao
+              Acessar a aplicação
             </a>
           </p>
           <p style="margin:0 0 16px; font-size:14px; line-height:1.7; color:#756962;">
@@ -52,7 +52,7 @@ function buildEmailHtml(name: string, applicationUrl: string) {
             <a href="${applicationUrl}" style="color:#684031; word-break:break-all;">${applicationUrl}</a>
           </p>
           <p style="margin:0; font-size:14px; line-height:1.7; color:#756962;">
-            Se voce nao reconhece este cadastro, responda este e-mail ou entre em contato com nosso time.
+            Se você não reconhece este cadastro, responda este e-mail ou entre em contato com nosso time.
           </p>
         </div>
       </div>
@@ -64,14 +64,14 @@ function buildEmailText(name: string, applicationUrl: string) {
   const firstName = getFirstName(name);
 
   return [
-    `Ola, ${firstName}.`,
+    `Olá, ${firstName}.`,
     "",
-    "Recebemos sua solicitacao de cadastro na area restrita do Circulo Santa Maria.",
-    "Seus dados foram enviados com sucesso e seu acesso esta em processamento.",
+    "Recebemos sua solicitação de cadastro na área restrita do Círculo Santa Maria.",
+    "Seus dados foram enviados com sucesso e seu acesso está em processamento.",
     "",
-    `Acesse a aplicacao em: ${applicationUrl}`,
+    `Acesse a aplicação em: ${applicationUrl}`,
     "",
-    "Se voce nao reconhece esta solicitacao, responda este e-mail ou entre em contato com nosso time.",
+    "Se você não reconhece esta solicitação, responda este e-mail ou entre em contato com nosso time.",
   ].join("\n");
 }
 
@@ -106,7 +106,7 @@ function resolveSmtpConfig(): SmtpConfig {
 
   if (missingVariables.length > 0) {
     throw new Error(
-      `Configuracao SMTP incompleta para envio de e-mail. Variaveis ausentes: ${missingVariables.join(", ")}.`,
+      `Configuração SMTP incompleta para envio de e-mail. Variáveis ausentes: ${missingVariables.join(", ")}.`,
     );
   }
 
@@ -311,10 +311,10 @@ export async function sendSignupConfirmationEmail({
   const config = resolveSmtpConfig();
   const from =
     process.env.SIGNUP_CONFIRMATION_FROM_EMAIL ??
-    "Santa Maria Emporio <automacao@marche.com.br>";
+    "Santa Maria Empório <automacao@marche.com.br>";
   const replyTo =
     process.env.SIGNUP_CONFIRMATION_REPLY_TO ?? "contato@emporiosantamaria.com.br";
-  const subject = "Recebemos seu cadastro no Circulo Santa Maria";
+  const subject = "Recebemos seu cadastro no Círculo Santa Maria";
   const text = buildEmailText(name, applicationUrl);
   const html = buildEmailHtml(name, applicationUrl);
   const fromMailbox = parseMailbox(from);

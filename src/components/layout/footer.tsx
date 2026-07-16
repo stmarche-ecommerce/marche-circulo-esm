@@ -1,31 +1,45 @@
-"use client";
-
-import Link from "next/link";
+﻿import Link from "next/link";
 import type { ReactNode } from "react";
 import { ChevronUp } from "lucide-react";
 
 export default function SiteFooter() {
+  const data = new Date();
+  const anoAtual = data.getFullYear();
+
   return (
     <footer
       className="relative overflow-hidden bg-[var(--color-brown-dark)] text-[var(--color-cream)]"
-      style={{ backgroundImage: "linear-gradient(rgba(65, 36, 30, 0.9), rgba(65, 36, 30, 0.92)), url('/images/footer-bg.jpg')" }}
+      style={{
+        backgroundImage:
+          "linear-gradient(rgba(65, 36, 30, 0.9), rgba(65, 36, 30, 0.92)), url('/images/footer-bg.jpg')",
+      }}
     >
       <div className="content-grid py-18">
         <div className="grid gap-12 lg:grid-cols-[1.35fr_1fr_0.85fr]">
           <div>
-            <FooterTitle>SANTA MARIA EMPORIO</FooterTitle>
+            <FooterTitle>SANTA MARIA EMPÓRIO</FooterTitle>
             <p className="mt-6 max-w-xl text-lg leading-9 text-[var(--color-cream-muted)]">
-              Referencia da boa gastronomia, o Santa Maria Emporio oferece um ambiente agradavel para compras em Sao
-              Paulo, com importados, padaria, rotisserie, confeitaria e um atendimento que valoriza cada detalhe.
+              Referência da boa gastronomia, o Santa Maria Empório oferece um ambiente agradável para compras em São
+              Paulo. Um lugar único que reúne, com harmonia e satisfação, uma vasta gama de produtos especiais,
+              importados, além de uma padaria, rotisserie e confeitaria com produtos frescos de fabricação própria,
+              sempre preparados com os melhores ingredientes. Contamos ainda com um sushi renomado, entre os melhores
+              de São Paulo, uma cafeteria especial e uma fábrica de massas artesanais. Qualidade e atendimento são
+              nossos diferenciais. Tudo isso para que você viva sua paixão por excelência, todos os dias.
             </p>
           </div>
 
           <div className="space-y-10">
             <div>
               <FooterTitle>DELIVERY</FooterTitle>
-              <div className="mt-6">
+              <div className="mt-6 flex flex-col gap-3 text-lg">
                 <FooterLink href="https://www.rappi.com.br/lojas/900631375-santa-maria-super-nc" external>
-                  Compre pelo RAPPI
+                  Rappi
+                </FooterLink>
+                <FooterLink href="https://www.ifood.com.br" external>
+                  iFood
+                </FooterLink>
+                <FooterLink href="https://wa.me/5511958187139" external>
+                  WhatsApp
                 </FooterLink>
               </div>
             </div>
@@ -39,10 +53,10 @@ export default function SiteFooter() {
             </div>
 
             <div>
-              <FooterTitle>HORARIOS</FooterTitle>
+              <FooterTitle>HORÁRIOS</FooterTitle>
               <div className="mt-6 space-y-2 text-lg leading-8 text-[var(--color-cream-muted)]">
-                <p>Segunda a sabado das 8h as 22h</p>
-                <p>Domingos e feriados das 8h as 21h</p>
+                <p>Segunda à sábado das 8h às 22h</p>
+                <p>Domingos e feriados das 8h às 21h</p>
               </div>
             </div>
           </div>
@@ -51,12 +65,14 @@ export default function SiteFooter() {
             <FooterTitle>INSTITUCIONAL</FooterTitle>
             <div className="mt-6 flex flex-col gap-3 text-lg">
               <FooterLink href="/manifesto">Manifesto</FooterLink>
-              <FooterLink href="/historia">Nossa Historia</FooterLink>
+              <FooterLink href="/historia">Nossa História</FooterLink>
               <FooterLink href="https://campanha.marche.com.br/sustentabilidade/" external>
                 Sustentabilidade
               </FooterLink>
-              <FooterLink href="/trabalhe">Trabalhe conosco</FooterLink>
-              <FooterLink href="/politica">Politica de Privacidade</FooterLink>
+              <FooterLink href="https://stmarche.gupy.io/" external>
+                Trabalhe conosco
+              </FooterLink>
+              <FooterLink href="/politica">Política de Privacidade</FooterLink>
               <FooterLink href="/contato">Contato</FooterLink>
             </div>
           </div>
@@ -64,29 +80,19 @@ export default function SiteFooter() {
 
         <div className="mt-16 flex flex-col items-center gap-8 border-t border-dashed border-white/25 pt-8 md:flex-row md:justify-between">
           <p className="max-w-2xl text-center text-sm leading-7 text-[var(--color-cream-muted)] md:text-left">
-            Copyright 2025 - SANTA MARIA EMPORIO. Todos os direitos reservados. Razao Social HORTUS COMERCIO DE
+            Copyright {anoAtual} - SANTA MARIA EMPÓRIO. Todos os direitos reservados. Razão Social HORTUS COMERCIO DE
             ALIMENTOS S.A. - CNPJ 09.000.493/0002-15
           </p>
 
-          <button
-            type="button"
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          <a
+            href="#top"
             className="inline-flex h-12 w-12 items-center justify-center border border-[var(--color-accent)] text-[var(--color-accent-soft)] transition hover:bg-[var(--color-accent)] hover:text-[var(--color-brown-dark)]"
             aria-label="Voltar ao topo"
           >
             <ChevronUp size={18} />
-          </button>
+          </a>
 
-          <div className="flex items-center gap-5 text-[var(--color-cream-muted)]">
-            <Link
-              href="https://www.facebook.com/profile.php?id=61568774857483"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="Facebook"
-              className="transition hover:text-[var(--color-accent-soft)]"
-            >
-              <SocialIcon kind="facebook" />
-            </Link>
+          <div className="flex items-center text-[var(--color-cream-muted)]">
             <Link
               href="https://www.instagram.com/stamariaemporio/"
               target="_blank"
@@ -94,7 +100,7 @@ export default function SiteFooter() {
               aria-label="Instagram"
               className="transition hover:text-[var(--color-accent-soft)]"
             >
-              <SocialIcon kind="instagram" />
+              <SocialIcon />
             </Link>
           </div>
         </div>
@@ -136,15 +142,7 @@ function FooterLink({
   );
 }
 
-function SocialIcon({ kind }: { kind: "facebook" | "instagram" }) {
-  if (kind === "facebook") {
-    return (
-      <svg aria-hidden="true" viewBox="0 0 24 24" className="h-[21px] w-[21px] fill-current">
-        <path d="M13.5 21v-7h2.3l.4-3h-2.7V9.2c0-.9.3-1.5 1.6-1.5H16V5.1c-.3 0-1.1-.1-2-.1-2 0-3.4 1.2-3.4 3.5V11H8v3h2.6v7h2.9Z" />
-      </svg>
-    );
-  }
-
+function SocialIcon() {
   return (
     <svg aria-hidden="true" viewBox="0 0 24 24" className="h-[21px] w-[21px] fill-none stroke-current" strokeWidth="1.8">
       <rect x="3" y="3" width="18" height="18" rx="5" />
