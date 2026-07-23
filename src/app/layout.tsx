@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { Fraunces, Inter, JetBrains_Mono } from "next/font/google";
 import { AppShell } from "@/components/layout/app-shell";
 import { ToastProvider } from "@/components/ui/toast-provider";
 import { AuthProvider } from "./context/auth-context";
@@ -11,6 +12,27 @@ const cera = localFont({
     { path: "../../public/fonts/CeraBold.ttf", weight: "700", style: "normal" },
   ],
   variable: "--font-cera",
+  display: "swap",
+});
+
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  variable: "--font-fraunces",
+  weight: ["400", "500", "600"],
+  display: "swap",
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  weight: ["400", "500", "600"],
+  display: "swap",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-jetbrains-mono",
+  weight: ["400", "500"],
   display: "swap",
 });
 
@@ -29,7 +51,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body className={`${cera.variable} min-h-screen bg-white text-[var(--color-body)]`}>
+      <body className={`${cera.variable} ${fraunces.variable} ${inter.variable} ${jetbrainsMono.variable} min-h-screen bg-white text-[var(--color-body)]`}>
         <AuthProvider>
           <AppShell>{children}</AppShell>
           <ToastProvider />

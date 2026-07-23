@@ -20,9 +20,9 @@ export default function AreaClienteLayout({
   }, [loading, user, router]);
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(213,166,66,0.08),transparent_26%),linear-gradient(180deg,#fcfaf7_0%,#f4ede6_100%)] md:flex">
+    <div className="min-h-screen bg-[#f7f1e6] min-[901px]:flex">
       <Sidebar userName={user?.name} />
-      <main className="flex-1 p-5 md:p-8 xl:p-10">{children}</main>
+      {children}
     </div>
   );
 }
