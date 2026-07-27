@@ -1,4 +1,4 @@
-export function WhatsAppBubble() {
+﻿export function WhatsAppBubble() {
   return (
     <a
       href="https://wa.me/5511958187139"

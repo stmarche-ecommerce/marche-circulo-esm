@@ -1,8 +1,9 @@
-"use client";
+﻿"use client";
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Sidebar from "@/components/layout/sidebar";
+import { WhatsAppAssistant } from "@/components/layout/whatsapp-assistant";
 import { useAuth } from "@/app/context/auth-context";
 
 export default function AreaClienteLayout({
@@ -20,9 +21,10 @@ export default function AreaClienteLayout({
   }, [loading, user, router]);
 
   return (
-    <div className="min-h-screen bg-[#f7f1e6] min-[901px]:flex">
-      <Sidebar userName={user?.name} />
+    <div className="min-h-screen bg-[#f6efe4] md:flex">
+      <Sidebar userName={user?.name} userEmail={user?.email} />
       {children}
+      <WhatsAppAssistant />
     </div>
   );
 }

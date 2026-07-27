@@ -1,17 +1,46 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LogOut } from "lucide-react";
-import styles from "./client-panel.module.css";
+import {
+  CircleUserRound,
+  Gift,
+  History,
+  House,
+  LogOut,
+  Sparkles,
+  TicketPercent,
+  UserRound,
+} from "lucide-react";
+import { clientPanelClasses as styles } from "./client-panel-classes";
 import { useAuth } from "@/app/context/auth-context";
 
 const navigation = [
-  { href: "/area-cliente", label: "Visão geral", icon: "⌂", id: "geral" },
-  { href: "/area-cliente/beneficios", label: "Benefícios", icon: "▤", id: "beneficios" },
-  { href: "/area-cliente/promocoes", label: "Promoções", icon: "▥", id: "promocoes" },
-  { href: "/area-cliente/historico", label: "Histórico", icon: "◔", id: "historico" },
-  { href: "/area-cliente/perfil", label: "Meu cadastro", icon: "○", id: "cadastro" },
+  { href: "/area-cliente", label: "Visão geral", icon: House, id: "geral" },
+  {
+    href: "/area-cliente/beneficios",
+    label: "Benefícios",
+    icon: Gift,
+    id: "beneficios",
+  },
+  {
+    href: "/area-cliente/promocoes",
+    label: "Promoções",
+    icon: TicketPercent,
+    id: "promocoes",
+  },
+  {
+    href: "/area-cliente/historico",
+    label: "Histórico",
+    icon: History,
+    id: "historico",
+  },
+  {
+    href: "/area-cliente/perfil",
+    label: "Meu cadastro",
+    icon: UserRound,
+    id: "cadastro",
+  },
 ] as const;
 
 type TabId = (typeof navigation)[number]["id"];
@@ -38,6 +67,7 @@ function getActiveTab(pathname: string | null): TabId {
 
 interface SidebarProps {
   userName?: string;
+  userEmail?: string;
 }
 
 export default function Sidebar({ userName }: SidebarProps) {
@@ -45,6 +75,15 @@ export default function Sidebar({ userName }: SidebarProps) {
   const router = useRouter();
   const { logout } = useAuth();
   const activeTab = getActiveTab(pathname);
+  const displayName = userName || "Convidado";
+
+  function displayNameLimit(name: string, limit = 15) {
+    if (name.length <= limit) {
+      return name
+    }
+
+    return name.slice(0, limit) + '...';
+  }
 
   function handleLogout() {
     logout();
@@ -55,30 +94,44 @@ export default function Sidebar({ userName }: SidebarProps) {
     <aside className={styles.sidebar}>
       <div>
         <div className={styles.brand}>
-          <div className={styles.brandIcon}>✦</div>
+          <div className={styles.brandIcon}>
+            <Sparkles className="h-4 w-4" />
+          </div>
           <div className={styles.brandText}>
-            <b className={styles.brandTextStrong}>Área do cliente</b>
-            Círculo Santa Maria
+            <b className={styles.brandTextStrong}>Círculo Santa Maria</b>
           </div>
         </div>
 
-        <div className={styles.greeting}>
-          Olá
-          <b className={styles.greetingStrong}>{userName || "Convidado"}</b>
+        <div className={styles.profileCard}>
+          <div className={styles.profileAvatar}>
+            <CircleUserRound className="h-6 w-6" />
+          </div>
+          <div className={styles.profileMeta}>
+            <div className={styles.profileName}>{displayNameLimit(displayName)}</div>
+            <div className={styles.profileSince}>
+              Membro do Círculo desde:
+              <br />
+              Jul/2026
+            </div>
+          </div>
         </div>
 
         <nav className={styles.sidebarNav} aria-label="Navegação principal">
           {navigation.map((item) => {
             const isActive = item.id === activeTab;
+            const Icon = item.icon;
 
             return (
               <Link
                 key={item.href}
                 href={item.href}
                 aria-current={isActive ? "page" : undefined}
-                className={`${styles.navItem} ${isActive ? styles.navItemActive : ""}`}
+                className={`${styles.navItem} ${isActive ? styles.navItemActive : ""
+                  }`}
               >
-                <span className={styles.navIcon}>{item.icon}</span>
+                <span className={styles.navIcon} aria-hidden="true">
+                  <Icon className="h-3.5 w-3.5" />
+                </span>
                 {item.label}
               </Link>
             );
@@ -87,12 +140,8 @@ export default function Sidebar({ userName }: SidebarProps) {
       </div>
 
       <div>
-        <div className={styles.curadoriaBox}>
-          <span className={styles.curadoriaEyebrow}>CURADORIA ATIVA</span>
-          Seu acesso libera promoções sazonais, experiências exclusivas e conteúdos escolhidos pelo time Santa Maria.
-        </div>
         <button type="button" onClick={handleLogout} className={styles.signout}>
-          <LogOut className="inline-block h-4 w-4" /> SAIR
+          <LogOut className="h-4 w-4" /> SAIR
         </button>
       </div>
     </aside>

@@ -1,4 +1,4 @@
-@import "tailwindcss";
+﻿@import "tailwindcss";
 
 :root {
   --color-brown: #684031;
@@ -24,6 +24,13 @@ body {
   background:
     radial-gradient(circle at top, rgba(213, 166, 66, 0.08), transparent 28%),
     linear-gradient(180deg, #fcfaf7 0%, #f6f0e9 100%);
+}
+
+.focus-ring:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px #8b2e20,
+    0 0 0 5px rgba(247, 241, 230, 0.98);
 }
 
 a,
