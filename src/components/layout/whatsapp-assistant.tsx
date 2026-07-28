@@ -6,7 +6,7 @@ import { MessageCircle, X } from "lucide-react";
 const WHATSAPP_URL = "https://wa.me/5511958187139";
 
 export function WhatsAppAssistant() {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <div className="fixed bottom-5 right-5 z-50 flex flex-col items-end gap-3">
