@@ -54,57 +54,57 @@ export const primaryNavigationItems = [
   { label: "Empório", href: "/emporio" },
   { label: "Sushi", href: "/sushi" },
   { label: "Café", href: "/cafe" },
-  { label: "Brunch", href: "/brunch" },
-  { label: "Delivery", href: "/delivery" },
-  { label: "Produtos", href: "/produtos" },
+  // { label: "Brunch", href: "/brunch" },
+  // { label: "Delivery", href: "/delivery" },
+  // { label: "Produtos", href: "/produtos" },
   { label: "Serviços", href: "/servicos" },
 ] as const;
 
 export const sitePages: SitePage[] = [
-  {
-    slug: "brunch",
-    title: "Brunch",
-    description: "Conheça o novo espaço de brunch do Santa Maria Empório.",
-    navLabel: "Brunch",
-    template: "feature",
-    hero: {
-      title: "Um novo espaço para celebrar a manhã",
-      description:
-        "Bebidas quentes e frias, refeições leves ou mais elaborados - com o toque de afeto do Santa Maria para transformar qualquer pausa em um momento especial.",
-      image: "/images/branch.png",
-    },
-    alternatingSections: [
-      {
-        title: "Um convite para desacelerar",
-        text: [
-          "No coração do nosso empório, criamos um espaço onde o tempo parece desacelerar.",
-          "Ali, entre aromas convidativos e luz suave, os dias começam com mais leveza.",
-        ],
-        image: "/images/branch1.jpg",
-      },
-      {
-        title: "Sabores para qualquer humor matinal",
-        text: [
-          "Servimos pães artesanais, ovos preparados na hora, frutas frescas, panquecas douradas e uma seleção especial de bebidas quentes e frias.",
-          "Tudo com aquele toque de afeto e sofisticação que já faz parte da Experiência Santa Maria.",
-        ],
-        image: "/images/branch2.jpg",
-        imageLeft: true,
-      },
-      {
-        title: "Brunch, pausa e reencontro",
-        text: [
-          "É brunch, mas também é pausa. É reencontro, é descobrir um novo favorito no cardápio.",
-          "Um começo de dia comum vira momento de celebração.",
-        ],
-        image: "/images/branch3.jpg",
-      },
-    ],
-    intro: [
-      "O Santa Maria é referência em gastronomia em São Paulo e conta com padaria, rotisserie, confeitaria, sushi, café e fábrica de massas. ",
-      "Tudo feito com os melhores ingredientes, qualidade e atendimento únicos!",
-    ],
-  },
+  // {
+  //   slug: "brunch",
+  //   title: "Brunch",
+  //   description: "Conheça o novo espaço de brunch do Santa Maria Empório.",
+  //   navLabel: "Brunch",
+  //   template: "feature",
+  //   hero: {
+  //     title: "Um novo espaço para celebrar a manhã",
+  //     description:
+  //       "Bebidas quentes e frias, refeições leves ou mais elaborados - com o toque de afeto do Santa Maria para transformar qualquer pausa em um momento especial.",
+  //     image: "/images/branch.png",
+  //   },
+  //   alternatingSections: [
+  //     {
+  //       title: "Um convite para desacelerar",
+  //       text: [
+  //         "No coração do nosso empório, criamos um espaço onde o tempo parece desacelerar.",
+  //         "Ali, entre aromas convidativos e luz suave, os dias começam com mais leveza.",
+  //       ],
+  //       image: "/images/branch1.jpg",
+  //     },
+  //     {
+  //       title: "Sabores para qualquer humor matinal",
+  //       text: [
+  //         "Servimos pães artesanais, ovos preparados na hora, frutas frescas, panquecas douradas e uma seleção especial de bebidas quentes e frias.",
+  //         "Tudo com aquele toque de afeto e sofisticação que já faz parte da Experiência Santa Maria.",
+  //       ],
+  //       image: "/images/branch2.jpg",
+  //       imageLeft: true,
+  //     },
+  //     {
+  //       title: "Brunch, pausa e reencontro",
+  //       text: [
+  //         "É brunch, mas também é pausa. É reencontro, é descobrir um novo favorito no cardápio.",
+  //         "Um começo de dia comum vira momento de celebração.",
+  //       ],
+  //       image: "/images/branch3.jpg",
+  //     },
+  //   ],
+  //   intro: [
+  //     "O Santa Maria é referência em gastronomia em São Paulo e conta com padaria, rotisserie, confeitaria, sushi, café e fábrica de massas. ",
+  //     "Tudo feito com os melhores ingredientes, qualidade e atendimento únicos!",
+  //   ],
+  // },
   {
     slug: "emporio",
     title: "Empório",
@@ -195,46 +195,46 @@ export const sitePages: SitePage[] = [
       },
     ],
   },
-  {
-    slug: "produtos",
-    title: "Nossos Produtos",
-    description: "Padaria, rotisserie e confeitaria do Santa Maria Empório.",
-    navLabel: "Nossos Produtos",
-    template: "feature",
-    hero: {
-      title: "Nossos produtos",
-      description:
-        "Bebidas quentes e frias, refeições leves ou mais elaborados - com o toque de afeto do Santa Maria para transformar qualquer pausa em um momento especial.",
-      image: "/images/padaria.jpg",
-    },
-    alternatingSections: [
-      {
-        title: "Padaria",
-        text: [
-          "A padaria do Santa Maria reúne pães e doces produzidos com ingredientes altamente selecionados.",
-          "Entre os mais pedidos estão pão de cranberry com nozes, pão de granola com pistache, baguete italiana e os famosos cruffins.",
-        ],
-        image: "/images/padaria.jpg",
-      },
-      {
-        title: "Rotisserie",
-        text: [
-          "Praticidade sem abrir mão da qualidade. Os pratos são feitos artesanalmente todos os dias.",
-          "Saladas, legumes, tortas, quiches, carnes, massas, acompanhamentos, antepastos e salgados fazem parte da seleção.",
-        ],
-        image: "/images/rotisseri.jpg",
-        imageLeft: true,
-      },
-      {
-        title: "Confeitaria",
-        text: [
-          "Doces artesanais elaborados para celebrar a vida, com alto padrao de qualidade e muito sabor.",
-          "Entre os destaques estão Fraise de Morango, Bolo Mousse de Pistache, Naked Frutas e Tiramisu.",
-        ],
-        image: "/images/confeitaria.jpg",
-      },
-    ],
-  },
+  // {
+  //   slug: "produtos",
+  //   title: "Nossos Produtos",
+  //   description: "Padaria, rotisserie e confeitaria do Santa Maria Empório.",
+  //   navLabel: "Nossos Produtos",
+  //   template: "feature",
+  //   hero: {
+  //     title: "Nossos produtos",
+  //     description:
+  //       "Bebidas quentes e frias, refeições leves ou mais elaborados - com o toque de afeto do Santa Maria para transformar qualquer pausa em um momento especial.",
+  //     image: "/images/padaria.jpg",
+  //   },
+  //   alternatingSections: [
+  //     {
+  //       title: "Padaria",
+  //       text: [
+  //         "A padaria do Santa Maria reúne pães e doces produzidos com ingredientes altamente selecionados.",
+  //         "Entre os mais pedidos estão pão de cranberry com nozes, pão de granola com pistache, baguete italiana e os famosos cruffins.",
+  //       ],
+  //       image: "/images/padaria.jpg",
+  //     },
+  //     {
+  //       title: "Rotisserie",
+  //       text: [
+  //         "Praticidade sem abrir mão da qualidade. Os pratos são feitos artesanalmente todos os dias.",
+  //         "Saladas, legumes, tortas, quiches, carnes, massas, acompanhamentos, antepastos e salgados fazem parte da seleção.",
+  //       ],
+  //       image: "/images/rotisseri.jpg",
+  //       imageLeft: true,
+  //     },
+  //     {
+  //       title: "Confeitaria",
+  //       text: [
+  //         "Doces artesanais elaborados para celebrar a vida, com alto padrao de qualidade e muito sabor.",
+  //         "Entre os destaques estão Fraise de Morango, Bolo Mousse de Pistache, Naked Frutas e Tiramisu.",
+  //       ],
+  //       image: "/images/confeitaria.jpg",
+  //     },
+  //   ],
+  // },
   {
     slug: "servicos",
     title: "Nossos Serviços",
