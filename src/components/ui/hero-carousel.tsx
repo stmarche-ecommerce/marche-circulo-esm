@@ -5,8 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Slider from "react-slick";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-
-import SparkleOverlay from "../sparleoverlay";
+import SparkleOverlay from "../sparkeeoverlay";
 
 const slides = [
   {
@@ -74,7 +73,6 @@ const sliderSettings = {
   dots: true,
   fade: false,
   infinite: false,
-  // lazyLoad: "ondemand" as const,
   nextArrow: <CustomNextArrow />,
   pauseOnFocus: true,
   pauseOnHover: true,
@@ -125,7 +123,7 @@ export function HeroCarousel() {
             </>
           );
 
-          const accessibleLabel = "" + slide.title + ". " + slide.description;
+          const accessibleLabel = `${slide.title}. ${slide.description}`;
 
           return (
             <div key={slide.title} className="h-full">
@@ -151,4 +149,3 @@ export function HeroCarousel() {
     </section>
   );
 }
-

@@ -1,8 +1,9 @@
-"use client";
+﻿"use client";
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Sidebar from "@/components/layout/sidebar";
+import { WhatsAppAssistant } from "@/components/layout/whatsapp-assistant";
 import { AppClientProviders } from "@/components/ui/app-client-providers";
 import { useAuth } from "@/app/context/auth-context";
 
@@ -17,9 +18,10 @@ function AreaClienteLayoutContent({ children }: { children: React.ReactNode }) {
   }, [loading, user, router]);
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(213,166,66,0.08),transparent_26%),linear-gradient(180deg,#fcfaf7_0%,#f4ede6_100%)] md:flex">
-      <Sidebar userName={user?.name} />
-      <main className="flex-1 p-5 md:p-8 xl:p-10">{children}</main>
+    <div className="min-h-screen bg-[#f6efe4] md:flex">
+      <Sidebar userName={user?.name} userEmail={user?.email} />
+      {children}
+      <WhatsAppAssistant />
     </div>
   );
 }
