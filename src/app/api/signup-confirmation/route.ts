@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import { sendSignupConfirmationEmail } from "@/lib/signup-confirmation-email";
 
 interface SignupConfirmationRequestBody {
@@ -42,14 +42,8 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error("Signup confirmation email failed:", error);
 
-    const message =
-      error instanceof Error
-        ? error.message
-        : "Falha ao enviar e-mail de confirmação.";
+    const message = error instanceof Error ? error.message : "Falha ao enviar e-mail de confirmação.";
 
-    return NextResponse.json(
-      { success: false, message },
-      { status: 500 },
-    );
+    return NextResponse.json({ success: false, message }, { status: 500 });
   }
 }

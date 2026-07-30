@@ -25,6 +25,7 @@ const experienceCards = [
     href: "/cafe",
     image: "/images/foto3.jpg",
   },
+  /*
   {
     title: "Brunch",
     description:
@@ -46,9 +47,11 @@ const experienceCards = [
     href: "/servicos",
     image: "/images/servicos.jpg",
   },
+
+  */
 ];
 
-const workHighlights = ["Grupo St Marche", "Ambiente acolhedor", "Novas oportunidades"];
+// const workHighlights = ["Grupo St Marche", "Ambiente acolhedor", "Novas oportunidades"];
 
 export default function HomePage() {
   return (
@@ -91,7 +94,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="section-shell overflow-hidden bg-[radial-gradient(circle_at_top,_rgba(218,168,54,0.18),_transparent_38%),linear-gradient(180deg,_#f6efe6_0%,_#f7f1e8_100%)]">
+      {/* <section className="section-shell overflow-hidden bg-[radial-gradient(circle_at_top,_rgba(218,168,54,0.18),_transparent_38%),linear-gradient(180deg,_#f6efe6_0%,_#f7f1e8_100%)]">
         <div className="content-grid">
           <article className="site-card relative overflow-hidden border border-white/70 bg-white/92 p-0 shadow-[0_24px_80px_rgba(113,74,42,0.14)] backdrop-blur">
             <div className="absolute inset-y-0 left-0 hidden w-2 bg-[var(--color-accent)] lg:block" />
@@ -146,7 +149,7 @@ export default function HomePage() {
             </div>
           </article>
         </div>
-      </section>
+      </section> */}
     </>
   );
 }

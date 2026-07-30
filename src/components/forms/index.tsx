@@ -87,7 +87,7 @@ export function ConsentSection({
 
       <div className="grid gap-2 md:grid-cols-3">{children}</div>
 
-      <label className="inline-flex items-start gap-2.5 border-t border-[rgba(104,64,49,0.1)] pt-3 text-[0.84rem] leading-[1.35] text-[var(--color-muted)]">
+      <label className="inline-flex items-start gap-2.5 border-t border-[rgba(104,64,49,0.1)] pt-3 text-[0.84rem] leading-[1.35] text-var(--color-muted)">
         <input
           type="checkbox"
           name="privacyConsent"
@@ -102,7 +102,7 @@ export function ConsentSection({
             href="https://marche.com.br/policies/privacy-policy?store_id=66677604431"
             target="_blank"
             rel="noreferrer"
-            className="font-bold text-[var(--color-brown)] underline decoration-[rgba(104,64,49,0.35)] underline-offset-3 hover:text-[var(--color-accent)]"
+            className="font-bold text-var(--color-brown) underline decoration-[rgba(104,64,49,0.35)] underline-offset-3 hover:text-var(--color-accent)"
           >
             política de privacidade
           </Link>

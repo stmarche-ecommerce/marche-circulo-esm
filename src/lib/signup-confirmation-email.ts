@@ -1,6 +1,7 @@
-"use server";
+﻿"use server";
 
 import { randomUUID } from "node:crypto";
+import net from "node:net";
 import tls from "node:tls";
 
 interface SignupConfirmationEmailParams {
@@ -17,6 +18,8 @@ type SmtpConfig = {
   secure: boolean;
 };
 
+type SmtpSocket = net.Socket | tls.TLSSocket;
+
 function getFirstName(name: string) {
   return name.trim().split(/\s+/)[0] || "cliente";
 }
@@ -28,8 +31,8 @@ function buildEmailHtml(name: string, applicationUrl: string) {
     <div style="font-family: Arial, sans-serif; background:#fcfaf7; color:#4d423d; padding:32px;">
       <div style="max-width:600px; margin:0 auto; background:#ffffff; border:1px solid rgba(104,64,49,0.12); border-radius:24px; overflow:hidden;">
         <div style="background:linear-gradient(135deg, #684031, #472a23); color:#ffffff; padding:32px;">
-          <p style="margin:0; font-size:12px; letter-spacing:0.28em; text-transform:uppercase; opacity:0.76;">Circulo Santa Maria</p>
-          <h1 style="margin:12px 0 0; font-size:28px; line-height:1.2;">Bem-vindo(a) ao Circulo Santa Maria</h1>
+          <p style="margin:0; font-size:12px; letter-spacing:0.28em; text-transform:uppercase; opacity:0.76;">Círculo Santa Maria</p>
+          <h1 style="margin:12px 0 0; font-size:28px; line-height:1.2;">Bem-vindo(a) ao Círculo Santa Maria</h1>
         </div>
         <div style="padding:32px;">
           <p style="margin:0 0 16px; font-size:16px; line-height:1.7;">Olá, ${firstName}.</p>
@@ -66,22 +69,18 @@ function buildEmailText(name: string, applicationUrl: string) {
   return [
     `Olá, ${firstName}.`,
     "",
-    "Recebemos sua solicitação de cadastro na área restrita do Círculo Santa Maria.",
-    "Seus dados foram enviados com sucesso e seu acesso está em processamento.",
+    "Seu cadastro no Círculo Santa Maria foi concluído com sucesso e seu acesso já está liberado.",
     "",
     `Acesse a aplicação em: ${applicationUrl}`,
     "",
-    "Se você não reconhece esta solicitação, responda este e-mail ou entre em contato com nosso time.",
+    "Se você não reconhece este cadastro, responda este e-mail ou entre em contato com nosso time.",
   ].join("\n");
 }
 
 function resolveEnvValue(...keys: string[]) {
   for (const key of keys) {
     const value = process.env[key]?.trim();
-
-    if (value) {
-      return value;
-    }
+    if (value) return value;
   }
 
   return "";
@@ -91,11 +90,7 @@ function resolveSmtpConfig(): SmtpConfig {
   const host = resolveEnvValue("SMTP_ENDERECO", "SMTP_HOST");
   const portValue = resolveEnvValue("SMTP_PORTA", "SMTP_PORT");
   const username = resolveEnvValue("SMTP_USUARIO", "SMTP_USER", "SENDGRID_USERNAME");
-  const password = resolveEnvValue(
-    "SMTP_SENDGRID_TOKEN",
-    "SMTP_PASSWORD",
-    "SENDGRID_API_KEY",
-  );
+  const password = resolveEnvValue("SMTP_SENDGRID_TOKEN", "SMTP_PASSWORD", "SENDGRID_API_KEY");
 
   const missingVariables = [
     !host && "SMTP_ENDERECO/SMTP_HOST",
@@ -113,7 +108,7 @@ function resolveSmtpConfig(): SmtpConfig {
   const port = Number(portValue);
 
   if (!Number.isFinite(port) || port <= 0) {
-    throw new Error("SMTP_PORTA/SMTP_PORT invalida.");
+    throw new Error("SMTP_PORTA/SMTP_PORT inválida.");
   }
 
   return {
@@ -130,10 +125,7 @@ function parseMailbox(value: string) {
   const match = trimmed.match(/^(.*)<(.+)>$/);
 
   if (!match) {
-    return {
-      name: "",
-      email: trimmed,
-    };
+    return { name: "", email: trimmed };
   }
 
   return {
@@ -198,7 +190,14 @@ function isPositiveCompletion(reply: string) {
   return /^[23]\d{2}/m.test(reply);
 }
 
-function createSmtpConnection(config: SmtpConfig) {
+function setCommonSocketOptions(socket: SmtpSocket) {
+  socket.setEncoding("utf8");
+  socket.setTimeout(15000, () => {
+    socket.destroy(new Error("Tempo limite excedido na conexão SMTP."));
+  });
+}
+
+function createTlsConnection(config: SmtpConfig) {
   return new Promise<tls.TLSSocket>((resolve, reject) => {
     const socket = tls.connect(
       {
@@ -209,15 +208,42 @@ function createSmtpConnection(config: SmtpConfig) {
       () => resolve(socket),
     );
 
-    socket.setEncoding("utf8");
-    socket.setTimeout(15000, () => {
-      socket.destroy(new Error("Tempo limite excedido ao conectar no SMTP."));
-    });
+    setCommonSocketOptions(socket);
     socket.once("error", reject);
   });
 }
 
-function readSmtpReply(socket: tls.TLSSocket) {
+function createPlainConnection(config: SmtpConfig) {
+  return new Promise<net.Socket>((resolve, reject) => {
+    const socket = net.createConnection(
+      {
+        host: config.host,
+        port: config.port,
+      },
+      () => resolve(socket),
+    );
+
+    setCommonSocketOptions(socket);
+    socket.once("error", reject);
+  });
+}
+
+function upgradeToTls(socket: net.Socket, config: SmtpConfig) {
+  return new Promise<tls.TLSSocket>((resolve, reject) => {
+    const securedSocket = tls.connect(
+      {
+        socket,
+        servername: config.host,
+      },
+      () => resolve(securedSocket),
+    );
+
+    setCommonSocketOptions(securedSocket);
+    securedSocket.once("error", reject);
+  });
+}
+
+function readSmtpReply(socket: SmtpSocket) {
   return new Promise<string>((resolve, reject) => {
     let buffer = "";
 
@@ -233,9 +259,7 @@ function readSmtpReply(socket: tls.TLSSocket) {
         .map((line) => line.trimEnd())
         .filter(Boolean);
 
-      if (!lines.length) {
-        return;
-      }
+      if (!lines.length) return;
 
       const lastLine = lines[lines.length - 1];
 
@@ -257,7 +281,7 @@ function readSmtpReply(socket: tls.TLSSocket) {
 
     const onClose = () => {
       cleanup();
-      reject(new Error("Conexao SMTP encerrada antes da resposta."));
+      reject(new Error("Conexão SMTP encerrada antes da resposta."));
     };
 
     socket.on("data", onData);
@@ -266,11 +290,7 @@ function readSmtpReply(socket: tls.TLSSocket) {
   });
 }
 
-async function sendSmtpCommand(
-  socket: tls.TLSSocket,
-  command: string,
-  expectedLabel: string,
-) {
+async function sendSmtpCommand(socket: SmtpSocket, command: string, expectedLabel: string) {
   socket.write(`${command}\r\n`);
   const reply = await readSmtpReply(socket);
 
@@ -281,19 +301,24 @@ async function sendSmtpCommand(
   return reply;
 }
 
-async function sendSmtpData(
-  socket: tls.TLSSocket,
-  message: string,
-) {
-  const dataReply = await sendSmtpCommand(socket, "DATA", "DATA");
+async function expectStartTls(socket: SmtpSocket) {
+  socket.write("STARTTLS\r\n");
+  const reply = await readSmtpReply(socket);
+
+  if (!/^220/m.test(reply)) {
+    throw new Error(`Servidor SMTP recusou STARTTLS: ${reply}`);
+  }
+}
+
+async function sendSmtpData(socket: SmtpSocket, message: string) {
+  socket.write("DATA\r\n");
+  const dataReply = await readSmtpReply(socket);
 
   if (!/^354/m.test(dataReply)) {
     throw new Error(`Servidor SMTP recusou DATA: ${dataReply}`);
   }
 
-  const normalizedMessage = message
-    .replace(/\r?\n/g, "\r\n")
-    .replace(/^\./gm, "..");
+  const normalizedMessage = message.replace(/\r?\n/g, "\r\n").replace(/^\./gm, "..");
 
   socket.write(`${normalizedMessage}\r\n.\r\n`);
   const finalReply = await readSmtpReply(socket);
@@ -309,18 +334,15 @@ export async function sendSignupConfirmationEmail({
   applicationUrl,
 }: SignupConfirmationEmailParams) {
   const config = resolveSmtpConfig();
-  const from =
-    process.env.SIGNUP_CONFIRMATION_FROM_EMAIL ??
-    "Santa Maria Empório <automacao@marche.com.br>";
-  const replyTo =
-    process.env.SIGNUP_CONFIRMATION_REPLY_TO ?? "contato@emporiosantamaria.com.br";
+  const from = process.env.SIGNUP_CONFIRMATION_FROM_EMAIL ?? "Santa Maria Empório <automacao@marche.com.br>";
+  const replyTo = process.env.SIGNUP_CONFIRMATION_REPLY_TO ?? "contato@emporiosantamaria.com.br";
   const subject = "Recebemos seu cadastro no Círculo Santa Maria";
   const text = buildEmailText(name, applicationUrl);
   const html = buildEmailHtml(name, applicationUrl);
   const fromMailbox = parseMailbox(from);
 
   if (!fromMailbox.email) {
-    throw new Error("SIGNUP_CONFIRMATION_FROM_EMAIL invalido.");
+    throw new Error("SIGNUP_CONFIRMATION_FROM_EMAIL inválido.");
   }
 
   const message = buildMimeMessage({
@@ -332,21 +354,55 @@ export async function sendSignupConfirmationEmail({
     html,
   });
 
-  const socket = await createSmtpConnection(config);
+  console.info("[signup-confirmation-email] Iniciando envio", {
+    to: email,
+    host: config.host,
+    port: config.port,
+    secure: config.secure,
+    from: fromMailbox.email,
+  });
+
+  let socket: SmtpSocket = config.secure
+    ? await createTlsConnection(config)
+    : await createPlainConnection(config);
 
   try {
     const greeting = await readSmtpReply(socket);
 
-    if (!isPositiveCompletion(greeting)) throw new Error(`Falha no handshake SMTP: ${greeting}`);
+    if (!isPositiveCompletion(greeting)) {
+      throw new Error(`Falha no handshake SMTP: ${greeting}`);
+    }
 
     await sendSmtpCommand(socket, `EHLO ${config.host}`, "EHLO");
+
+    if (!config.secure) {
+      await expectStartTls(socket);
+      socket = await upgradeToTls(socket as net.Socket, config);
+      await sendSmtpCommand(socket, `EHLO ${config.host}`, "EHLO após STARTTLS");
+    }
+
     await sendSmtpCommand(socket, "AUTH LOGIN", "AUTH LOGIN");
-    await sendSmtpCommand(socket, toBase64(config.username), "usuario SMTP");
+    await sendSmtpCommand(socket, toBase64(config.username), "usuário SMTP");
     await sendSmtpCommand(socket, toBase64(config.password), "senha SMTP");
     await sendSmtpCommand(socket, `MAIL FROM:<${fromMailbox.email}>`, "MAIL FROM");
     await sendSmtpCommand(socket, `RCPT TO:<${email}>`, "RCPT TO");
     await sendSmtpData(socket, message);
     await sendSmtpCommand(socket, "QUIT", "QUIT");
+
+    console.info("[signup-confirmation-email] SMTP aceitou a mensagem", {
+      to: email,
+      host: config.host,
+      port: config.port,
+    });
+  } catch (error) {
+    console.error("[signup-confirmation-email] Falha no envio SMTP", {
+      to: email,
+      host: config.host,
+      port: config.port,
+      secure: config.secure,
+      error: error instanceof Error ? error.message : String(error),
+    });
+    throw error;
   } finally {
     socket.end();
   }

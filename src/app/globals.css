@@ -26,6 +26,13 @@ body {
     linear-gradient(180deg, #fcfaf7 0%, #f6f0e9 100%);
 }
 
+.focus-ring:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px #8b2e20,
+    0 0 0 5px rgba(247, 241, 230, 0.98);
+}
+
 a,
 button,
 input,
@@ -299,8 +306,6 @@ textarea {
   box-shadow: 0 0 0 4px rgba(213, 166, 66, 0.14);
 }
 
-
-
 @media (min-width: 768px) {
   .card-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -327,14 +332,6 @@ textarea {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
-
-
-
-
-
-
-
-
 
 .slick-slider {
   position: relative;
@@ -449,5 +446,3 @@ textarea {
   height: 100%;
   width: 100%;
 }
-
-
