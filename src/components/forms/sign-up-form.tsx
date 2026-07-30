@@ -99,7 +99,7 @@ export function SignUpForm() {
 
             <FieldGrid>
               <Field label="E-mail" name="email" type="email" value={formData.email} onChange={handleFormFieldChange} placeholder="seunome@email.com" error={fieldErrors.email} required />
-              <Field label="WhatsApp" name="phone" value={formData.phone} onChange={handleFormFieldChange} type="tel" placeholder="(11) 99999-9999" error={fieldErrors.phone} required />
+              <Field label="WhatsApp" name="phone" value={formData.phone} onChange={handleFormFieldChange} type="tel" inputMode="numeric" maxLength={15} placeholder="(11) 99999-9999" error={fieldErrors.phone} required />
             </FieldGrid>
           </>
         ) : null}

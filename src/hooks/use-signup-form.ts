@@ -1,4 +1,4 @@
-﻿import { useCallback, useState, type ChangeEvent } from "react";
+import { useCallback, useState, type ChangeEvent } from "react";
 import { formatCpf } from "@/lib/sign-up-validation";
 
 interface SignUpFormData {
@@ -40,13 +40,31 @@ const INITIAL_CONSENTS: SignUpConsents = {
   optInSms: false,
 };
 
+function formatPhone(value: string) {
+  const digits = value.replace(/\D/g, "").slice(0, 11);
+
+  if (digits.length <= 2) {
+    return digits ? `(${digits}` : "";
+  }
+
+  if (digits.length <= 7) {
+    return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+  }
+
+  return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+}
+
 export function useSignUpForm(): UseSignUpFormReturn {
   const [formData, setFormData] = useState<SignUpFormData>(INITIAL_FORM_DATA);
   const [consents, setConsents] = useState<SignUpConsents>(INITIAL_CONSENTS);
 
   const handleFieldChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    const nextValue = name === "cpf" ? formatCpf(value) : value;
+    const nextValue = name === "cpf"
+      ? formatCpf(value)
+      : name === "phone"
+        ? formatPhone(value)
+        : value;
 
     setFormData((current) => ({
       ...current,
