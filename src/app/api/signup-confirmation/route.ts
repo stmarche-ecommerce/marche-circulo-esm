@@ -1,4 +1,4 @@
-﻿import { NextResponse } from "next/server";
+import { after, NextResponse } from "next/server";
 import { sendSignupConfirmationEmail } from "@/lib/signup-confirmation-email";
 
 interface SignupConfirmationRequestBody {
@@ -32,13 +32,21 @@ export async function POST(request: Request) {
       );
     }
 
-    await sendSignupConfirmationEmail({
-      email,
-      name,
-      applicationUrl: resolveApplicationUrl(request),
+    const applicationUrl = resolveApplicationUrl(request);
+
+    after(async () => {
+      try {
+        await sendSignupConfirmationEmail({
+          email,
+          name,
+          applicationUrl,
+        });
+      } catch (error) {
+        console.error("Signup confirmation email failed:", error);
+      }
     });
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true }, { status: 202 });
   } catch (error) {
     console.error("Signup confirmation email failed:", error);
 
@@ -47,3 +55,4 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: false, message }, { status: 500 });
   }
 }
+

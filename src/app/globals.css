@@ -312,16 +312,6 @@ textarea {
   }
 }
 
-@media (max-width: 767px) {
-  .custom-arrow-prev { left: 8px; }
-  .custom-arrow-next { right: 8px; }
-}
-
-@media (min-width: 768px) {
-  .custom-arrow-prev { left: 16px; }
-  .custom-arrow-next { right: 16px; }
-}
-
 @media (min-width: 1024px) {
   .feature-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -434,15 +424,18 @@ textarea {
   background: var(--color-accent);
 }
 
-.hero-carousel .slick-slider,
-.hero-carousel .slick-list,
-.hero-carousel .slick-track,
-.hero-carousel .slick-slide,
-.hero-carousel .slick-slide > div {
-  height: 100%;
-}
-
 .hero-carousel__slide {
   height: 100%;
   width: 100%;
+}
+
+/* Única media query com efeito real: sobrescreve o padrão de 16px para 8px em telas menores */
+@media (max-width: 767px) {
+  .custom-arrow-prev {
+    left: 8px;
+  }
+
+  .custom-arrow-next {
+    right: 8px;
+  }
 }
