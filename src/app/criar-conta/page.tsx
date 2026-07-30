@@ -6,9 +6,9 @@ export default function SignUpPage() {
   return (
     <AppClientProviders>
       <AuthShell
-        eyebrow="Cadastro"
+        eyebrow=""
         title="Crie seu acesso"
-        description="Informe seus dados cadastrais e defina seus consentimentos de comunicação para solicitar acesso a área restrita."
+        description="Crie seu cadastro e aproveite as ofertas do Círculo Santa Maria"
         helperText="Já possui uma conta?"
         helperLinkHref="/login"
         helperLinkLabel="Fazer login"

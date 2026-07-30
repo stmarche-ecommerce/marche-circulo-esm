@@ -8,8 +8,6 @@ interface SignUpFormData {
   email: string;
   phone: string;
   birthDate: string;
-  password: string;
-  confirmPassword: string;
 }
 
 interface SignUpConsents {
@@ -34,8 +32,6 @@ const INITIAL_FORM_DATA: SignUpFormData = {
   email: "",
   phone: "",
   birthDate: "",
-  password: "",
-  confirmPassword: "",
 };
 
 const INITIAL_CONSENTS: SignUpConsents = {
@@ -44,20 +40,13 @@ const INITIAL_CONSENTS: SignUpConsents = {
   optInSms: false,
 };
 
-const trimPasswordEdges = (value: string) => value.replace(/^\s+|\s+$/g, "");
-
 export function useSignUpForm(): UseSignUpFormReturn {
   const [formData, setFormData] = useState<SignUpFormData>(INITIAL_FORM_DATA);
   const [consents, setConsents] = useState<SignUpConsents>(INITIAL_CONSENTS);
 
   const handleFieldChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    const nextValue =
-      name === "cpf"
-        ? formatCpf(value)
-        : name === "password" || name === "confirmPassword"
-          ? trimPasswordEdges(value)
-          : value;
+    const nextValue = name === "cpf" ? formatCpf(value) : value;
 
     setFormData((current) => ({
       ...current,

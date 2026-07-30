@@ -59,13 +59,13 @@ export function SiteHeader() {
               Criar conta
             </Link>
 
-            <Link
+            {/* <Link
               href="/login"
               className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-(--color-accent)/20 bg-(--color-accent) px-5 text-xs font-semibold uppercase tracking-[0.16em] text-(--color-brown-dark) shadow-[0_0_0_1px_rgba(213,166,66,0.08)] hover:bg-(--color-accent-soft) hover:border-(--color-accent-soft)"
             >
               <User size={15} strokeWidth={2.2} />
               Login
-            </Link>
+            </Link> */}
           </section>
         </nav>
 

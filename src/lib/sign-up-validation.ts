@@ -60,50 +60,42 @@ const isPastOrToday = (value: string) => {
   return date <= today;
 };
 
-export const signUpSchema = z
-  .object({
-    firstName: z.string().trim().min(1, "Informe seu nome."),
-    lastName: z.string().trim().min(1, "Informe seu sobrenome."),
-    cpf: z
-      .string()
-      .trim()
-      .min(1, "Informe seu CPF.")
-      .refine(isValidCpf, "Informe um CPF valido."),
-    email: z.string().trim().min(1, "Informe seu e-mail.").email("Informe um e-mail valido."),
-    phone: z
-      .string()
-      .trim()
-      .min(1, "Informe seu telefone.")
-      .refine((value) => {
-        const digits = onlyDigits(value);
-        return digits.length >= 10 && digits.length <= 11;
-      }, "Informe um telefone valido."),
-    birthDate: z
-      .string()
-      .min(1, "Informe sua data de nascimento.")
-      .refine(isPastOrToday, "Informe uma data de nascimento valida."),
-    zipCode: z
-      .string()
-      .trim()
-      .min(1, "Informe seu CEP.")
-      .refine((value) => onlyDigits(value).length === 8, "Informe um CEP valido."),
-    street: z.string().trim().min(1, "Informe a rua ou avenida."),
-    number: z.string().trim().min(1, "Informe o numero."),
-    neighborhood: z.string().trim().min(1, "Informe o bairro."),
-    city: z.string().trim().min(1, "Informe a cidade."),
-    state: z
-      .string()
-      .trim()
-      .length(2, "Informe a UF com 2 letras.")
-      .refine((value) => /^[A-Za-z]{2}$/.test(value), "Informe uma UF valida."),
-    password: z.string().trim().min(8, "A senha deve ter pelo menos 8 caracteres."),
-    confirmPassword: z.string().trim().min(1, "Confirme sua senha."),
-    privacyConsent: z.boolean().refine((value) => value, "Voce precisa concordar com a polÃ­tica de privacidade."),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    path: ["confirmPassword"],
-    message: "As senhas nÃ£o coincidem.",
-  });
+export const signUpSchema = z.object({
+  firstName: z.string().trim().min(1, "Informe seu nome."),
+  lastName: z.string().trim().min(1, "Informe seu sobrenome."),
+  cpf: z
+    .string()
+    .trim()
+    .min(1, "Informe seu CPF.")
+    .refine(isValidCpf, "Informe um CPF valido."),
+  email: z.string().trim().min(1, "Informe seu e-mail.").email("Informe um e-mail valido."),
+  phone: z
+    .string()
+    .trim()
+    .min(1, "Informe seu telefone.")
+    .refine((value) => {
+      const digits = onlyDigits(value);
+      return digits.length >= 10 && digits.length <= 11;
+    }, "Informe um telefone valido."),
+  birthDate: z
+    .string()
+    .min(1, "Informe sua data de nascimento.")
+    .refine(isPastOrToday, "Informe uma data de nascimento valida."),
+  zipCode: z
+    .string()
+    .trim()
+    .min(1, "Informe seu CEP.")
+    .refine((value) => onlyDigits(value).length === 8, "Informe um CEP valido."),
+  street: z.string().trim().min(1, "Informe a rua ou avenida."),
+  number: z.string().trim().min(1, "Informe o numero."),
+  neighborhood: z.string().trim().min(1, "Informe o bairro."),
+  city: z.string().trim().min(1, "Informe a cidade."),
+  state: z
+    .string()
+    .trim()
+    .length(2, "Informe a UF com 2 letras.")
+    .refine((value) => /^[A-Za-z]{2}$/.test(value), "Informe uma UF valida."),
+  privacyConsent: z.boolean().refine((value) => value, "Voce precisa concordar com a politica de privacidade."),
+});
 
 export type SignUpFormValues = z.infer<typeof signUpSchema>;
-
