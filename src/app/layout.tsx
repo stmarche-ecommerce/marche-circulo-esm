@@ -1,4 +1,4 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { Fraunces, Inter, JetBrains_Mono } from "next/font/google";
 import { AppShell } from "@/components/layout/app-shell";
@@ -6,8 +6,8 @@ import "./globals.css";
 
 const cera = localFont({
   src: [
-    { path: "../../public/fonts/CeraLight.ttf", weight: "300", style: "normal" },
-    { path: "../../public/fonts/CeraBold.ttf", weight: "700", style: "normal" },
+    { path: "../../public/fonts/CeraLight.woff2", weight: "300", style: "normal" },
+    { path: "../../public/fonts/CeraBold.woff2", weight: "700", style: "normal" },
   ],
   variable: "--font-cera",
   display: "swap",
@@ -32,6 +32,7 @@ const jetbrainsMono = JetBrains_Mono({
   variable: "--font-jetbrains-mono",
   weight: ["400", "500"],
   display: "swap",
+  preload: false,
 });
 
 export const metadata: Metadata = {
@@ -39,7 +40,10 @@ export const metadata: Metadata = {
     default: "Santa Maria Emporio",
     template: "%s | Santa Maria Emporio",
   },
-  description: "Landing page institucional do Santa Maria Emporio em Next.js.",
+  description: "Landing page institucional do Santa Maria Empório em Next.js.",
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({

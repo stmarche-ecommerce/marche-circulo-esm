@@ -25,10 +25,11 @@ export function AuthShell({
       <div className="absolute inset-0 lg:hidden" aria-hidden="true">
         <Image
           src="/images/loja.jpg"
-          alt=""
+          alt="Fachada Santa Maria Empório"
           fill
           priority
-          sizes="100vw"
+          quality={75}
+          sizes="(max-width: 1024px) 0px, 60vw"
           className="object-cover object-center"
         />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(18,15,24,0.18),rgba(18,15,24,0.72)),linear-gradient(135deg,rgba(47,44,82,0.42),rgba(104,64,49,0.26))]" />
