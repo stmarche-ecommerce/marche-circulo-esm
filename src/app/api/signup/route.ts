@@ -23,11 +23,22 @@ interface SignupPayload {
   complement: string;
 }
 
+// function resolveUsersApiUrl() {
+//   return (
+//     process.env.ESM_CUSTOMER_SYNC_URL?.trim() ||
+//     process.env.NEXT_PUBLIC_API_USERS_V2?.trim()
+//   );
+// }
+
 function resolveUsersApiUrl() {
-  return (
+  const base =
     process.env.ESM_CUSTOMER_SYNC_URL?.trim() ||
-    process.env.NEXT_PUBLIC_API_USERS_V2?.trim()
-  );
+    process.env.NEXT_PUBLIC_API_USERS_V2?.trim();
+
+  if (!base) return undefined;
+
+  // remove barra final duplicada, se houver
+  return `${base.replace(/\/+$/, "")}/users-v2`;
 }
 
 function resolveUsersApiKey() {

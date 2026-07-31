@@ -12,7 +12,7 @@ const slides = [
     eyebrow: "Todos os dias, a partir das 9h",
     title: "Brunch Santa Maria",
     description: "Um convite para desacelerar, descobrir novos sabores e começar o dia celebrando a vida.",
-    href: "/brunch",
+    href: "/",
     cta: "Descobrir brunch",
     image: "/images/branch1.jpg",
   },

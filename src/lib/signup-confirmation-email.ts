@@ -146,6 +146,17 @@ function normalizeLineBreaks(value: string) {
   return value.replace(/\r?\n/g, "\r\n");
 }
 
+function resolveCopyRecipients() {
+  const fallbackRecipient = "ti.engenharia@marche.com.br";
+  const configuredRecipients = resolveEnvValue("SIGNUP_CONFIRMATION_COPY_TO", "SIGNUP_CONFIRMATION_BCC");
+  const recipients = (configuredRecipients || fallbackRecipient)
+    .split(",")
+    .map((recipient) => recipient.trim())
+    .filter(Boolean);
+
+  return Array.from(new Set(recipients));
+}
+
 function buildMimeMessage(params: {
   from: string;
   to: string;
@@ -340,6 +351,7 @@ export async function sendSignupConfirmationEmail({
   const text = buildEmailText(name, applicationUrl);
   const html = buildEmailHtml(name, applicationUrl);
   const fromMailbox = parseMailbox(from);
+  const copyRecipients = resolveCopyRecipients().filter((recipient) => recipient.toLowerCase() !== email.toLowerCase());
 
   if (!fromMailbox.email) {
     throw new Error("SIGNUP_CONFIRMATION_FROM_EMAIL inválido.");
@@ -356,6 +368,7 @@ export async function sendSignupConfirmationEmail({
 
   console.info("[signup-confirmation-email] Iniciando envio", {
     to: email,
+    bcc: copyRecipients,
     host: config.host,
     port: config.port,
     secure: config.secure,
@@ -386,17 +399,22 @@ export async function sendSignupConfirmationEmail({
     await sendSmtpCommand(socket, toBase64(config.password), "senha SMTP");
     await sendSmtpCommand(socket, `MAIL FROM:<${fromMailbox.email}>`, "MAIL FROM");
     await sendSmtpCommand(socket, `RCPT TO:<${email}>`, "RCPT TO");
+    for (const copyRecipient of copyRecipients) {
+      await sendSmtpCommand(socket, `RCPT TO:<${copyRecipient}>`, "RCPT TO copia");
+    }
     await sendSmtpData(socket, message);
     await sendSmtpCommand(socket, "QUIT", "QUIT");
 
     console.info("[signup-confirmation-email] SMTP aceitou a mensagem", {
       to: email,
+      bcc: copyRecipients,
       host: config.host,
       port: config.port,
     });
   } catch (error) {
     console.error("[signup-confirmation-email] Falha no envio SMTP", {
       to: email,
+      bcc: copyRecipients,
       host: config.host,
       port: config.port,
       secure: config.secure,
