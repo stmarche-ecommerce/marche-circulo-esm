@@ -95,14 +95,14 @@ export function SiteHeader() {
       {open ? (
         <div className="border-t border-white/10 bg-(--color-brown-dark) py-4 xl:hidden">
           <section className="w-full flex flex-col flex-wrap gap-2 px-4 mb-5 pb-5 border-b border-white/10">
-            <Link
+            {/* <Link
               href="/login"
               onClick={() => setOpen(false)}
               className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-(--color-accent)/20 bg-(--color-accent) px-5 text-xs font-semibold uppercase tracking-[0.16em] text-(--color-brown-dark) shadow-[0_0_0_1px_rgba(213,166,66,0.08)] hover:bg-(--color-accent-soft) hover:border-(--color-accent-soft)"
             >
               <User size={15} strokeWidth={2.2} />
               Login
-            </Link>
+            </Link> */}
 
             <Link
               href="/criar-conta"
