@@ -62,7 +62,7 @@ export function SignUpForm() {
                       ? "border-[var(--color-accent)] bg-[rgba(213,166,66,0.14)] text-[var(--color-brown)]"
                       : "border-[rgba(104,64,49,0.14)] bg-white text-[var(--color-muted)]"
                     } ${isFutureStep ? "cursor-not-allowed opacity-50" : ""}`}
-                  aria-label={`Ir para etapa ${step}: ${step === 1 ? "Identificacao" : "Endereco e preferencias"}`}
+                  aria-label={`Ir para etapa ${step}: ${step === 1 ? "Identificacao" : "Endereco e preferências"}`}
                   aria-disabled={isFutureStep}
                 >
                   {step}
@@ -135,7 +135,7 @@ export function SignUpForm() {
             <div className="rounded-[1.15rem] border border-[rgba(104,64,49,0.05)] bg-[rgba(255,255,255,0.5)] p-2.5">
               <div className="rounded-[0.95rem] border border-[rgba(104,64,49,0.07)] bg-white/82 p-2.5">
                 <p className="border-b border-[rgba(104,64,49,0.06)] pb-1.5 text-[0.74rem] font-bold uppercase tracking-[0.18em] text-[var(--color-brown)]">
-                  Comunicacao
+                  Comunicação
                 </p>
 
                 <div className="mt-1.5 grid gap-1.5 md:grid-cols-3">

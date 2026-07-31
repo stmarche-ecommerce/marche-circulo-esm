@@ -13,10 +13,10 @@ function resolveApplicationUrl(request: Request) {
   const forwardedHost = request.headers.get("x-forwarded-host")?.trim();
 
   if (forwardedProto && forwardedHost) {
-    return `${forwardedProto}://${forwardedHost.replace(/\/+$/, "")}/login`;
+    return `${forwardedProto}://${forwardedHost.replace(/\/+$/, "")}/emporio`;
   }
 
-  return new URL("/login", request.url).toString();
+  return new URL("/emporio", request.url).toString();
 }
 
 export async function POST(request: Request) {
