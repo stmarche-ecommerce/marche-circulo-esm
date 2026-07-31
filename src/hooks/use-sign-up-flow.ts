@@ -43,7 +43,7 @@ type StepConfig = {
 const STEP_CONFIG: StepConfig[] = [
   {
     id: 1,
-    title: "Identificacao",
+    title: "Identificação",
     description: "Nome, sobrenome, CPF, data de nascimento, e-mail e WhatsApp.",
     fields: ["firstName", "lastName", "cpf", "birthDate", "email", "phone"],
   },

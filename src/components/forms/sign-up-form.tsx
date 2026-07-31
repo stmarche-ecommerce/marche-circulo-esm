@@ -62,7 +62,7 @@ export function SignUpForm() {
                       ? "border-[var(--color-accent)] bg-[rgba(213,166,66,0.14)] text-[var(--color-brown)]"
                       : "border-[rgba(104,64,49,0.14)] bg-white text-[var(--color-muted)]"
                     } ${isFutureStep ? "cursor-not-allowed opacity-50" : ""}`}
-                  aria-label={`Ir para etapa ${step}: ${step === 1 ? "Identificacao" : "Endereco e preferências"}`}
+                  aria-label={`Ir para etapa ${step}: ${step === 1 ? "Identificação" : "Endereco e preferências"}`}
                   aria-disabled={isFutureStep}
                 >
                   {step}
@@ -183,7 +183,7 @@ export function SignUpForm() {
         </SecondaryButton>
         {currentStep < 2 ? (
           <SubmitButton type="button" disabled={isSubmitting} onClick={handleNextStep}>
-            Proxima etapa
+            Próxima etapa
           </SubmitButton>
         ) : (
           <SubmitButton type="button" disabled={isSubmitting} onClick={() => void handleSubmit()}>
