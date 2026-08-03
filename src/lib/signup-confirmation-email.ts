@@ -69,11 +69,13 @@ function buildEmailText(name: string, applicationUrl: string) {
   return [
     `Olá, ${firstName}.`,
     "",
-    "Seu cadastro no Círculo Santa Maria foi concluído com sucesso e seu acesso já está liberado.",
+    "Seu cadastro no Círculo Santa Maria foi concluído com sucesso.",
     "",
-    `Acesse a aplicação em: ${applicationUrl}`,
+    `Seu acesso ainda está em análise e será liberado em breve. Assim que estiver disponível, você receberá um novo e-mail com as instruções de acesso.`,
     "",
     "Se você não reconhece este cadastro, responda este e-mail ou entre em contato com nosso time.",
+
+    `Para acessar o site clique no link abaixo. ${applicationUrl}`
   ].join("\n");
 }
 
