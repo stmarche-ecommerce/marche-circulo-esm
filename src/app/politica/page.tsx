@@ -1,7 +1,4 @@
-﻿"use client";
-
-import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+﻿import Image from "next/image";
 import { Bell, ChartColumn, Eye, Monitor } from "lucide-react";
 
 type PolicySection = {
@@ -227,102 +224,36 @@ function isHighlightedContact(sectionTitle: string, paragraph: string) {
 }
 
 function PolicyTimeline() {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const sectionRefs = useRef<Array<HTMLElement | null>>([]);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-
-          const index = Number(entry.target.getAttribute("data-index"));
-          if (!Number.isNaN(index)) {
-            setActiveIndex(index);
-          }
-        });
-      },
-      {
-        rootMargin: "-22% 0px -60% 0px",
-        threshold: 0,
-      },
-    );
-
-    sectionRefs.current.forEach((section) => {
-      if (section) observer.observe(section);
-    });
-
-    return () => observer.disconnect();
-  }, []);
-
-  const scrollToSection = (index: number) => {
-    const element = sectionRefs.current[index];
-    const section = POLICY_SECTIONS[index];
-    if (!element || !section) return;
-
-    const slug = slugify(section.title);
-    const top = element.getBoundingClientRect().top + window.scrollY - 104;
-
-    window.history.replaceState(null, "", `#${slug}`);
-    window.scrollTo({ top, behavior: "smooth" });
-  };
-
-  const getIndexButtonClassName = (isActive: boolean, mobile: boolean) => {
-    if (mobile) {
-      return `block min-w-[220px] shrink-0 snap-start rounded-[0.9rem] border px-3 py-2 text-left text-[0.98rem] leading-6 transition ${isActive
-        ? "border-[var(--color-accent)] bg-white text-[var(--color-brown-dark)] shadow-[0_8px_20px_rgba(71,42,35,0.06)]"
-        : "border-[rgba(104,64,49,0.12)] text-[var(--color-brown)] hover:bg-white/70 hover:text-[var(--color-brown-dark)]"
-        }`;
-    }
-
-    return `block w-full rounded-[0.9rem] px-3 py-2 text-left text-[1.02rem] leading-6 transition ${isActive
-      ? "border-l-2 border-[var(--color-accent)] bg-white text-[var(--color-brown-dark)] shadow-[0_8px_20px_rgba(71,42,35,0.06)]"
-      : "text-[var(--color-brown)] hover:bg-white/70 hover:text-[var(--color-brown-dark)]"
-      }`;
-  };
-
   return (
     <div className="grid grid-cols-1 gap-8 lg:grid-cols-[200px_minmax(0,1fr)] lg:items-start lg:gap-9 xl:grid-cols-[200px_minmax(0,1fr)]">
       <div className="lg:hidden">
-        <p className="mb-3 px-2 text-base text-[var(--color-brown)]">Indice</p>
+        <p className="mb-3 px-2 text-base text-[var(--color-brown)]">Índice</p>
         <div className="flex gap-2 overflow-x-auto px-2 pb-2 snap-x snap-mandatory">
-          {POLICY_SECTIONS.map((section, index) => {
-            const isActive = index === activeIndex;
-
-            return (
-              <button
-                key={section.title}
-                type="button"
-                aria-current={isActive ? "true" : undefined}
-                onClick={() => scrollToSection(index)}
-                className={getIndexButtonClassName(isActive, true)}
-              >
-                {section.title}
-              </button>
-            );
-          })}
+          {POLICY_SECTIONS.map((section) => (
+            <a
+              key={section.title}
+              href={`#${slugify(section.title)}`}
+              className="block min-w-[220px] shrink-0 snap-start rounded-[0.9rem] border border-[rgba(104,64,49,0.12)] px-3 py-2 text-left text-[0.98rem] leading-6 text-[var(--color-brown)] transition hover:bg-white/70 hover:text-[var(--color-brown-dark)]"
+            >
+              {section.title}
+            </a>
+          ))}
         </div>
       </div>
 
       <aside className="hidden lg:block lg:sticky lg:top-28">
         <div className="rounded-[1.4rem] bg-transparent px-2 py-2">
-          <p className="mb-3 text-base text-[var(--color-brown)]">Indice</p>
+          <p className="mb-3 text-base text-[var(--color-brown)]">Índice</p>
           <div className="space-y-1.5">
-            {POLICY_SECTIONS.map((section, index) => {
-              const isActive = index === activeIndex;
-
-              return (
-                <button
-                  key={section.title}
-                  type="button"
-                  aria-current={isActive ? "true" : undefined}
-                  onClick={() => scrollToSection(index)}
-                  className={getIndexButtonClassName(isActive, false)}
-                >
-                  {section.title}
-                </button>
-              );
-            })}
+            {POLICY_SECTIONS.map((section) => (
+              <a
+                key={section.title}
+                href={`#${slugify(section.title)}`}
+                className="block w-full rounded-[0.9rem] px-3 py-2 text-left text-[1.02rem] leading-6 text-[var(--color-brown)] transition hover:bg-white/70 hover:text-[var(--color-brown-dark)]"
+              >
+                {section.title}
+              </a>
+            ))}
           </div>
         </div>
       </aside>
@@ -332,16 +263,11 @@ function PolicyTimeline() {
 
         {POLICY_SECTIONS.map((section, index) => {
           const { icon: Icon, iconWrapperClassName } = getItemStyle(index);
-          const isActive = index === activeIndex;
 
           return (
             <section
               key={section.title}
               id={slugify(section.title)}
-              ref={(element) => {
-                sectionRefs.current[index] = element;
-              }}
-              data-index={index}
               className="relative scroll-mt-28"
             >
               <span
@@ -350,12 +276,7 @@ function PolicyTimeline() {
                 <Icon className="h-5 w-5" />
               </span>
 
-              <article
-                className={`rounded-[1.4rem] border bg-white px-6 py-5 shadow-[0_10px_24px_rgba(71,42,35,0.06)] transition-all duration-200 sm:px-7 ${isActive
-                  ? "border-[#e7c88f] shadow-[0_12px_28px_rgba(231,200,143,0.2)]"
-                  : "border-[rgba(104,64,49,0.12)]"
-                  }`}
-              >
+              <article className="rounded-[1.4rem] border border-[rgba(104,64,49,0.12)] bg-white px-6 py-5 shadow-[0_10px_24px_rgba(71,42,35,0.06)] sm:px-7">
                 <div className="flex items-start gap-4 lg:hidden">
                   <span className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-[1rem] ${iconWrapperClassName}`}>
                     <Icon className="h-5 w-5" />
