@@ -257,9 +257,13 @@ function PolicyTimeline() {
 
   const scrollToSection = (index: number) => {
     const element = sectionRefs.current[index];
-    if (!element) return;
+    const section = POLICY_SECTIONS[index];
+    if (!element || !section) return;
 
+    const slug = slugify(section.title);
     const top = element.getBoundingClientRect().top + window.scrollY - 104;
+
+    window.history.replaceState(null, "", `#${slug}`);
     window.scrollTo({ top, behavior: "smooth" });
   };
 
@@ -280,7 +284,7 @@ function PolicyTimeline() {
   return (
     <div className="grid grid-cols-1 gap-8 lg:grid-cols-[200px_minmax(0,1fr)] lg:items-start lg:gap-9 xl:grid-cols-[200px_minmax(0,1fr)]">
       <div className="lg:hidden">
-        <p className="mb-3 px-2 text-base text-[var(--color-brown)]">?ndice</p>
+        <p className="mb-3 px-2 text-base text-[var(--color-brown)]">Indice</p>
         <div className="flex gap-2 overflow-x-auto px-2 pb-2 snap-x snap-mandatory">
           {POLICY_SECTIONS.map((section, index) => {
             const isActive = index === activeIndex;
@@ -302,7 +306,7 @@ function PolicyTimeline() {
 
       <aside className="hidden lg:block lg:sticky lg:top-28">
         <div className="rounded-[1.4rem] bg-transparent px-2 py-2">
-          <p className="mb-3 text-base text-[var(--color-brown)]">?ndice</p>
+          <p className="mb-3 text-base text-[var(--color-brown)]">Indice</p>
           <div className="space-y-1.5">
             {POLICY_SECTIONS.map((section, index) => {
               const isActive = index === activeIndex;

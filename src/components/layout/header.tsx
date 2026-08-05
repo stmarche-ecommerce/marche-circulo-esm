@@ -23,7 +23,7 @@ export function SiteHeader() {
         <Link
           href="/"
           className="shrink-0 justify-self-center xl:justify-self-auto"
-          aria-label="Santa Maria Emporio - página inicial"
+          aria-label="Santa Maria Empório - página inicial"
         >
           <Image
             src="/images/logo1.png"

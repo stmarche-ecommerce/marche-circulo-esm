@@ -39,7 +39,7 @@ export function AuthShell({
         <div className="sticky top-0 h-screen overflow-hidden">
           <Image
             src="/images/loja.jpg"
-            alt="Ambiente do Santa Maria Emporio"
+            alt="Ambiente do Santa Maria Empório"
             fill
             priority
             sizes="(min-width: 1024px) 52vw, 100vw"

@@ -120,7 +120,7 @@ function RichTextSections({ page }: { page: SitePage }) {
             <div className="space-y-8">
               {page.richTextSections.map((section) => (
                 <article key={section.title} className="site-card p-8 md:p-10">
-                  <p className="section-eyebrow">Santa Maria Emporio</p>
+                  <p className="section-eyebrow">Santa Maria Empório</p>
                   <h2 className="section-title !text-3xl md:!text-4xl">{section.title}</h2>
                   <div className="rich-text mt-6">
                     {section.body.map((paragraph) => (

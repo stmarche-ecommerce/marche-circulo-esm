@@ -37,8 +37,8 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Santa Maria Emporio",
-    template: "%s | Santa Maria Emporio",
+    default: "Santa Maria Empório",
+    template: "%s | Santa Maria Empório",
   },
   description: "Landing page institucional do Santa Maria Empório em Next.js.",
   icons: {
