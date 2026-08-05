@@ -24,7 +24,7 @@ function getFirstName(name: string) {
   return name.trim().split(/\s+/)[0] || "cliente";
 }
 
-function buildEmailHtml(name: string, applicationUrl: string) {
+function buildEmailHtml(name: string) {
   const firstName = getFirstName(name);
 
   return `
@@ -32,30 +32,26 @@ function buildEmailHtml(name: string, applicationUrl: string) {
       <div style="max-width:600px; margin:0 auto; background:#ffffff; border:1px solid rgba(104,64,49,0.12); border-radius:24px; overflow:hidden;">
         <div style="background:linear-gradient(135deg, #684031, #472a23); color:#ffffff; padding:32px;">
           <p style="margin:0; font-size:12px; letter-spacing:0.28em; text-transform:uppercase; opacity:0.76;">Círculo Santa Maria</p>
-          <h1 style="margin:12px 0 0; font-size:28px; line-height:1.2;">Bem-vindo(a) ao Círculo Santa Maria</h1>
+          <h1 style="margin:12px 0 0; font-size:28px; line-height:1.2;">Bem-vindo ao Círculo Santa Maria</h1>
         </div>
         <div style="padding:32px;">
           <p style="margin:0 0 16px; font-size:16px; line-height:1.7;">Olá, ${firstName}.</p>
           <p style="margin:0 0 16px; font-size:16px; line-height:1.7;">
-            Seu cadastro foi concluído com sucesso e seu acesso já está liberado.
+            É um prazer receber você no Círculo Santa Maria, o programa de benefícios do Empório Santa Maria.
           </p>
-          <p style="margin:0 0 24px; font-size:16px; line-height:1.7;">
-            A partir de agora você pode entrar na área do cliente e aproveitar as promoções e benefícios exclusivos do Círculo Santa Maria.
+          <p style="margin:0 0 16px; font-size:16px; line-height:1.7;">
+            A partir de agora, você já pode aproveitar descontos exclusivos em produtos selecionados em nossas lojas.
           </p>
-          <p style="margin:0 0 24px;">
-            <a
-              href="${applicationUrl}"
-              style="display:inline-block; border-radius:999px; background:#684031; color:#ffffff; padding:14px 24px; font-size:14px; font-weight:700; letter-spacing:0.12em; text-decoration:none; text-transform:uppercase;"
-            >
-              Acessar a aplicação
-            </a>
+          <p style="margin:0 0 12px; font-size:16px; line-height:1.7; font-weight:700;">
+            Para utilizar seus benefícios, é simples:
           </p>
-          <p style="margin:0 0 16px; font-size:14px; line-height:1.7; color:#756962;">
-            Se preferir, copie e cole este link no navegador:<br />
-            <a href="${applicationUrl}" style="color:#684031; word-break:break-all;">${applicationUrl}</a>
-          </p>
-          <p style="margin:0; font-size:14px; line-height:1.7; color:#756962;">
-            Se você não reconhece este cadastro, responda este e-mail ou entre em contato com nosso time.
+          <ul style="margin:0 0 20px; padding-left:22px; font-size:16px; line-height:1.9; color:#4d423d;">
+            <li>Identifique os produtos com a etiqueta do Círculo Santa Maria;</li>
+            <li>Informe seu CPF no caixa;</li>
+            <li>Os descontos serão aplicados ao final da compra.</li>
+          </ul>
+          <p style="margin:0; font-size:16px; line-height:1.7; color:#756962;">
+            Este é apenas o começo. Em breve, o Círculo Santa Maria contará com novas vantagens e experiências pensadas especialmente para você.
           </p>
         </div>
       </div>
@@ -63,19 +59,22 @@ function buildEmailHtml(name: string, applicationUrl: string) {
   `;
 }
 
-function buildEmailText(name: string, applicationUrl: string) {
+function buildEmailText(name: string) {
   const firstName = getFirstName(name);
 
   return [
     `Olá, ${firstName}.`,
     "",
-    "Seu cadastro no Círculo Santa Maria foi concluído com sucesso.",
+    "É um prazer receber você no Círculo Santa Maria, o programa de benefícios do Empório Santa Maria.",
     "",
-    `Seu acesso ainda está em análise e será liberado em breve. Assim que estiver disponível, você receberá um novo e-mail com as instruções de acesso.`,
+    "A partir de agora, você já pode aproveitar descontos exclusivos em produtos selecionados em nossas lojas.",
     "",
-    "Se você não reconhece este cadastro, responda este e-mail ou entre em contato com nosso time.",
-
-    `Para acessar o site clique no link abaixo. ${applicationUrl}`
+    "Para utilizar seus benefícios, é simples:",
+    "- Identifique os produtos com a etiqueta do Círculo Santa Maria;",
+    "- Informe seu CPF no caixa;",
+    "- Os descontos serão aplicados ao final da compra.",
+    "",
+    "Este é apenas o começo. Em breve, o Círculo Santa Maria contará com novas vantagens e experiências pensadas especialmente para você.",
   ].join("\n");
 }
 
@@ -349,9 +348,10 @@ export async function sendSignupConfirmationEmail({
   const config = resolveSmtpConfig();
   const from = process.env.SIGNUP_CONFIRMATION_FROM_EMAIL ?? "Santa Maria Empório <automacao@marche.com.br>";
   const replyTo = process.env.SIGNUP_CONFIRMATION_REPLY_TO ?? "contato@emporiosantamaria.com.br";
-  const subject = "Recebemos seu cadastro no Círculo Santa Maria";
-  const text = buildEmailText(name, applicationUrl);
-  const html = buildEmailHtml(name, applicationUrl);
+  const subject = "Bem-vindo ao Círculo Santa Maria";
+  void applicationUrl;
+  const text = buildEmailText(name);
+  const html = buildEmailHtml(name);
   const fromMailbox = parseMailbox(from);
   const copyRecipients = resolveCopyRecipients().filter((recipient) => recipient.toLowerCase() !== email.toLowerCase());
 

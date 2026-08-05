@@ -27,6 +27,11 @@ export type RichTextSection = {
   body: string[];
 };
 
+export type AccordionSection = {
+  title: string;
+  body: string[];
+};
+
 export type ContactInfo = {
   title: string;
   description: string;
@@ -47,6 +52,7 @@ export type SitePage = {
   alternatingSections?: AlternatingSection[];
   gridItems?: GridItem[];
   richTextSections?: RichTextSection[];
+  accordionSections?: AccordionSection[];
   contactInfo?: ContactInfo;
 };
 
@@ -506,46 +512,159 @@ export const sitePages: SitePage[] = [
   },
   {
     slug: "politica",
-    title: "Política de Privacidade",
-    description: "Política de privacidade e proteção de dados.",
+    title: "Pol\u00edtica de privacidade",
+    description: "Pol\u00edtica de privacidade e prote\u00e7\u00e3o de dados.",
     template: "richText",
     hero: {
-      title: "Política de privacidade",
+      title: "Pol\u00edtica de privacidade",
       description:
-        "Transparência, ética e cuidado com o tratamento dos dados pessoais.",
+        "Transpar\u00eancia, \u00e9tica e cuidado com o tratamento dos dados pessoais.",
       image: "/images/loja.jpg",
     },
-    richTextSections: [
+    accordionSections: [
       {
-        title: "Privacidade e proteção de dados",
+        title: "1. Objetivo e abrang\u00eancia",
         body: [
-          "O Empório Santa Maria busca garantir o mais alto nível de transparência e ética em suas atividades, e esse compromisso também se estende ao tratamento dos dados pessoais.",
-          "Esta política se aplica a clientes, fornecedores, prestadores de serviços, participantes de eventos, candidatos e demais pessoas cujos dados possam ser tratados em interações com a empresa, o site e as redes sociais.",
-          "A empresa declara adotar práticas de segurança e governança, políticas internas, mecanismos de supervisão e ações educativas para preservar a privacidade e mitigar riscos.",
+          "Esta Pol\u00edtica de privacidade explica como a Hortus Com\u00e9rcio de Alimentos S.A. (Hortus, Emp\u00f3rio Santa Maria, n\u00f3s ou nosso) realiza o tratamento de dados pessoais de clientes, participantes do Programa C\u00edrculo Santa Maria, visitantes do site, usu\u00e1rios da \u00e1rea do cliente e pessoas que entram em contato com nossos canais de atendimento.",
+          "Esta Pol\u00edtica abrange, entre outras atividades, o cadastro e a participa\u00e7\u00e3o no C\u00edrculo Santa Maria, a identifica\u00e7\u00e3o de compras por CPF nas lojas f\u00edsicas do Emp\u00f3rio Santa Maria, a disponibiliza\u00e7\u00e3o de benef\u00edcios, pre\u00e7os exclusivos, descontos personalizados, cupons, ofertas de parceiros, vantagens de anivers\u00e1rio, comunica\u00e7\u00f5es de relacionamento e a\u00e7\u00f5es de m\u00eddia personalizada.",
+          "Esta Pol\u00edtica deve ser lida em conjunto com o Regulamento do Programa C\u00edrculo Santa Maria e com outros avisos ou termos espec\u00edficos apresentados em determinados canais ou campanhas.",
         ],
       },
       {
-        title: "Coleta, finalidades e bases legais",
+        title: "2. Quem \u00e9 o controlador dos dados",
         body: [
-          "Os dados podem ser coletados em compras presenciais ou remotas, formulários de contato, atendimento ao consumidor, participação em eventos, processos seletivos, interações em redes sociais, uso de wi-fi, imagens de monitoramento e relações com fornecedores.",
-          "Entre os dados tratados estão identificação civil, contatos, dados de pagamento, endereço, histórico de compras, preferências, dados de navegação, imagens e informações profissionais, sempre vinculados a finalidades específicas.",
-          "As bases legais incluem execução de contrato, cumprimento de obrigação legal, exercício regular de direitos, consentimento e legítimo interesse, conforme a natureza da interação.",
+          "A controladora dos dados pessoais tratados no contexto desta Pol\u00edtica \u00e9 a Hortus Com\u00e9rcio de Alimentos S.A., inscrita no CNPJ sob o n\u00ba 09.000.493/0001-31, com endere\u00e7o na Avenida Cidade Jardim, 790, Jardim Paulistano, S\u00e3o Paulo/SP.",
+          "Canal de atendimento e de privacidade: sac@emporiosantamaria.com.br.",
         ],
       },
       {
-        title: "Cookies, compartilhamento e retencao",
+        title: "3. Quais dados pessoais podemos coletar",
         body: [
-          "O site pode utilizar cookies e tecnologias de rastreamento para personalização da experiência, análise de tráfego, segurança e melhoria dos serviços.",
-          "Os dados podem ser compartilhados com terceiros envolvidos nas operações, como instituições financeiras, provedores de tecnologia, logística, marketing, auditoria, recrutamento e assessorias, sempre com objetivo operacional e nunca para comercialização de dados.",
-          "A retenção ocorre pelo tempo necessário para as finalidades declaradas, cumprimento de obrigações legais, proteção de direitos e manutenção de backup e segurança.",
+          "3.1. Dados fornecidos diretamente por voc\u00ea: dados de identifica\u00e7\u00e3o e cadastro, como nome completo, CPF, data de nascimento e informa\u00e7\u00f5es necess\u00e1rias para confirma\u00e7\u00e3o de maioridade.",
+          "3.1. Tamb\u00e9m podemos coletar dados de contato, como telefone, e-mail e endere\u00e7o residencial; dados de acesso e seguran\u00e7a, como credenciais de acesso, c\u00f3digos de confirma\u00e7\u00e3o e registros de autentica\u00e7\u00e3o na \u00e1rea do cliente; prefer\u00eancias de comunica\u00e7\u00e3o e dados fornecidos em atendimentos, reclama\u00e7\u00f5es, solicita\u00e7\u00f5es, pesquisas de satisfa\u00e7\u00e3o ou outras intera\u00e7\u00f5es com o Emp\u00f3rio Santa Maria.",
+          "3.2. Dados gerados durante o relacionamento e as compras: hist\u00f3rico de compras identificadas pelo CPF, incluindo data, loja, produtos, categorias, quantidades, valores, descontos, cupons e benef\u00edcios utilizados.",
+          "3.2. Tamb\u00e9m podemos tratar informa\u00e7\u00f5es sobre participa\u00e7\u00e3o em campanhas, resposta a ofertas e uso de benef\u00edcios do C\u00edrculo Santa Maria, al\u00e9m de dados de relacionamento, frequ\u00eancia de compras, prefer\u00eancias, categorias de interesse e outros indicadores utilizados para melhorar a experi\u00eancia e personalizar benef\u00edcios.",
+          "3.2. Registros de eventuais suspeitas de fraude, uso indevido de CPF, cadastros duplicados ou viola\u00e7\u00f5es do Regulamento do Programa tamb\u00e9m podem ser tratados.",
+          "3.3. Dados coletados automaticamente: dados de navega\u00e7\u00e3o e uso do site ou da \u00e1rea do cliente, como endere\u00e7o IP, data e hora de acesso, tipo de dispositivo, navegador, p\u00e1ginas acessadas e intera\u00e7\u00f5es realizadas.",
+          "3.3. Tamb\u00e9m utilizamos cookies, pixels, identificadores de publicidade e tecnologias semelhantes, al\u00e9m de registros t\u00e9cnicos e de seguran\u00e7a necess\u00e1rios para prote\u00e7\u00e3o dos ambientes digitais e preven\u00e7\u00e3o de acessos n\u00e3o autorizados.",
+          "3.4. Dados obtidos de terceiros: podemos receber dados de fornecedores de tecnologia, plataformas de comunica\u00e7\u00e3o, empresas de an\u00e1lise de dados, parceiros de m\u00eddia, empresas do mesmo grupo econ\u00f4mico e outros prestadores que atuem em nosso nome ou apoiem a opera\u00e7\u00e3o do Programa, sempre observadas as finalidades informadas, os contratos aplic\u00e1veis e a legisla\u00e7\u00e3o.",
         ],
       },
       {
-        title: "Direitos do titular",
+        title: "4. Como utilizamos os dados pessoais",
         body: [
-          "O titular pode solicitar confirmação de tratamento, acesso, correção, anonimização, bloqueio, eliminação, portabilidade, informações sobre compartilhamento e revogação de consentimento, nos termos da LGPD.",
-          "Solicitações podem ser feitas por meio do encarregado pelo tratamento de dados no e-mail privacidade@marche.com.br.",
-          "A política informa versões anteriores e aponta atualização em setembro de 2022.",
+          "Podemos utilizar dados pessoais para criar, validar, manter e atualizar o cadastro no C\u00edrculo Santa Maria.",
+          "Tamb\u00e9m utilizamos os dados para confirmar identidade, idade e titularidade do CPF e identificar o participante nas compras realizadas nas lojas f\u00edsicas do Emp\u00f3rio Santa Maria.",
+          "Os dados podem ser usados para aplicar pre\u00e7os exclusivos, descontos, cupons e demais benef\u00edcios do Programa, personalizar ofertas e benef\u00edcios com base no perfil e no hist\u00f3rico de relacionamento do participante e disponibilizar vantagens de anivers\u00e1rio e outras campanhas de relacionamento.",
+          "Ainda podemos tratar os dados para gerenciar prefer\u00eancias de comunica\u00e7\u00e3o, enviar mensagens pelos canais autorizados, realizar atendimento, responder solicita\u00e7\u00f5es, solucionar d\u00favidas e tratar reclama\u00e7\u00f5es.",
+          "Os dados tamb\u00e9m podem ser utilizados para prevenir, detectar e investigar fraudes, cadastros duplicados, uso indevido de CPF e outras irregularidades, al\u00e9m de realizar an\u00e1lises estat\u00edsticas, estudos de comportamento e melhoria de produtos, servi\u00e7os, campanhas e experi\u00eancia do cliente.",
+          "Por fim, podemos tratar dados para cumprir obriga\u00e7\u00f5es legais, regulat\u00f3rias, fiscais e determina\u00e7\u00f5es de autoridades competentes, exercer direitos em processos judiciais, administrativos ou arbitrais e proteger os direitos, a seguran\u00e7a e os interesses leg\u00edtimos da Hortus, de seus clientes, colaboradores, parceiros e terceiros.",
+        ],
+      },
+      {
+        title: "5. Marketing, comunica\u00e7\u00f5es e prefer\u00eancias",
+        body: [
+          "A ades\u00e3o ao C\u00edrculo Santa Maria \u00e9 independente da autoriza\u00e7\u00e3o para recebimento de comunica\u00e7\u00f5es publicit\u00e1rias. O participante poder\u00e1 escolher separadamente se deseja receber mensagens por e-mail, SMS e WhatsApp.",
+          "As prefer\u00eancias poder\u00e3o ser alteradas ou revogadas na \u00e1rea do cliente no site e, quando dispon\u00edvel, pelos mecanismos indicados em cada comunica\u00e7\u00e3o. A retirada do consentimento para marketing n\u00e3o implica o cancelamento da participa\u00e7\u00e3o no Programa.",
+          "Mesmo quando o participante n\u00e3o desejar receber publicidade, poderemos enviar comunica\u00e7\u00f5es estritamente necess\u00e1rias \u00e0 opera\u00e7\u00e3o da conta, \u00e0 seguran\u00e7a, ao atendimento, ao cumprimento do Regulamento ou de obriga\u00e7\u00f5es legais.",
+          "O uso de telefone para contatos comerciais e a realiza\u00e7\u00e3o de m\u00eddia personalizada em plataformas digitais observar\u00e3o as prefer\u00eancias registradas pelo titular e a legisla\u00e7\u00e3o aplic\u00e1vel.",
+        ],
+      },
+      {
+        title: "6. Personaliza\u00e7\u00e3o de ofertas e m\u00eddia",
+        body: [
+          "Podemos analisar dados cadastrais, hist\u00f3rico de compras, uso de cupons, frequ\u00eancia, categorias de interesse e intera\u00e7\u00f5es com campanhas para oferecer descontos, benef\u00edcios e comunica\u00e7\u00f5es mais relevantes.",
+          "Tamb\u00e9m poderemos utilizar identificadores protegidos, pseudonimizados ou tecnicamente transformados para criar p\u00fablicos em plataformas de m\u00eddia e apresentar an\u00fancios personalizados, quando permitido pela legisla\u00e7\u00e3o e pelas prefer\u00eancias do titular.",
+        ],
+      },
+      {
+        title: "7. Cookies e tecnologias semelhantes",
+        body: [
+          "O site e a \u00e1rea do cliente poder\u00e3o utilizar cookies e tecnologias semelhantes para funcionamento, seguran\u00e7a, autentica\u00e7\u00e3o, armazenamento de prefer\u00eancias, an\u00e1lise de uso, medi\u00e7\u00e3o de campanhas e personaliza\u00e7\u00e3o de conte\u00fado ou publicidade.",
+          "Quando aplic\u00e1vel, o usu\u00e1rio poder\u00e1 gerenciar cookies por meio do banner ou painel de prefer\u00eancias e das configura\u00e7\u00f5es do navegador. A desativa\u00e7\u00e3o de determinados cookies poder\u00e1 afetar algumas funcionalidades.",
+        ],
+      },
+      {
+        title: "8. Com quem podemos compartilhar os dados",
+        body: [
+          "Podemos compartilhar dados pessoais, conforme necess\u00e1rio, com fornecedores de tecnologia, hospedagem, nuvem, CRM, CDP, sistemas de frente de caixa, desenvolvimento, manuten\u00e7\u00e3o e seguran\u00e7a da informa\u00e7\u00e3o.",
+          "Tamb\u00e9m poderemos compartilhar informa\u00e7\u00f5es com prestadores de servi\u00e7os de comunica\u00e7\u00e3o por e-mail, SMS, WhatsApp, telefone e outros canais, empresas de an\u00e1lise de dados, mensura\u00e7\u00e3o, pesquisa, consultoria, publicidade e m\u00eddia.",
+          "Parceiros respons\u00e1veis por ofertas ou benef\u00edcios poder\u00e3o receber dados quando o compartilhamento for necess\u00e1rio e estiver devidamente informado ao participante.",
+          "Empresas integrantes do mesmo grupo econ\u00f4mico podem tratar dados para finalidades administrativas, operacionais, de seguran\u00e7a ou relacionamento compat\u00edveis com esta Pol\u00edtica.",
+          "Os dados tamb\u00e9m podem ser compartilhados com autoridades p\u00fablicas, \u00f3rg\u00e3os reguladores, Poder Judici\u00e1rio ou terceiros, quando necess\u00e1rio para cumprimento de obriga\u00e7\u00e3o legal, ordem v\u00e1lida, defesa de direitos ou preven\u00e7\u00e3o de fraude.",
+          "Terceiros envolvidos em reorganiza\u00e7\u00f5es societ\u00e1rias, fus\u00f5es, aquisi\u00e7\u00f5es, incorpora\u00e7\u00f5es, venda de ativos ou outras opera\u00e7\u00f5es empresariais tamb\u00e9m podem participar, observadas as medidas de prote\u00e7\u00e3o aplic\u00e1veis.",
+          "Os parceiros e prestadores devem tratar os dados de acordo com suas atribui\u00e7\u00f5es, contratos, instru\u00e7\u00f5es e obriga\u00e7\u00f5es legais. Quando um parceiro atuar como controlador independente, seu pr\u00f3prio aviso de privacidade poder\u00e1 ser aplic\u00e1vel.",
+        ],
+      },
+      {
+        title: "9. Transfer\u00eancia internacional de dados",
+        body: [
+          "Alguns fornecedores de tecnologia, nuvem, comunica\u00e7\u00e3o, an\u00e1lise ou m\u00eddia poder\u00e3o armazenar ou tratar dados em outros pa\u00edses. Nesses casos, adotaremos medidas compat\u00edveis com a legisla\u00e7\u00e3o aplic\u00e1vel e mecanismos adequados de prote\u00e7\u00e3o.",
+        ],
+      },
+      {
+        title: "10. Bases legais",
+        body: [
+          "O tratamento de dados pessoais poder\u00e1 estar fundamentado, conforme cada finalidade, em diferentes hip\u00f3teses legais, incluindo execu\u00e7\u00e3o de contrato ou de procedimentos preliminares, cumprimento de obriga\u00e7\u00e3o legal ou regulat\u00f3ria, exerc\u00edcio regular de direitos, prote\u00e7\u00e3o da vida ou da integridade f\u00edsica, leg\u00edtimo interesse, prote\u00e7\u00e3o do cr\u00e9dito e consentimento.",
+          "Quando o consentimento for a base legal aplic\u00e1vel, ele poder\u00e1 ser revogado pelos canais disponibilizados, sem afetar a legalidade dos tratamentos realizados anteriormente \u00e0 revoga\u00e7\u00e3o.",
+        ],
+      },
+      {
+        title: "11. Seguran\u00e7a da informa\u00e7\u00e3o",
+        body: [
+          "Adotamos medidas t\u00e9cnicas, administrativas e organizacionais destinadas a proteger os dados pessoais contra acessos n\u00e3o autorizados, perda, destrui\u00e7\u00e3o, altera\u00e7\u00e3o, divulga\u00e7\u00e3o ou tratamento inadequado. Essas medidas incluem controles de acesso, gest\u00e3o de credenciais, monitoramento, procedimentos internos e requisitos contratuais aplic\u00e1veis aos fornecedores.",
+          "Nenhum sistema \u00e9 totalmente imune a incidentes. Caso seja identificado incidente que possa gerar risco ou dano relevante aos titulares, ser\u00e3o adotadas as medidas cab\u00edveis de investiga\u00e7\u00e3o, conten\u00e7\u00e3o, remedia\u00e7\u00e3o e comunica\u00e7\u00e3o, conforme exigido pela legisla\u00e7\u00e3o.",
+        ],
+      },
+      {
+        title: "12. Reten\u00e7\u00e3o e elimina\u00e7\u00e3o",
+        body: [
+          "Os dados pessoais ser\u00e3o mantidos pelo per\u00edodo necess\u00e1rio para cumprir as finalidades descritas nesta Pol\u00edtica, operar o Programa, atender solicita\u00e7\u00f5es, prevenir fraudes, cumprir obriga\u00e7\u00f5es legais ou regulat\u00f3rias, exercer direitos e manter registros exigidos pela legisla\u00e7\u00e3o.",
+          "Ap\u00f3s o cancelamento do C\u00edrculo Santa Maria, determinados dados poder\u00e3o permanecer armazenados pelo per\u00edodo necess\u00e1rio \u00e0s finalidades permitidas pela legisla\u00e7\u00e3o. Quando n\u00e3o houver justificativa para conserva\u00e7\u00e3o, os dados poder\u00e3o ser eliminados ou anonimizados.",
+        ],
+      },
+      {
+        title: "13. Direitos dos titulares",
+        body: [
+          "Nos termos da legisla\u00e7\u00e3o aplic\u00e1vel, o titular poder\u00e1 solicitar, conforme o caso, confirma\u00e7\u00e3o da exist\u00eancia de tratamento, acesso aos dados pessoais, corre\u00e7\u00e3o de dados incompletos, inexatos ou desatualizados, anonimiza\u00e7\u00e3o, bloqueio ou elimina\u00e7\u00e3o de dados desnecess\u00e1rios, excessivos ou tratados em desconformidade, portabilidade, informa\u00e7\u00e3o sobre compartilhamento e revis\u00e3o de decis\u00f5es tomadas unicamente com base em tratamento automatizado, quando aplic\u00e1vel.",
+          "O titular tamb\u00e9m pode solicitar informa\u00e7\u00e3o sobre a possibilidade de n\u00e3o fornecer consentimento e sobre as consequ\u00eancias da negativa, revoga\u00e7\u00e3o do consentimento, elimina\u00e7\u00e3o dos dados tratados com base no consentimento, ressalvadas as hip\u00f3teses legais de conserva\u00e7\u00e3o, e oposi\u00e7\u00e3o a tratamento realizado em desconformidade com a legisla\u00e7\u00e3o.",
+          "Para prote\u00e7\u00e3o do titular, poderemos solicitar informa\u00e7\u00f5es adicionais ou realizar procedimentos de verifica\u00e7\u00e3o de identidade antes de atender a uma solicita\u00e7\u00e3o.",
+          "As solicita\u00e7\u00f5es poder\u00e3o ser encaminhadas para sac@emporiosantamaria.com.br.",
+        ],
+      },
+      {
+        title: "14. Cancelamento do programa e exclus\u00e3o da conta",
+        body: [
+          "O participante poder\u00e1 solicitar o cancelamento do C\u00edrculo Santa Maria pela \u00e1rea do cliente, quando essa funcionalidade estiver dispon\u00edvel, ou pelo SAC.",
+          "O cancelamento encerra o acesso aos benef\u00edcios, descontos e cupons do Programa, mas n\u00e3o implica necessariamente a elimina\u00e7\u00e3o imediata de todos os dados pessoais, que poder\u00e3o ser conservados quando houver fundamento legal, necessidade de preven\u00e7\u00e3o a fraude ou exerc\u00edcio de direitos.",
+        ],
+      },
+      {
+        title: "15. Dados de crian\u00e7as e adolescentes",
+        body: [
+          "O C\u00edrculo Santa Maria \u00e9 destinado exclusivamente a pessoas com 18 anos ou mais. N\u00e3o buscamos cadastrar intencionalmente crian\u00e7as ou adolescentes no Programa. Caso seja identificado cadastro em desacordo com essa regra, poderemos adotar medidas para bloqueio, exclus\u00e3o ou regulariza\u00e7\u00e3o, conforme aplic\u00e1vel.",
+        ],
+      },
+      {
+        title: "16. Links e servi\u00e7os de terceiros",
+        body: [
+          "Nossos sites, comunica\u00e7\u00f5es ou benef\u00edcios poder\u00e3o conter links para ambientes de terceiros. Esses terceiros possuem pr\u00e1ticas pr\u00f3prias de privacidade e seguran\u00e7a. Recomendamos que o titular leia os respectivos avisos antes de fornecer dados pessoais ou utilizar esses servi\u00e7os.",
+        ],
+      },
+      {
+        title: "17. Altera\u00e7\u00f5es nesta pol\u00edtica",
+        body: [
+          "Esta Pol\u00edtica poder\u00e1 ser atualizada para refletir mudan\u00e7as nas pr\u00e1ticas de tratamento, no Programa, nos canais, nos fornecedores ou na legisla\u00e7\u00e3o. A vers\u00e3o vigente e a data da \u00faltima atualiza\u00e7\u00e3o ser\u00e3o disponibilizadas nos canais oficiais do Emp\u00f3rio Santa Maria.",
+          "Quando a altera\u00e7\u00e3o for relevante, poder\u00e3o ser adotados meios adicionais de comunica\u00e7\u00e3o. Mudan\u00e7as que dependam de novo consentimento n\u00e3o ser\u00e3o consideradas aceitas apenas pelo sil\u00eancio ou pela continuidade do uso.",
+        ],
+      },
+      {
+        title: "18. Contato e reclama\u00e7\u00f5es",
+        body: [
+          "Para d\u00favidas sobre esta Pol\u00edtica, solicita\u00e7\u00f5es relacionadas a dados pessoais ou exerc\u00edcio de direitos, o titular poder\u00e1 utilizar os seguintes canais.",
+          "E-mail: sac@emporiosantamaria.com.br.",
+          "Endere\u00e7o para correspond\u00eancia: Avenida Cidade Jardim, 790, Jardim Paulistano, S\u00e3o Paulo/SP.",
+          "Caso o titular entenda que sua solicita\u00e7\u00e3o n\u00e3o foi adequadamente atendida, poder\u00e1 buscar os canais de defesa do consumidor ou a autoridade competente, conforme aplic\u00e1vel.",
         ],
       },
     ],

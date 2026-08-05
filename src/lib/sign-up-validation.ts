@@ -163,7 +163,7 @@ export const signUpSchema = z.object({
     .trim()
     .length(2, "Informe a UF com 2 letras.")
     .refine((value) => /^[A-Za-z]{2}$/.test(value), "Informe uma UF valida."),
-  privacyConsent: z.boolean().refine((value) => value, "Voce precisa concordar com a politica de privacidade."),
+  privacyConsent: z.boolean().refine((value) => value, "Voce precisa concordar com a Política de privacidade."),
 });
 
 export type SignUpFormValues = z.infer<typeof signUpSchema>;
