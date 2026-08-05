@@ -263,12 +263,47 @@ function PolicyTimeline() {
     window.scrollTo({ top, behavior: "smooth" });
   };
 
+  const getIndexButtonClassName = (isActive: boolean, mobile: boolean) => {
+    if (mobile) {
+      return `block min-w-[220px] shrink-0 snap-start rounded-[0.9rem] border px-3 py-2 text-left text-[0.98rem] leading-6 transition ${isActive
+        ? "border-[var(--color-accent)] bg-white text-[var(--color-brown-dark)] shadow-[0_8px_20px_rgba(71,42,35,0.06)]"
+        : "border-[rgba(104,64,49,0.12)] text-[var(--color-brown)] hover:bg-white/70 hover:text-[var(--color-brown-dark)]"
+        }`;
+    }
+
+    return `block w-full rounded-[0.9rem] px-3 py-2 text-left text-[1.02rem] leading-6 transition ${isActive
+      ? "border-l-2 border-[var(--color-accent)] bg-white text-[var(--color-brown-dark)] shadow-[0_8px_20px_rgba(71,42,35,0.06)]"
+      : "text-[var(--color-brown)] hover:bg-white/70 hover:text-[var(--color-brown-dark)]"
+      }`;
+  };
+
   return (
     <div className="grid grid-cols-1 gap-8 lg:grid-cols-[200px_minmax(0,1fr)] lg:items-start lg:gap-9 xl:grid-cols-[200px_minmax(0,1fr)]">
-      <aside className="lg:sticky lg:top-28">
-        <div className="rounded-[1.4rem] bg-transparent py-2 lg:px-2">
-          <p className="mb-3 text-base text-[var(--color-brown)]">Índice</p>
-          <div className="flex gap-2 overflow-x-auto px-2 pb-2 snap-x snap-mandatory lg:block lg:space-y-1.5 lg:overflow-visible lg:px-0 lg:pb-0">
+      <div className="lg:hidden">
+        <p className="mb-3 px-2 text-base text-[var(--color-brown)]">?ndice</p>
+        <div className="flex gap-2 overflow-x-auto px-2 pb-2 snap-x snap-mandatory">
+          {POLICY_SECTIONS.map((section, index) => {
+            const isActive = index === activeIndex;
+
+            return (
+              <button
+                key={section.title}
+                type="button"
+                aria-current={isActive ? "true" : undefined}
+                onClick={() => scrollToSection(index)}
+                className={getIndexButtonClassName(isActive, true)}
+              >
+                {section.title}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      <aside className="hidden lg:block lg:sticky lg:top-28">
+        <div className="rounded-[1.4rem] bg-transparent px-2 py-2">
+          <p className="mb-3 text-base text-[var(--color-brown)]">?ndice</p>
+          <div className="space-y-1.5">
             {POLICY_SECTIONS.map((section, index) => {
               const isActive = index === activeIndex;
 
@@ -278,10 +313,7 @@ function PolicyTimeline() {
                   type="button"
                   aria-current={isActive ? "true" : undefined}
                   onClick={() => scrollToSection(index)}
-                  className={`block min-w-[220px] shrink-0 snap-start rounded-[0.9rem] border border-[rgba(104,64,49,0.12)] px-3 py-2 text-left text-[0.98rem] leading-6 transition lg:w-full lg:min-w-0 lg:border-transparent lg:text-[1.02rem] ${isActive
-                    ? "border-[var(--color-accent)] bg-white text-[var(--color-brown-dark)] shadow-[0_8px_20px_rgba(71,42,35,0.06)] lg:border-l-2 lg:border-[var(--color-accent)]"
-                    : "text-[var(--color-brown)] hover:bg-white/70 hover:text-[var(--color-brown-dark)]"
-                    }`}
+                  className={getIndexButtonClassName(isActive, false)}
                 >
                   {section.title}
                 </button>
