@@ -68,13 +68,6 @@ export async function POST(request: Request) {
     }
 
     const body = (await request.json()) as SignupPayload;
-    const upstreamStartedAt = performance.now();
-
-    console.info("[api/signup] upstream iniciado", {
-      startedAt: new Date().toISOString(),
-      email: body.email,
-      apiUrl,
-    });
 
     const upstreamResponse = await fetch(apiUrl, {
       method: "POST",
@@ -87,16 +80,8 @@ export async function POST(request: Request) {
       signal: AbortSignal.timeout(20000),
     });
 
-    const upstreamFinishedAt = performance.now();
     const responseText = await upstreamResponse.text();
     const contentType = upstreamResponse.headers.get("content-type") ?? "application/json";
-
-    console.info("[api/signup] upstream concluido", {
-      upstreamDurationMs: Math.round(upstreamFinishedAt - upstreamStartedAt),
-      totalDurationMs: Math.round(upstreamFinishedAt - startedAt),
-      status: upstreamResponse.status,
-      ok: upstreamResponse.ok,
-    });
 
     return new NextResponse(responseText, {
       status: upstreamResponse.status,

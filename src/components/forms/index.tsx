@@ -150,11 +150,13 @@ export function ConsentOption({
 export function SubmitButton({
   children,
   disabled,
+  loading = false,
   type = "submit",
   className,
   ...buttonProps
 }: ComponentProps<"button"> & {
   children: ReactNode;
+  loading?: boolean;
 }) {
   return (
     <button
@@ -163,7 +165,15 @@ export function SubmitButton({
       className={`mt-0.5 inline-flex min-h-[3.15rem] items-center justify-center rounded-full bg-[var(--color-brown)] px-5 py-3 text-[0.84rem] font-bold uppercase tracking-[0.16em] text-white transition hover:bg-[var(--color-ink)] disabled:cursor-not-allowed disabled:opacity-60 ${className ?? ""}`.trim()}
       {...buttonProps}
     >
-      {children}
+      <span className="inline-flex items-center gap-2">
+        {loading ? (
+          <span
+            className="h-4 w-4 animate-spin rounded-full border-2 border-white/35 border-t-white"
+            aria-hidden="true"
+          />
+        ) : null}
+        <span>{children}</span>
+      </span>
     </button>
   );
 }

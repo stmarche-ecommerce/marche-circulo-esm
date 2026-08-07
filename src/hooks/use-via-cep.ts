@@ -28,6 +28,7 @@ interface UseZipCodeLookupReturn {
   zipCode: string;
   addressFields: AddressFields;
   cepStatus: CepStatus;
+  resetZipCodeLookup: () => void;
   setAddressFields: React.Dispatch<React.SetStateAction<AddressFields>>;
   handleZipCodeChange: (event: ChangeEvent<HTMLInputElement>) => void;
   handleZipCodeBlur: (event: FocusEvent<HTMLInputElement>) => Promise<void>;
@@ -123,10 +124,20 @@ export function useZipCodeLookup(): UseZipCodeLookupReturn {
     []
   );
 
+  const resetZipCodeLookup = useCallback(() => {
+    setZipCode("");
+    setAddressFields(INITIAL_ADDRESS_FIELDS);
+    setCepStatus({
+      tone: "idle",
+      message: "",
+    });
+  }, []);
+
   return {
     zipCode,
     addressFields,
     cepStatus,
+    resetZipCodeLookup,
     setAddressFields,
     handleZipCodeChange,
     handleZipCodeBlur,

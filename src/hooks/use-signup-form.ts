@@ -21,6 +21,7 @@ interface UseSignUpFormReturn {
   consents: SignUpConsents;
   handleFieldChange: (event: ChangeEvent<HTMLInputElement>) => void;
   handleConsentChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  resetForm: () => void;
   setFormData: React.Dispatch<React.SetStateAction<SignUpFormData>>;
   setConsents: React.Dispatch<React.SetStateAction<SignUpConsents>>;
 }
@@ -81,11 +82,17 @@ export function useSignUpForm(): UseSignUpFormReturn {
     }));
   }, []);
 
+  const resetForm = useCallback(() => {
+    setFormData(INITIAL_FORM_DATA);
+    setConsents(INITIAL_CONSENTS);
+  }, []);
+
   return {
     formData,
     consents,
     handleFieldChange,
     handleConsentChange,
+    resetForm,
     setFormData,
     setConsents,
   };

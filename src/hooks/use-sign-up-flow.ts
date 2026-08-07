@@ -1,4 +1,4 @@
-import { useMemo, useState, type ChangeEvent, type KeyboardEvent } from "react";
+import { useMemo, useRef, useState, type ChangeEvent, type KeyboardEvent } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { useSignUpForm } from "@/hooks/use-signup-form";
@@ -62,12 +62,13 @@ export const CONSENT_OPTIONS = [
 ] as const;
 
 export function useSignUpFlow() {
-  const { formData, consents, handleFieldChange, handleConsentChange } = useSignUpForm();
-  const { zipCode, addressFields, cepStatus, handleZipCodeChange, handleZipCodeBlur, handleAddressFieldChange } = useZipCodeLookup();
+  const { formData, consents, handleFieldChange, handleConsentChange, resetForm } = useSignUpForm();
+  const { zipCode, addressFields, cepStatus, resetZipCodeLookup, handleZipCodeChange, handleZipCodeBlur, handleAddressFieldChange } = useZipCodeLookup();
   const [privacyConsent, setPrivacyConsent] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Partial<Record<keyof SignUpFormValues, string>>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [currentStep, setCurrentStep] = useState<WizardStep>(1);
+  const submissionLockRef = useRef(false);
 
   const currentStepConfig = STEP_CONFIG[currentStep - 1];
   const progressValue = `${(currentStep / STEP_CONFIG.length) * 100}%`;
@@ -212,6 +213,14 @@ export function useSignUpFlow() {
     };
   };
 
+  const resetSignUpFlow = () => {
+    resetForm();
+    resetZipCodeLookup();
+    setPrivacyConsent(false);
+    setFieldErrors({});
+    setCurrentStep(1);
+  };
+
   const sendSignupConfirmation = async ({ email, name }: SignupConfirmationPayload) => {
     const startedAt = performance.now();
     const response = await fetch("/api/signup-confirmation", {
@@ -235,6 +244,10 @@ export function useSignUpFlow() {
   };
 
   const handleSubmit = async () => {
+    if (submissionLockRef.current || isSubmitting) {
+      return;
+    }
+
     const validationResult = signUpSchema.safeParse(getValidationValues());
 
     if (!validationResult.success) {
@@ -254,6 +267,7 @@ export function useSignUpFlow() {
     const submitStartedAt = performance.now();
 
     try {
+      submissionLockRef.current = true;
       setIsSubmitting(true);
       setFieldErrors({});
       const payload = buildPayload();
@@ -282,6 +296,7 @@ export function useSignUpFlow() {
           toast.warn(warningMessage);
         });
 
+        resetSignUpFlow();
         toast.success("Cadastro realizado com sucesso! Seus dados foram enviados e seu acesso esta em processamento.");
         return;
       }
@@ -295,7 +310,7 @@ export function useSignUpFlow() {
         normalizedMessage.includes("telephone") ||
         normalizedMessage.includes("already exists")
       ) {
-        toast.info("Ja existe um cadastro com este e-mail, CPF ou telefone. Tente fazer login ou use outros dados.");
+        toast.info("Já existe um cadastro com este e-mail, CPF ou telefone. Use outros dados.");
         return;
       }
 
@@ -327,6 +342,7 @@ export function useSignUpFlow() {
 
       toast.info(mensagem);
     } finally {
+      submissionLockRef.current = false;
       setIsSubmitting(false);
     }
   };

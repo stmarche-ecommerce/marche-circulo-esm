@@ -2,6 +2,7 @@
 
 import { useSignUpFlow, CONSENT_OPTIONS } from "@/hooks/use-sign-up-flow";
 import { Field, FieldGrid, SecondaryButton, SubmitButton } from ".";
+import Link from "next/link";
 
 export function SignUpForm() {
   const {
@@ -164,7 +165,7 @@ export function SignUpForm() {
                     className="h-3.5 w-3.5 rounded border-[rgba(104,64,49,0.16)] text-[var(--color-accent)]"
                   />
                   <span>
-                    Concordo com a <span className="font-semibold text-[var(--color-brown)]">Política de privacidade</span>.
+                    Concordo com a <Link href="/politica" className="font-semibold text-[var(--color-brown)]">Política de privacidade</Link>.
                   </span>
                 </label>
 
@@ -186,7 +187,7 @@ export function SignUpForm() {
             Próxima etapa
           </SubmitButton>
         ) : (
-          <SubmitButton type="button" disabled={isSubmitting} onClick={() => void handleSubmit()}>
+          <SubmitButton type="button" disabled={isSubmitting} loading={isSubmitting} onClick={() => void handleSubmit()}>
             {isSubmitting ? "Enviando..." : "Criar conta"}
           </SubmitButton>
         )}
