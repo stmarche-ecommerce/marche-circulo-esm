@@ -66,7 +66,7 @@ export default function SiteFooter() {
             <div className="mt-6 flex flex-col gap-3 text-lg">
               <FooterLink href="/manifesto">Manifesto</FooterLink>
               <FooterLink href="/historia">Nossa História</FooterLink>
-              <FooterLink href="https://campanha.marche.com.br/sustentabilidade/" external>
+              <FooterLink href="https://pages.marche.com.br/sustentabilidade/" external>
                 Sustentabilidade
               </FooterLink>
               <FooterLink href="https://stmarche.gupy.io/" external>
