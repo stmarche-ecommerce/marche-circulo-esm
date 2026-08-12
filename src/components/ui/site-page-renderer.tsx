@@ -121,7 +121,7 @@ function RichTextSections({ page }: { page: SitePage }) {
           <div className="content-grid">
             <div className="space-y-8">
               {page.richTextSections.map((section) => (
-                <article key={section.title} className="site-card p-8 md:p-10">
+                <article key={section.title} className="site-card p-6 sm:p-8 md:p-10">
                   <p className="section-eyebrow">Santa Maria Empório</p>
                   <h2 className="section-title !text-3xl md:!text-4xl">{section.title}</h2>
                   <div className="rich-text mt-6">
@@ -187,20 +187,20 @@ function ContactDetail({
   href?: string;
 }) {
   return (
-    <div className="group flex items-center gap-3 rounded-lg px-2 py-2 -mx-2 transition-colors hover:bg-[var(--color-accent)]/5">
-      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[var(--color-brown-dark)] text-[var(--color-accent-soft)] ring-2 ring-[var(--color-accent)]/25 transition group-hover:ring-[var(--color-accent)]/50">
+    <div className="group flex items-start gap-3 rounded-lg px-2 py-2 transition-colors hover:bg-[var(--color-accent)]/5">
+      <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[var(--color-brown-dark)] text-[var(--color-accent-soft)] ring-2 ring-[var(--color-accent)]/25 transition group-hover:ring-[var(--color-accent)]/50">
         {icon}
       </div>
-      <div className="flex min-w-0 items-baseline gap-2">
-        <p className="shrink-0 text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--color-accent)]">
+      <div className="flex min-w-0 flex-1 flex-col gap-1 sm:flex-row sm:items-baseline sm:gap-2">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--color-accent)]">
           {label}
         </p>
         {href ? (
-          <a href={href} className="truncate text-sm font-semibold text-[var(--color-brown-dark)] transition group-hover:text-[var(--color-accent)]">
+          <a href={href} className="min-w-0 break-words text-sm leading-6 font-semibold text-[var(--color-brown-dark)] transition group-hover:text-[var(--color-accent)]">
             {value}
           </a>
         ) : (
-          <p className="truncate text-sm font-semibold text-[var(--color-brown-dark)]">{value}</p>
+          <p className="min-w-0 break-words text-sm leading-6 font-semibold text-[var(--color-brown-dark)]">{value}</p>
         )}
       </div>
     </div>
@@ -280,7 +280,7 @@ function ContactSection({ page }: { page: SitePage }) {
     <section className="section-shell bg-[var(--color-surface)]">
       <div className="content-grid">
         <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
-          <article className="site-card p-8 md:p-10">
+          <article className="site-card p-6 sm:p-8 md:p-10">
             <h2 className="section-title !text-3xl md:!text-4xl">{contact.title}</h2>
             <p className="mt-5 text-lg leading-8 text-[var(--color-muted)]">{contact.description}</p>
 
@@ -320,7 +320,7 @@ function ContactSection({ page }: { page: SitePage }) {
             </div>
           </article>
 
-          <article className="site-card p-8 md:p-10">
+          <article className="site-card p-6 sm:p-8 md:p-10">
             <h2 className="section-title !text-3xl md:!text-4xl">Envie sua mensagem</h2>
             <p className="mt-5 text-lg leading-8 text-[var(--color-muted)]">
               O formulario abre seu aplicativo de e-mail com a mensagem preenchida.
