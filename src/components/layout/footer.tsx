@@ -39,7 +39,7 @@ export default function SiteFooter() {
                   iFood
                 </FooterLink>
                 <FooterLink href="https://wa.me/5511958187139" external>
-                  Loja própia
+                  Loja própria
                 </FooterLink>
               </div>
             </div>
