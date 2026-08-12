@@ -72,7 +72,7 @@ export default function SiteFooter() {
               <FooterLink href="https://stmarche.gupy.io/" external>
                 Trabalhe conosco
               </FooterLink>
-              <FooterLink href="/politica">Política de Privacidade</FooterLink>
+              <FooterLink href="/politica-privacidade">Política de Privacidade</FooterLink>
               <FooterLink href="/contato">Contato</FooterLink>
             </div>
           </div>

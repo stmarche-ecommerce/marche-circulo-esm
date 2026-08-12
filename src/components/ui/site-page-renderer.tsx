@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { Mail, MapPin, MessageCircle, Phone } from "lucide-react";
+import { Headset, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 
 import { ContactForm } from "@/components/forms/contact-form";
 import type { GridItem, SitePage } from "@/lib/site-config";
@@ -254,6 +254,15 @@ function ContactCardDetails({ card }: { card: NonNullable<SitePage["contactInfo"
           icon={<MapPin size={18} />}
           label=""
           value={card.address}
+        />
+      ) : null}
+
+
+      {card.sac ? (
+        <ContactDetail
+          icon={<Headset size={18} />}
+          label=""
+          value={card.sac}
         />
       ) : null}
     </>
