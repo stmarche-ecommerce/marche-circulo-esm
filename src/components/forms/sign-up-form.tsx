@@ -139,6 +139,8 @@ export function SignUpForm() {
                   Comunicação
                 </p>
 
+                <span>Aceito receber ofertas, novidades e benefícios exclusivos pelos canais selecionados</span>
+
                 <div className="mt-1.5 grid gap-1.5 md:grid-cols-3">
                   {CONSENT_OPTIONS.map((option) => (
                     <label
@@ -165,7 +167,7 @@ export function SignUpForm() {
                     className="h-3.5 w-3.5 rounded border-[rgba(104,64,49,0.16)] text-[var(--color-accent)]"
                   />
                   <span>
-                    Concordo com a <Link href="/politica" className="font-semibold text-[var(--color-brown)]">Política de privacidade</Link>.
+                    Concordo com a <Link href="/politica-privacidade" className="font-semibold text-[var(--color-brown)]">Política de privacidade</Link>.
                   </span>
                 </label>
 

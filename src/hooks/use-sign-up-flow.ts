@@ -49,8 +49,8 @@ const STEP_CONFIG: StepConfig[] = [
   },
   {
     id: 2,
-    title: "Endereco e preferencias",
-    description: "Endereco completo e consentimentos de comunicação.",
+    title: "Endereço e preferências",
+    description: "Endereço completo e consentimentos de comunicação.",
     fields: ["zipCode", "street", "number", "neighborhood", "city", "state", "privacyConsent"],
   },
 ];

@@ -226,6 +226,7 @@ function isHighlightedContact(sectionTitle: string, paragraph: string) {
 function PolicyTimeline() {
   return (
     <div className="grid grid-cols-1 gap-8 lg:grid-cols-[200px_minmax(0,1fr)] lg:items-start lg:gap-9 xl:grid-cols-[200px_minmax(0,1fr)]">
+
       <div className="lg:hidden">
         <p className="mb-3 px-2 text-base text-[var(--color-brown)]">Índice</p>
         <div className="flex gap-2 overflow-x-auto px-2 pb-2 snap-x snap-mandatory">
@@ -271,7 +272,7 @@ function PolicyTimeline() {
               className="relative scroll-mt-28"
             >
               <span
-                className={`absolute left-[-3.58rem] top-5 z-10 hidden h-11 w-11 items-center justify-center rounded-[1rem] border border-white/60 shadow-[0_10px_22px_rgba(71,42,35,0.08)] lg:flex ${iconWrapperClassName}`}
+                className={`absolute left-[-3.58rem] top-0 z-10 hidden h-11 w-11 items-center justify-center rounded-[1rem] border border-white/60 shadow-[0_10px_22px_rgba(71,42,35,0.08)] lg:flex ${iconWrapperClassName}`}
               >
                 <Icon className="h-5 w-5" />
               </span>
@@ -325,6 +326,11 @@ export default function PoliticaPage() {
 
       <section className="section-shell bg-[var(--color-surface)] pt-0">
         <div className="content-grid">
+          <div className="flex flex-col gap-2 lg:mb-20 xs:mb-20">
+            <h1 className="section-title" >EMPÓRIO SANTA MARIA E PROGRAMA CÍRCULO SANTA MARIA</h1>
+            <p><strong>Controlador:</strong> Hortus Comércio de Alimentos S.A. | CNPJ 09.000.493/0001-31 </p>
+            <p><strong>Última atualização:</strong> 4 de agosto de 2026</p>
+          </div>
           <PolicyTimeline />
         </div>
       </section>
