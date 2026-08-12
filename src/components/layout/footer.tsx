@@ -39,13 +39,13 @@ export default function SiteFooter() {
                   iFood
                 </FooterLink>
                 <FooterLink href="https://wa.me/5511958187139" external>
-                  WhatsApp
+                  Loja própia
                 </FooterLink>
               </div>
             </div>
 
             <div>
-              <FooterTitle>UNIDADE</FooterTitle>
+              <FooterTitle>ENDEREÇO</FooterTitle>
               <div className="mt-6 space-y-2 text-lg leading-8 text-[var(--color-cream-muted)]">
                 <p>Av. Cidade Jardim, 790 - Jd. Paulistano</p>
                 <p>Telefones: (11) 3706-5211 e (11) 3706-5210</p>

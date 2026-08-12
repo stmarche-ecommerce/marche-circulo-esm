@@ -1,5 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
+import type { ReactNode } from "react";
+import { Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 
 import { ContactForm } from "@/components/forms/contact-form";
 import type { GridItem, SitePage } from "@/lib/site-config";
@@ -173,6 +175,91 @@ function InstitutionalSections({ page }: { page: SitePage }) {
   );
 }
 
+function ContactDetail({
+  icon,
+  label,
+  value,
+  href,
+}: {
+  icon: ReactNode;
+  label: string;
+  value: string;
+  href?: string;
+}) {
+  return (
+    <div className="group flex items-center gap-3 rounded-lg px-2 py-2 -mx-2 transition-colors hover:bg-[var(--color-accent)]/5">
+      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[var(--color-brown-dark)] text-[var(--color-accent-soft)] ring-2 ring-[var(--color-accent)]/25 transition group-hover:ring-[var(--color-accent)]/50">
+        {icon}
+      </div>
+      <div className="flex min-w-0 items-baseline gap-2">
+        <p className="shrink-0 text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--color-accent)]">
+          {label}
+        </p>
+        {href ? (
+          <a href={href} className="truncate text-sm font-semibold text-[var(--color-brown-dark)] transition group-hover:text-[var(--color-accent)]">
+            {value}
+          </a>
+        ) : (
+          <p className="truncate text-sm font-semibold text-[var(--color-brown-dark)]">{value}</p>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function ContactCardDetails({ card }: { card: NonNullable<SitePage["contactInfo"]>["cards"] extends (infer T)[] | undefined ? T : never }) {
+  const samePhoneAndWhatsapp = Boolean(card.whatsapp && card.phone && card.whatsapp === card.phone);
+
+  return (
+    <>
+      {card.email ? (
+        <ContactDetail
+          icon={<Mail size={18} />}
+          label="E-mail"
+          value={card.email}
+          href={`mailto:${card.email}`}
+        />
+      ) : null}
+
+      {samePhoneAndWhatsapp ? (
+        <ContactDetail
+          icon={<MessageCircle size={18} />}
+          label="WhatsApp / Telefone"
+          value={card.phone as string}
+          href={`https://wa.me/${(card.phone as string).replace(/\D/g, "")}`}
+        />
+      ) : (
+        <>
+          {card.whatsapp ? (
+            <ContactDetail
+              icon={<MessageCircle size={18} />}
+              label="WhatsApp"
+              value={card.whatsapp}
+              href={`https://wa.me/${card.whatsapp.replace(/\D/g, "")}`}
+            />
+          ) : null}
+          {card.phone ? (
+            <ContactDetail
+              icon={<Phone size={18} />}
+              label="Telefone"
+              value={card.phone}
+              href={`tel:${card.phone.replace(/[^\d+]/g, "")}`}
+            />
+          ) : null}
+        </>
+      )}
+
+      {card.address ? (
+        <ContactDetail
+          icon={<MapPin size={18} />}
+          label=""
+          value={card.address}
+        />
+      ) : null}
+    </>
+  );
+}
+
 function ContactSection({ page }: { page: SitePage }) {
   const contact = page.contactInfo;
 
@@ -185,31 +272,52 @@ function ContactSection({ page }: { page: SitePage }) {
       <div className="content-grid">
         <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
           <article className="site-card p-8 md:p-10">
-            <p className="section-eyebrow">Atendimento</p>
             <h2 className="section-title !text-3xl md:!text-4xl">{contact.title}</h2>
             <p className="mt-5 text-lg leading-8 text-[var(--color-muted)]">{contact.description}</p>
-            <div className="mt-8 space-y-4 text-base ">
-              {contact.email ? (
-                <p>
-                  E-mail:{" "}
-                  <a className="font-semibold text-[var(--color-accent)]" href={`mailto:${contact.email}`}>
-                    {contact.email}
-                  </a>
-                </p>
+
+            <div className="mt-8 space-y-8">
+              {contact.cards?.map((card) => (
+                <article key={card.title}>
+                  <h3 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.08em] text-[var(--color-brown-dark)]">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[var(--color-accent)]" />
+                    {card.title}
+                  </h3>
+                  <div className="mt-3 space-y-1">
+                    <ContactCardDetails card={card} />
+                  </div>
+                </article>
+              ))}
+
+              {!contact.cards?.length ? (
+                <div className="divide-y divide-[var(--color-border)]/40">
+                  {contact.email ? (
+                    <ContactDetail
+                      icon={<Mail size={18} />}
+                      label="E-mail"
+                      value={contact.email}
+                      href={`mailto:${contact.email}`}
+                    />
+                  ) : null}
+                  {contact.phone ? (
+                    <ContactDetail
+                      icon={<Phone size={18} />}
+                      label="Telefone"
+                      value={contact.phone}
+                      href={`tel:${contact.phone.replace(/[^\d+]/g, "")}`}
+                    />
+                  ) : null}
+                </div>
               ) : null}
-              {contact.phone ? <p>Telefone: <span className="font-semibold">{contact.phone}</span></p> : null}
-              <p>Endereco: Av. Cidade Jardim, 790 - Jd. Paulistano, Sao Paulo</p>
             </div>
           </article>
 
           <article className="site-card p-8 md:p-10">
-            <p className="section-eyebrow">Formulario</p>
             <h2 className="section-title !text-3xl md:!text-4xl">Envie sua mensagem</h2>
             <p className="mt-5 text-lg leading-8 text-[var(--color-muted)]">
               O formulario abre seu aplicativo de e-mail com a mensagem preenchida.
             </p>
             <div className="mt-8">
-              <ContactForm destinationEmail={contact.email ?? "contato@emporiosantamaria.com.br"} defaultSubject={page.title} />
+              <ContactForm destinationEmail={page.slug === "contato" ? "valdir.silva@marche.com.br" : contact.email ?? "contato@emporiosantamaria.com.br"} defaultSubject={page.title} />
             </div>
           </article>
         </div>
@@ -230,6 +338,3 @@ export function SitePageRenderer({ page }: { page: SitePage }) {
     </>
   );
 }
-
-
-

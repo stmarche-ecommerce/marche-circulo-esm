@@ -139,6 +139,8 @@ export function SignUpForm() {
                   Comunicação
                 </p>
 
+                <span>Aceito receber ofertas, novidades e benefícios exclusivos pelos canais selecionados</span>
+
                 <div className="mt-1.5 grid gap-1.5 md:grid-cols-3">
                   {CONSENT_OPTIONS.map((option) => (
                     <label

@@ -37,6 +37,13 @@ export type ContactInfo = {
   description: string;
   email?: string;
   phone?: string;
+  cards?: Array<{
+    title: string;
+    email?: string;
+    whatsapp?: string;
+    phone?: string;
+    address?: string;
+  }>;
 };
 
 export type PageTemplate = "feature" | "grid" | "richText" | "institutional" | "contact";
@@ -696,10 +703,26 @@ export const sitePages: SitePage[] = [
       image: "/images/adega2.jpg",
     },
     contactInfo: {
-      title: "Atendimento Santa Maria",
-      description: "Preencha o formulário ou fale diretamente com a nossa equipe pelos canais abaixo.",
+      title: "Quadro Atendimento",
+      description: "Preencha o formulario ou fale diretamente com a nossa equipe pelos canais abaixo.",
       email: "contato@emporiosantamaria.com.br",
       phone: "(11) 3706-5211",
+      cards: [
+        {
+          title: "Pedidos e delivery loja",
+          whatsapp: "(11) 95818-7139",
+          phone: "(11) 3706-5211 / (11) 3706-5210",
+        },
+        {
+          title: "Restaurante do Empório (Sushi Bar)",
+          whatsapp: "(11) 98217-0531",
+          phone: "(11) 98217-0531",
+        },
+        {
+          title: "Endereco",
+          address: "Av. Cidade Jardim, 790 - Jd. Paulistano, Sao Paulo",
+        },
+      ],
     },
   },
 ];
