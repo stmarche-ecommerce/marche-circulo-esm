@@ -29,7 +29,7 @@ export function WhatsAppAssistant() {
 
           <div className="space-y-4 p-4">
             <div className="rounded-r-2xl rounded-b-2xl bg-[#efeee8] px-4 py-3 font-normal text-[12.5px] leading-[1.55] text-[#2f241c]">
-              Olá, Kayk! 👋 Posso te ajudar a pedir seu delivery agora mesmo. Quer
+              Olá ! 👋 Posso te ajudar a pedir seu delivery agora mesmo. Quer
               que eu já separe seus itens favoritos?
             </div>
 
