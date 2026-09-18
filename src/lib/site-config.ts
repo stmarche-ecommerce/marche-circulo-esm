@@ -72,6 +72,7 @@ export const primaryNavigationItems = [
   // { label: "Delivery", href: "/delivery" },
   // { label: "Produtos", href: "/produtos" },
   { label: "Serviços", href: "/servicos" },
+  { label: "Para Colecionar", href: "/para-colecionar" },
 ] as const;
 
 export const sitePages: SitePage[] = [

@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
-import { Menu, User, UserPlus, X } from "lucide-react";
+import { Menu, UserPlus, X } from "lucide-react";
 import { primaryNavigationItems } from "@/lib/site-config";
 
 export function SiteHeader() {

@@ -10,10 +10,7 @@ export default function Error({
     <div className="flex min-h-[50vh] items-center justify-center px-4 text-center">
       <div className="max-w-xl">
         <p className="text-sm uppercase tracking-[0.3em] text-[#b1813a]">Algo saiu do esperado</p>
-        <h2
-          className="mt-4 text-3xl uppercase tracking-[0.18em] text-[#583729]"
-          style={{ fontFamily: "CeraBold, sans-serif" }}
-        >
+        <h2 className="mt-4 text-3xl font-bold uppercase tracking-[0.18em] text-[#583729]">
           Nao foi possivel carregar esta pagina
         </h2>
         <button
