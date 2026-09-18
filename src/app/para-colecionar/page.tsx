@@ -8,6 +8,7 @@ import { Footer } from "./layout/Footer";
 import { SelosFaqLink } from "./components/Faq";
 import { MobileNav } from "./components/MobileNav";
 import { RegulamentoLink } from "./components/Regulamento";
+import { BackToTop } from "./components/BackToTop";
 
 const ptSans = PT_Sans({
   subsets: ["latin"],
@@ -321,6 +322,8 @@ export default function ParaColecionarPage() {
           <Footer />
         </section>
       </main>
+
+      <BackToTop />
     </div>
   );
 }
