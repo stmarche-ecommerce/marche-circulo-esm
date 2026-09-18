@@ -5,6 +5,12 @@ const nextConfig: NextConfig = {
   output: "standalone",
   images: {
     qualities: [75],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "d9hhrg4mnvzow.cloudfront.net",
+      },
+    ],
   },
 };
 

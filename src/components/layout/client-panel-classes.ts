@@ -1,13 +1,13 @@
 ﻿export const clientPanelClasses = {
   panelRoot:
-    "min-w-0 flex-1 bg-[#f6efe4] text-[#2b1c14] [font-family:var(--font-inter),sans-serif]",
+    "min-w-0 flex-1 bg-[#f6efe4] text-[#2b1c14]",
   main: "w-full max-w-[98%] px-6 py-7 md:px-12 md:pt-8 md:pb-16",
   eyebrow:
     "mb-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#9d341f]",
   heroTitle:
-    "mb-4 max-w-[760px] text-[32px] leading-[1.06] font-normal tracking-[-0.03em] text-[#25160f] [font-family:var(--font-fraunces),serif] md:text-[58px]",
+    "mb-4 max-w-[760px] text-[32px] leading-[1.06] font-normal tracking-[-0.03em] text-[#25160f] md:text-[58px]",
   pageTitle:
-    "mb-2.5 text-[30px] leading-[1.1] font-medium [font-family:var(--font-fraunces),serif] md:text-[34px]",
+    "mb-2.5 text-[30px] leading-[1.1] font-medium md:text-[34px]",
   heroSub: "mb-6 max-w-[760px] text-[15px] leading-[1.55] text-[#684031] md:text-[18px] md:leading-[1.45]",
   pageSub: "mb-5 max-w-[600px] text-[15px] leading-[1.6] text-[#5b4d40]",
   primaryButton:
@@ -25,27 +25,27 @@
   highlightEyebrow:
     "mb-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#e0a13f]",
   highlightTitle:
-    "mb-1 text-[24px] leading-[1.15] font-medium [font-family:var(--font-fraunces),serif] md:text-[28px]",
+    "mb-1 text-[24px] leading-[1.15] font-medium md:text-[28px]",
   highlightText: "text-[14px] leading-[1.55] text-[#f6ddd3] md:text-[15px]",
   highlightIcon:
     "hidden text-[42px] md:block",
   card:
     "mb-6 rounded-[22px] border border-[#e6d7c1] bg-[#fffdf9] p-5 shadow-[0_10px_24px_rgba(81,46,30,0.05)] md:p-7",
   cardTitle:
-    "mb-[18px] mt-0.5 text-[22px] font-medium text-[#23140e] [font-family:var(--font-fraunces),serif] md:text-[24px]",
+    "mb-[18px] mt-0.5 text-[22px] font-medium text-[#23140e] md:text-[24px]",
   benefitsGrid:
     "grid grid-cols-1 gap-5 md:grid-cols-2",
   benefitCard:
     "rounded-[16px] border border-[#e6d7c1] bg-[#fbf6ee] p-5",
   benefitCardTitle:
-    "mb-2 text-[18px] font-medium text-[#261610] [font-family:var(--font-fraunces),serif]",
+    "mb-2 text-[18px] font-medium text-[#261610]",
   benefitCardText: "mb-4 text-[14px] leading-[1.55] text-[#684031]",
   benefitUsage: "mb-4 flex items-center gap-3",
   usageTrack:
     "h-[7px] flex-1 overflow-hidden rounded-full bg-[#e6d8c2]",
   usageFill: "h-full rounded-full bg-[#9d341f]",
   usageLabel:
-    "whitespace-nowrap text-[12px] text-[#7d2c1d] [font-family:var(--font-jetbrains-mono),monospace]",
+    "whitespace-nowrap text-[12px] text-[#7d2c1d]",
   benefitAction:
     "focus-ring inline-flex items-center rounded-[10px] bg-[#a33a24] px-4 py-3 text-[12px] font-semibold tracking-[0.04em] text-white no-underline hover:bg-[#912f1c]",
   footnote:
@@ -58,14 +58,14 @@
   benefitIcon:
     "flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-[#fbf1e2] text-[22px] text-[#6e2418]",
   benefitBlockTitle:
-    "text-[24px] font-medium text-[#23140e] [font-family:var(--font-fraunces),serif] md:text-[28px]",
+    "text-[24px] font-medium text-[#23140e] md:text-[28px]",
   ruleGrid:
     "mb-5 grid grid-cols-1 gap-4 md:grid-cols-3",
   rule: "rounded-[16px] border border-[#e7ddc9] bg-[#fbf7ee] p-5",
   ruleLabel:
     "mb-2 text-[11px] uppercase tracking-[0.12em] text-[#8a7d6f]",
   ruleValue:
-    "text-[18px] font-medium text-[#23140e] [font-family:var(--font-fraunces),serif] md:text-[22px]",
+    "text-[18px] font-medium text-[#23140e] md:text-[22px]",
   benefitNote:
     "mt-5 text-[14px] leading-[1.8] text-[#5b4d40]",
   benefitActionRow: "mt-5",
@@ -85,7 +85,7 @@
   bazarCard:
     "rounded-[24px] border border-dashed border-[#edc98d] bg-[#f8ebd9] p-6",
   bazarTitle:
-    "mb-3 mt-1.5 text-[22px] font-medium text-[#5c3d18] [font-family:var(--font-fraunces),serif]",
+    "mb-3 mt-1.5 text-[22px] font-medium text-[#5c3d18]",
   bazarText: "max-w-[760px] text-[14px] leading-[1.8] text-[#6b4a20] md:text-[15px]",
   filters: "mb-7 flex flex-wrap gap-2.5",
   filter:
@@ -94,7 +94,7 @@
   filterActive: "border-[#8b2e20] bg-[#8b2e20] font-medium text-white",
   categoryBlock: "mb-9",
   categoryTitle:
-    "mb-1 text-[20px] font-medium [font-family:var(--font-fraunces),serif]",
+    "mb-1 text-[20px] font-medium",
   categoryDesc: "mb-4 text-[13px] text-[#8a7d6f]",
   promoGrid:
     "grid w-full grid-cols-1 gap-[18px] md:grid-cols-2 xl:grid-cols-3",
@@ -105,12 +105,12 @@
   promoImage:
     "mb-3.5 flex h-[110px] w-full items-center justify-center rounded-xl bg-[#f1e6d6] text-[28px] text-[#c9a86a]",
   promoTitle:
-    "mb-1 text-[16px] font-medium [font-family:var(--font-fraunces),serif]",
+    "mb-1 text-[16px] font-medium",
   promoStore: "mb-3 text-[12px] text-[#8a7d6f]",
   priceRow: "mb-1 flex items-baseline gap-2",
   priceOld: "text-[13px] text-[#8a7d6f] line-through",
   priceNew:
-    "text-[18px] font-medium text-[#6e2418] [font-family:var(--font-jetbrains-mono),monospace]",
+    "text-[18px] font-medium text-[#6e2418]",
   validity: "text-[11.5px] text-[#8a7d6f]",
   profileGrid:
     "grid grid-cols-1 gap-[18px] md:grid-cols-2",
@@ -120,7 +120,7 @@
     "mb-1.5 text-[11px] uppercase tracking-[0.05em] text-[#8a7d6f]",
   profileValue: "text-[15px] text-[#2b1c14]",
   sidebar:
-    "flex w-full shrink-0 flex-col justify-between bg-[linear-gradient(180deg,#412d45_0%,#241621_100%)] px-5 py-6 text-[#f2e9e4] [font-family:var(--font-inter),sans-serif] md:sticky md:top-0 md:h-screen md:w-[276px]",
+    "flex w-full shrink-0 flex-col justify-between bg-[linear-gradient(180deg,#412d45_0%,#241621_100%)] px-5 py-6 text-[#f2e9e4] md:sticky md:top-0 md:h-screen md:w-[276px]",
   brand:
     "mb-5 flex items-center gap-3 px-1 py-1",
   brandIcon:
