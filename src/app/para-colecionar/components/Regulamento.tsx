@@ -86,7 +86,7 @@ export function RegulamentoModal({ open, onClose }: RegulamentoModalProps) {
         <main className="min-h-0 flex-1 overflow-y-auto bg-zinc-100">
           <div className="mx-auto flex max-w-5xl flex-col items-center gap-3 p-3 sm:gap-5 sm:p-6">
             {pages.map((page, index) => (
-              <div key={page.desktop} className=" overflow-hidden bg-white shadow-sm">
+              <div key={page.desktop} className="w-full overflow-hidden bg-white shadow-sm">
                 <picture>
                   <source media="(max-width: 767px)" srcSet={page.mobile} />
                   <Image

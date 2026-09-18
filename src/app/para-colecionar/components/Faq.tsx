@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import Image from 'next/image'
 import { PT_Sans } from 'next/font/google'
 import Link from 'next/link'
 
@@ -22,27 +21,53 @@ type FaqItem = {
   answer: React.ReactNode
 }
 
+function ExemplosTable({
+  rows,
+}: {
+  rows: { valor: string; selos: string }[]
+}) {
+  return (
+    <div className="overflow-hidden rounded-lg border border-stone-300">
+      <div className="bg-[#494542] py-2 text-center text-sm font-bold uppercase tracking-wide text-white">
+        Exemplos
+      </div>
+      <table className="w-full border-collapse text-left">
+        <tbody>
+          {rows.map((row) => (
+            <tr key={row.valor} className="border-t border-stone-300">
+              <td className="border-r border-stone-300 px-4 py-2 font-medium text-stone-900">
+                {row.valor}
+              </td>
+              <td className="px-4 py-2">{row.selos}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
 const faqItems: FaqItem[] = [
   {
     question: 'Qual o período de realização da campanha?',
     answer: (
       <ul className="space-y-3">
         <li>
-          <span className="font-medium text-stone-900">Período da ação:</span>{' '}
-          21/09/2026 a 20/12/2026, ou enquanto durarem os estoques.
+          <span className="font-medium text-stone-900">PERÍODO DA AÇÃO:</span>{' '}
+          21/09/2026 A 20/12/2026 OU ENQUANTO DURAREM OS ESTOQUES;
         </li>
         <li>
           <span className="font-medium text-stone-900">
-            Entrega de selos de desconto:
+            PERÍODO DA ENTREGA DE SELOS DE DESCONTO:
           </span>{' '}
-          21/09/2026 a 13/12/2026, ou enquanto durarem os estoques. A partir de
-          14/12/2026 não há mais distribuição de selos.
+          21/09/2026 A 13/12/2026 OU ENQUANTO DURAREM OS ESTOQUES. A PARTIR DE
+          14/12/2026, NÃO HAVERÁ MAIS DISTRIBUIÇÃO DE SELOS;
         </li>
         <li>
           <span className="font-medium text-stone-900">
-            Resgate de produtos com desconto:
+            PERÍODO DO RESGATE DE PRODUTOS COM DESCONTO:
           </span>{' '}
-          21/09/2026 a 20/12/2026, ou enquanto durarem os estoques.
+          21/09/2026 A 20/12/2026 OU ENQUANTO DURAREM OS ESTOQUES.
         </li>
       </ul>
     ),
@@ -52,138 +77,271 @@ const faqItems: FaqItem[] = [
     answer: (
       <div className="space-y-3">
         <p>
-          A ação de desconto é válida apenas para pessoas físicas, capazes e
-          maiores de 18 anos, domiciliadas no Brasil e cadastradas no
-          programa <span className="font-medium text-stone-900">Círculo Santa Maria</span>.
+          A AÇÃO DE DESCONTO É VÁLIDA APENAS PARA PESSOAS FÍSICAS, CAPAZES E MAIORES DE (18) DEZOITO ANOS, DOMICILIADAS NO BRASIL E CADASTRADAS NO PROGRAMA “CÍRCULO SANTA MARIA”.
         </p>
         <p>
-          A compra sem desconto pode ser feita por clientes participantes ou
-          não do programa, conforme disponibilidade de estoque. Compras
-          realizadas com CNPJ não participam desta campanha.
+          A COMPRA SEM DESCONTO PODERÁ SER REALIZADA POR CLIENTES PARTICIPANTES OU NÃO DO PROGRAMA “CÍRCULO SANTA MARIA”, CONFORME DISPONIBILIDADE DE ESTOQUE. NÃO PARTICIPAM DESTA CAMPANHA COMPRAS REALIZADAS COM CNPJ.
         </p>
       </div>
     ),
   },
   {
-    question: 'Como acumular selos de desconto?',
+    question: 'Como o cliente pode participar da campanha e acumular selos de desconto?',
     answer: (
       <div className="space-y-4">
         <p>
-          A cada <span className="font-medium text-stone-900">R$ 40,00</span>{' '}
-          em compras, em uma única nota ou cupom fiscal, nas lojas físicas
-          participantes do Empório Santa Maria, no site ou pelo WhatsApp, o
-          cliente Círculo Santa Maria recebe 1 selo de desconto — válido de
-          21/09/2026 a 13/12/2026.
+          A CADA R$40,00 (QUARENTA REAIS) EM COMPRAS, EM UMA ÚNICA NOTA/CUPOM FISCAL, REALIZADAS NAS LOJA FÍSICA PARTICIPANTE DO EMPÓRIO SANTA MARIA, DISPONÍVEIS NO SITE:{' '}
+          <Link href="https://emporiosantamaria.com.br" target="_blank" className="underline">
+            https://emporiosantamaria.com.br
+          </Link>{' '}
+          BEM COMO WHATSAPP, NO PERÍODO DE PARTICIPAÇÃO DE 21/09/2026 A 13/12/2026), O CLIENTE CÍRCULO SANTA MARIA RECEBERÁ 01 (UM) SELO DE DESCONTO, PARA ACUMULAR E COMPRAR COM O DESCONTO QUE FIZER JUS, OS PRODUTOS LE CORDON BLEU® PARTICIPANTES, CONFORME CONDIÇÕES ESTABELECIDAS NAS REGRAS DE PARTICIPAÇÃO.
         </p>
         <p>
-          Em compras parceladas, considera-se sempre o valor total do
-          comprovante, e não o valor da parcela. Saldos residuais entre notas
-          não são somados para gerar novos selos.
+          NO CASO DE COMPRAS PARCELADAS SERÁ SEMPRE CONSIDERADO O TOTAL DO COMPROVANTE E NÃO O VALOR DA PARCELA. OS VALORES RESIDUAIS DOS COMPROVANTES FISCAIS NÃO SERÃO REAPROVEITADOS, OU SEJA, HAVENDO SALDOS RESIDUAIS, ESTES SERÃO DESCONSIDERADOS PARA OBTENÇÃO DE NOVOS SELOS DE DESCONTO.
         </p>
-        <figure className="overflow-hidden rounded-lg border border-stone-200">
-          {/* TODO: adicionar a imagem da tabela de descontos por faixa de selos.
-             Arquivo citado como estando "na mesma pasta" do documento original —
-             salve-a em /public/campanhas/selos-le-cordon-bleu/tabela-descontos.png
-             (ou ajuste o caminho abaixo) antes de publicar. */}
-          <Image
-            src="/images/para-colecionar/faq-tabela-exemplo.png"
-            alt="Tabela de quantidade de selos por faixa de desconto"
-            width={640}
-            height={360}
-            className="h-auto w-full"
-          />
-        </figure>
+        <ExemplosTable
+          rows={[
+            { valor: 'R$ 40,00', selos: '1 SELO DE DESCONTO' },
+            { valor: 'R$ 79,99', selos: '1 SELO DE DESCONTO' },
+            { valor: 'R$ 119,00', selos: '2 SELO DE DESCONTOS' },
+            { valor: 'R$ 159,00', selos: '2 SELO DE DESCONTOS' },
+          ]}
+        />
       </div>
     ),
   },
   {
-    question: 'Quais produtos não participam desta campanha?',
+    question: 'Não participam desta ação os seguintes produtos, caso sejam adquiridos:',
     answer: (
       <div className="space-y-3">
         <ul className="list-disc space-y-2 pl-5">
           <li>
-            Medicamentos, armas e munições, fogos de artifício ou de
-            estampido, bebidas alcoólicas com graduação acima de 13º, fumo e
-            seus derivados.
+            MEDICAMENTOS, ARMAS E MUNIÇÕES, FOGOS DE ARTIFÍCIO OU DE ESTAMPIDO, BEBIDAS ALCOÓLICAS COM GRADUAÇÃO ACIMA DE 13º, FUMO E SEUS DERIVADOS, CONFORME DETERMINA O ARTIGO 10, DO DECRETO Nº 70.951/72.
           </li>
           <li>
-            Fórmulas infantis para lactentes e de seguimento para lactentes
-            (0 a 12 meses de idade).
+            FÓRMULAS INFANTIS PARA LACTENTES E DE SEGUIMENTO PARA LACTENTES (0-12 MESES DE IDADE), CONFORME A LEI (LEI Nº 11.265, DE 3 DE JANEIRO DE 2006, E REGULAMENTAÇÕES SUBSEQUENTES “LEGISLAÇÃO LOCAL”) QUE VISA PROTEGER O ALEITAMENTO MATERNO E QUE REGULAMENTA A COMERCIALIZAÇÃO DOS PRODUTOS DESTINADOS À ALIMENTAÇÃO DE LACTENTES E CRIANÇAS DE PRIMEIRA INFÂNCIA.
+          </li>
+
+          <li>
+            CASO CONSTEM PRODUTOS MENSURADOS NOS ITENS 6.1.1. E 6.1.2. NO COMPROVANTE FISCAL, OS VALORES DESTES, SERÃO DESCONTADOS DA COMPRA E CONSIDERADOS APENAS OS DEMAIS PRODUTOS VÁLIDOS.
+          </li>
+
+          <li>
+            AS COMPRAS REALIZADAS POR MEIO DO APLICATIVO RAPPI E IFOOD, OUTROS APLICATIVOS DE ENTREGA OU SITE QUE VENHA A COMERCIALIZAR PRODUTOS DA LOJA EMPÓRIO SANTA MARIA, QUE NÃO O PRÓPRIO EMPÓRIO SANTA MARIA, NOS FORMATOS AQUI DESCRITOS.
+          </li>
+
+          <li>
+            SERVIÇOS COMO, POR EXEMPLO, PAGAMENTO DE CONTAS, TICKETS DE ESTACIONAMENTO, TAXAS DE ENTREGA DE SITES/DELIVERY, CONVÊNIOS, PEDIDOS FEITOS DIRETAMENTE NO TOTEM DO CAFÉ DO SANTA MARIA EMPÓRIO. NESTE CASO, O CLIENTE DO CÍRCULO SANTA MARIA, DEVERÁ DIRIGIR-SE AO CAIXA, PARA PAGAMENTO DA SUA COMANDA E OBTENÇÃO DOS SELOS DE DESCONTO.
+          </li>
+
+          <li>
+            TOTEM DO SANTA MARIA EMPÓRIO NÃO PARTICIPARÁ DESTA CAMPANHA COM A AÇÃO DE ENTREGA DE SELOS PARA OS CLIENTES DO CÍRCULO SANTA MARIA
+          </li>
+
+          <li>
+            NENHUMA OFERTA DE VOUCHER OU DESCONTO, INDEPENDENTEMENTE DA SUA FORMA OU ORIGEM, SERÁ CONSIDERADA ELEGÍVEL PARA A GERAÇÃO DE SELOS NESTA CAMPANHA.
+          </li>
+
+          <li>
+            A COMPRA COM DESCONTO DAS CAÇAROLAS, FRIGIDEIRA E WOK DE FERRO DA MARCA LE CORDON BLEU®. OU SEJA, O VALOR A SER PAGO NA AQUISIÇÃO DO ITEM NÃO SERÁ REVERTIDO EM SELO, UMA VEZ QUE, SE DESTINA A COMPLEMENTAR O VALOR DO PRODUTO, JÁ COM DESCONTO DECORRENTE DA QUANTIDADE DE SELOS APRESENTADOS.
+          </li>
+
+          <li>
+            NOS CASOS DE DEVOLUÇÃO OU TROCA DE PRODUTOS ADQUIRIDOS, OS CONSUMIDORES TAMBÉM NÃO TERÃO DIREITO A RECEBER SELOS DE DESCONTO, EXCETO SE FOR DESEMBOLSADO VALOR EXCEDENTE AO QUE ULTRAPASSE R$ 40,00 (QUARENTA REAIS), RESSALVADAS AS HIPÓTESES DO ITEM 6 DO REGULAMENTO. NESTA CAMPANHA, SERÁ ENTREGUE A QUANTIDADE MÁXIMA DE 500 (QUINHENTOS) SELOS POR TRANSAÇÃO/COMPRA, INDEPENDENTEMENTE DO VALOR TOTAL PAGO PELO CLIENTE DO CÍRCULO SANTA MARIA.
           </li>
         </ul>
-        <p>
-          Caso esses itens apareçam no mesmo cupom fiscal, seus valores são
-          descontados do total da compra antes do cálculo dos selos.
-        </p>
+
+        <p className="text-bold">NESTA CAMPANHA, SERÁ ENTREGUE A QUANTIDADE MÁXIMA DE 500 (QUINHENTOS) SELOS POR TRANSAÇÃO/COMPRA, INDEPENDENTEMENTE DO VALOR TOTAL PAGO PELO CLIENTE CÍRCULO SANTA MARIA.</p>
+
       </div>
     ),
   },
   {
-    question: 'Compras pelo Rappi, iFood ou outros aplicativos geram selos?',
-    answer: (
-      <p>
-        Não. Compras realizadas pelo Rappi, iFood, outros aplicativos de
-        entrega ou sites terceiros que comercializem produtos do Empório
-        Santa Maria não participam desta campanha.
-      </p>
-    ),
-  },
-  {
-    question:
-      'Pagamento de contas, estacionamento ou pedidos no totem do café geram selos?',
+    question: 'Como receberei os selos de desconto?',
     answer: (
       <div className="space-y-3">
         <p>
-          Serviços como pagamento de contas, tickets de estacionamento, taxas
-          de entrega, convênios e pedidos feitos diretamente no totem do café
-          do Santa Maria Empório não geram selos automaticamente.
+          PARA AS COMPRAS REALIZADAS NA LOJA FÍSICA PARTICIPANTE, BEM COMO NO WHATSAPP, OS SELOS DE DESCONTO CORRESPONDENTES AO VALOR TOTAL DA COMPRA EFETIVAMENTE PAGA CONFORME CONDIÇÕES DESCRITAS NO REGULAMENTO, SERÃO ENTREGUES IMEDIATAMENTE E DIRETAMENTE AO PARTICIPANTE PELO OPERADOR DE CAIXA RESPONSÁVEL PELO ATENDIMENTO, MEDIANTE:
+        </p>
+        <ol className="list-decimal space-y-1 pl-5">
+          <li>
+            CONFIRMAÇÃO DO CLIENTE “CÍRCULO SANTA MARIA” NA TECLA VERDE DO PINPAD DO CAIXA, COMO FORMA DE REGISTRO DE SEU ACEITE E RECEBIMENTO DE SEUS SELOS DE DESCONTO E;
+          </li>
+          <li>REALIZAÇÃO DO PAGAMENTO DE SUAS COMPRAS.</li>
+        </ol>
+        <p>
+          PARA AS COMPRAS REALIZADAS NOS SELF-CHECKOUTS DAS LOJAS PARTICIPANTES, O CLIENTE DE CÍRCULO SANTA MARIA DEVERÁ RETIRAR SEUS SELOS IMEDIATAMENTE APÓS O ACEITE NO PINPAD E PAGAMENTO DE SUAS COMPRAS, COM OS OPERADORES AUXILIARES PRESENTES NOS SELF-CHECKOUTS, NÃO SENDO ESTES ENTREGUES POSTERIORMENTE, SOB NENHUMA HIPÓTESE.
         </p>
         <p>
-          Para receber os selos, o cliente deve se dirigir ao caixa para
-          pagar sua comanda. O totem do Santa Maria Empório não participa da
-          entrega de selos.
+          IMPORTANTE: OS SELOS DE DESCONTO DEVERÃO SER RETIRADOS, OBRIGATORIAMENTE, NO ATO DA COMPRA E NA MESMA LOJA EM QUE A COMPRA FOR EFETUADA. SE NO MOMENTO DA COMPRA O CLIENTE DO CÍRCULO SANTA MARIA NÃO OU MANIFESTAR RECUSA PELOS SELOS DE DESCONTO (SELECIONANDO A TECLA VERMELHA DO PIN PAD), PERDERÁ O DIREITO DE REIVINDICÁ-LOS POSTERIORMENTE, POR QUALQUER HIPÓTESE.
+        </p>
+        <p>
+          EM TODOS OS CASOS, O CLIENTE DO CÍRCULO SANTA MARIA DEVERÁ CONFERIR A QUANTIDADE DE SELOS DE DESCONTO A QUE FAZ JUS NO EXATO MOMENTO EM QUE RECEBÊ-LOS DA EMPRESA REALIZADORA DA AÇÃO, NÃO SENDO ACEITAS RECLAMAÇÕES POSTERIORES AO RECEBIMENTO.
         </p>
       </div>
     ),
   },
   {
-    question: 'Vouchers ou outros descontos contam para gerar selos?',
+    question: 'Quais produtos dão direito a selos de desconto?',
     answer: (
       <p>
-        Não. Nenhuma oferta de voucher ou desconto, independentemente da
-        forma ou origem, é elegível para gerar selos nesta campanha.
+        PARTICIPAM DESTA CAMPANHA TODOS OS PRODUTOS COMERCIALIZADOS NA LOJA EMPÓRIO SANTA MARIA, BEM COMO NO WHATSAPP, EXCETO OS ITENS LISTADOS NO ITEM 3 DO REGULAMENTO.
+      </p>
+    ),
+  },
+  {
+    question: 'Em que momento o cliente do Círculo Santa Maria recebe a cartela da campanha?',
+    answer: (
+      <p>
+        A QUALQUER MOMENTO A CARTELA PODERÁ SER RETIRADA NOS CAIXAS DAS LOJAS PARTICIPANTES.
       </p>
     ),
   },
   {
     question:
-      'O valor pago pelas panelas Le Cordon Bleu® com desconto gera novos selos?',
+      'Como faço para usar os selos de desconto para comprar caçarolas, frigideira e wok Éternité Le Cordon Bleu® com desconto?',
+    answer: (
+      <div className="space-y-4">
+        <p>
+          A TROCA DA CARTELA COM SELOS DE DESCONTO PARA AQUISIÇÃO DO PRODUTO ESCOLHIDO PELO CLIENTE CÍRCULO SANTA MARIA, DEVERÁ SER EFETIVADA SOMENTE NOS CAIXAS DA LOJA FÍSICAS EMPÓRIO SANTA MARIA, ATÉ O DIA 20/12/2026 OU ENQUANTO DURAREM OS ESTOQUES, DENTRO DO HORÁRIO DE FUNCIONAMENTO DAS UNIDADES.
+        </p>
+        <p>
+          OS PRODUTOS COLECIONÁVEIS PODERÃO SER ADQUIRIDOS PELOS PARTICIPANTES NO VALOR REGULAR DE VENDA (SEM DESCONTO) OU PELOS CLIENTES CÍRCULO SANTA MARIA COM O DESCONTO CONCEDIDO PELOS SELOS OBTIDOS.
+        </p>
+        <p>
+          NÃO SERÃO EFETUADAS VENDAS COM OU SEM DESCONTO, DOS PRODUTOS PARTICIPANTES, NOS SELF-CHECKOUTS DAS LOJAS, APENAS NOS CAIXAS CONVENCIONAIS.
+        </p>
+        <div>
+          <p className="font-bold text-stone-900">01 - COMPRA SEM DESCONTO</p>
+          <p>
+            QUALQUER CLIENTE QUE DESEJAR ADQUIRIR AS CAÇAROLAS, FRIGIDEIRA E WOK ÉTERNITÉ LE CORDON BLEU® PODERÁ COMPRAR PELO VALOR DE VENDA SEM DESCONTO, SEM A NECESSIDADE DE APRESENTAR A CARTELA PREENCHIDA.
+          </p>
+          <p>
+            A AQUISIÇÃO DOS PRODUTOS COLECIONÁVEIS NO VALOR REGULAR DE VENDA (SEM DESCONTO) SERÁ REALIZADO NO PERÍODO REGULAR DA CAMPANHA OU ENQUANTO DURAREM OS ESTOQUES.
+          </p>
+        </div>
+        <div>
+          <p className="font-bold text-stone-900">02 - COMPRA COM DESCONTO</p>
+          <p>
+            PARA A AQUISIÇÃO DO PRODUTO DESEJADO COM DESCONTO, O CLIENTE CÍRCULO SANTA MARIA APRESENTAR APENAS A PÁGINA COM OS SELOS DE DESCONTO COLADOS (SEM A NECESSIDADE DE QUALQUER OUTRA PÁGINA QUE COMPÕE A CARTELA), PORÉM, TODOS OS SELOS DE DESCONTO DEVERÃO ESTAR EM BOAS CONDIÇÕES DE LEGIBILIDADE E VERIFICAÇÃO DE SUA AUTENTICIDADE, SEM MANCHAS, RASURAS OU RASGOS QUE DIFICULTEM SUA VERIFICAÇÃO. OS SELOS DE DESCONTO DEVERÃO SER COLADOS NA CARTELA DA AÇÃO (DISPONÍVEL NAS LOJAS PARTICIPANTES) ATÉ QUE SEJAM ALCANÇADAS AS QUANTIDADES INDICADAS NA PRÓPRIA CARTELA COMO CONDICIONANTE PARA OBTENÇÃO DOS PRODUTOS.
+          </p>
+          <p>NÃO HÁ DESCONTO DE 100% NO VALOR DOS PRODUTOS.</p>
+          <p>
+            APÓS O PROCESSO DE TROCA DA CARTELA E AQUISIÇÃO DO PRODUTO DESEJADO, ESTA FICARÁ RETIDA PELA REALIZADORA E ANULADA PARA EFEITO DE NOVA PARTICIPAÇÃO NESTA AÇÃO, INDEPENDENTEMENTE SE NELA ESTIVEREM COLADOS SELOS DE DESCONTO EXCEDENTES À QUANTIDADE NECESSÁRIA.
+          </p>
+        </div>
+      </div>
+    ),
+  },
+  {
+    question:
+      'Se eu completar toda a cartela com selos de desconto, terei direito de utilizá-la para comprar todas as caçarolas, frigideira e wok Éternité Le Cordon Bleu®?',
+    answer: (
+      <div className="space-y-3">
+        <p>
+          NÃO. CADA CARTELA DARÁ DIREITO A COMPRA COM DESCONTO DE APENAS 01 (UM) PRODUTO ÉTERNITÉ LE CORDON BLEU®. O CLIENTE DEVERÁ APRESENTAR A CARTELA COM A QUANTIDADE DE SELOS DE DESCONTO RESPECTIVO AO PRODUTO ESCOLHIDO PARA EFETUAR CADA COMPRA COM DESCONTO, SENDO QUE:
+        </p>
+        <ol className="list-decimal space-y-1 pl-5">
+          <li>CADA CARTELA CORRESPONDERÁ A 01 (UMA) TROCA PELO PRODUTO DESEJADO;</li>
+          <li>
+            NÃO SERÁ ACEITO, EM HIPÓTESE ALGUMA, DIVISÃO DE SELOS COLADOS EM CARTELAS DIFERENTES PARA AQUISIÇÃO DE UM PRODUTO, DE MODO QUE CADA CARTELA CORRESPONDERÁ, PORTANTO, A UMA ÚNICA AQUISIÇÃO, SEM DESMEMBRAMENTO E/OU DIVISÃO DE SELOS.
+          </li>
+        </ol>
+      </div>
+    ),
+  },
+  {
+    question: 'Quantas vezes o cliente pode participar desta campanha de venda com desconto?',
     answer: (
       <p>
-        Não. O valor pago na aquisição das caçarolas, frigideira e wok de
-        ferro Le Cordon Bleu® com desconto não é revertido em selo — ele
-        serve apenas para complementar o valor do produto, já com o desconto
-        aplicado.
+        A COMPRA DOS PRODUTOS COLECIONÁVEIS COM DESCONTO SERÁ LIMITADA AOS CLIENTES “CÍRCULO SANTA MARIA” A 16 PRODUTOS POR CPF.
       </p>
     ),
   },
   {
-    question: 'Em caso de devolução ou troca, o cliente recebe selos?',
+    question:
+      'Posso efetuar a troca por outro modelo das caçarolas, frigideira e wok Éternité Le Cordon Bleu® já adquirido com ou sem desconto depois de retirado na loja?',
+    answer: (
+      <div className="space-y-3">
+        <p>
+          NÃO. UMA VEZ REALIZADA A COMPRA COM DESCONTO OU PELO VALOR REGULAR DE VENDA (SEM DESCONTO) DO PRODUTO DA CAMPANHA, O PARTICIPANTE NÃO PODERÁ SOLICITAR A TROCA DESTE POR OUTRO PRODUTO SEM QUE HAJA RAZÃO LEGAL PARA TANTO (SENDO ESTE DA CAMPANHA OU NÃO), TAMPOUCO SOLICITAR A DEVOLUÇÃO E/OU CANCELAMENTO DA OPERAÇÃO, EXCETO POR VÍCIO E/OU DEFEITO DE FABRICAÇÃO, CONFORME PREVÊ O CÓDIGO DE DEFESA DO CONSUMIDOR.
+        </p>
+        <p>
+          SE NA OCASIÃO DO RECEBIMENTO DO PRODUTO ADQUIRIDO PELO PARTICIPANTE FOR CONSTATADA ALGUMA IRREGULARIDADE, COMO POR EXEMPLO, VÍCIO OU DEFEITO DE ORIGEM NO RESPECTIVO PRODUTO, O PARTICIPANTE DEVERÁ SOLICITAR A TROCA IMEDIATA POR OUTRO EM PERFEITAS CONDIÇÕES.
+        </p>
+        <p>
+          SOMENTE SERÃO CONSIDERADOS DEFEITOS NESTA CAMPANHA PARA TROCA DAS CAÇAROLAS, FRIGIDEIRA E WOK DE FERRO DA MARCA LE CORDON BLEU®.
+        </p>
+        <p>A) DEFEITOS NA PINTURA</p>
+        <p>B) DEFEITOS NA FORMA</p>
+      </div>
+    ),
+  },
+  {
+    question:
+      'Posso adquirir as caçarolas, frigideira e wok Éternité Le Cordon Bleu® em qualquer loja, com ou sem desconto?',
     answer: (
       <p>
-        Em regra, não. A exceção é quando é desembolsado valor excedente aos
-        R$ 40,00 na troca, respeitadas as hipóteses previstas no item 6 do
-        regulamento.
+        SIM. AS CAÇAROLAS, FRIGIDEIRA E WOK DE FERRO LE CORDON BLEU® PODEM SER ADQUIRIDAS NA LOJA EMPÓRIO SANTA MARIA PARTICIPANTE DA CAMPANHA, COM OU SEM DESCONTO, RESPEITANDO AS CONDIÇÕES PREVISTAS NAS REGRAS DE PARTICIPAÇÃO E DISPONIBILIDADE DE ESTOQUE DOS PRODUTOS NA LOJA FÍSICA PARTICIPANTE.
       </p>
     ),
   },
   {
-    question: 'Existe um limite de selos por compra?',
+    question:
+      'Posso receber selos de desconto em uma loja e efetuar a retirada das caçarolas, frigideira e wok Éternité Le Cordon Bleu® em outra unidade diferente?',
     answer: (
       <p>
-        Sim. O limite é de <span className="font-medium text-stone-900">500 selos por transação/compra</span>,
-        independentemente do valor total pago pelo cliente Círculo Santa
-        Maria.
+        SIM. OS SELOS DE DESCONTO PODERÃO SER UTILIZADOS PARA COMPRA COM DESCONTO NA LOJA EMPÓRIO SANTA MARIA PARTICIPANTE.
+      </p>
+    ),
+  },
+  {
+    question: 'Como posso aumentar a quantidade de selos de desconto por compra?',
+    answer: (
+      <div className="space-y-4">
+        <p>
+          NA CAMPANHA HAVERÁ ALGUNS PRODUTOS “ACELERADORES” QUE VALEM SELOS DE DESCONTO ADICIONAIS. AO ADQUIRIR A QUANTIDADE DE “PRODUTOS ACELERADORES” NECESSÁRIA, O CLIENTE CÍRCULO SANTA MARIA RECEBERÁ SELO(S) DE DESCONTO EXTRAS.
+        </p>
+        <div className="rounded-lg border border-stone-300 p-4 text-center">
+          <p className="font-bold uppercase text-stone-900">Exemplo</p>
+          <p className="mt-2">
+            01 (UM) SELO DE DESCONTOS PELA COMPRA REGULAR DE R$ 40,00 (QUARENTA REAIS)
+          </p>
+          <p className="font-bold">X</p>
+          <p>01 (UM) SELO DE DESCONTO PELA COMPRA DO PRODUTO ACELERADOR</p>
+          <p className="font-bold">=</p>
+          <p className="font-bold text-stone-900">02 (DOIS) SELOS DE DESCONTO</p>
+        </div>
+        <p>
+          IMPORTANTE: OS PRODUTOS ACELERADORES CONCEDEM SELOS DE DESCONTO ADICIONAIS DESDE QUE O VALOR FINAL PAGO PELO CLIENTE SEJA NO MÍNIMO R$40,00 EM PRODUTOS PARTICIPANTES, CONFORME REGRAS DE PARTICIPAÇÃO.
+        </p>
+      </div>
+    ),
+  },
+  {
+    question: 'As caçarolas, frigideira e wok Éternité Le Cordon Bleu® podem ser utilizadas na lava-louças?',
+    answer: (
+      <div className="space-y-3">
+        <p>
+          NÃO. AS CAÇAROLAS, FRIGIDEIRA E WOK DE FERRO LE CORDON BLEU® NÃO SÃO INDICADAS PARA USO NA LAVA-LOUÇAS. EMBORA ALGUMAS PANELAS DE FERRO FUNDIDO ESMALTADO POSSAM SER LAVADAS NA LAVA-LOUÇAS, A LAVAGEM À MÃO É SEMPRE RECOMENDADA PARA PRESERVAR A BELEZA E A DURABILIDADE DO ESMALTE.
+        </p>
+        <p>*É RECOMENDÁVEL A VERIFICAÇÃO DOS CUIDADOS DE USO NAS EMBALAGENS DE CADA PRODUTO.</p>
+      </div>
+    ),
+  },
+  {
+    question: 'Se ainda restar dúvidas, qual o canal de atendimento ao cliente para a campanha?',
+    answer: (
+      <p>
+        EM CASO DE DÚVIDAS SOBRE A AÇÃO, OS CLIENTES DEVERÃO ENTRAR EM CONTATO COM A EMPRESA REALIZADORA, POR MEIO DO TELEFONE (11) 3708-5211 / (11) 3708-5210 OU PELO E-MAIL{' '}
+        <Link href="mailto:SAC@EMPORIOSANTAMARIA.COM.BR" className="underline">
+          SAC@EMPORIOSANTAMARIA.COM.BR
+        </Link>
+        , OU PELO SITE{' '}
+        <Link href="https://www.emporiosantamaria.com.br/" target="_blank" className="underline">
+          https://www.emporiosantamaria.com.br/
+        </Link>
+        , CONTATANDO O SANTA MARIA EMPÓRIO.
       </p>
     ),
   },
@@ -280,7 +438,7 @@ function FaqModal({ onClose }: { onClose: () => void }) {
   }, [onClose])
 
   return createPortal(
-    <div className={`${ptSans.className} fixed inset-0 z-50 flex items-end justify-center text-left sm:items-center sm:p-6`}>
+    <div className={`${ptSans.className} fixed inset-0 z-100 flex items-end justify-center text-left sm:items-center sm:p-6`}>
       {/* backdrop */}
       <div
         className="absolute inset-0 backdrop-blur-[2px]"

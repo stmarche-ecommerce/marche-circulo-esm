@@ -254,7 +254,9 @@
 
 .socialRail {
   position: absolute;
-  left: 19%;
+  /* ancorado à mesma largura/centralização do .heroInner (61.6875rem),
+     para manter a folga constante em relação à imagem em qualquer largura de tela */
+  left: calc(50% - 30.84375rem - 4.5rem);
   top: 6rem;
   z-index: 15;
   width: 3rem;
