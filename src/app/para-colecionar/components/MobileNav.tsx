@@ -45,7 +45,7 @@ export function MobileNav({
 
   return (
     <div className={styles.mobileBar}>
-      <span className={styles.mobileBarLabel}>Menu</span>
+      <span className={styles.mobileBarLabel}></span>
       <button
         type="button"
         className={styles.hamburgerBtn}

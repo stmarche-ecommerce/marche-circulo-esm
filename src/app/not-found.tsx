@@ -6,7 +6,7 @@ export default function NotFound() {
       <div className="max-w-xl">
         <p className="font-bold text-[5rem] uppercase tracking-[0.3em] text-[#b1813a]">404</p>
         <h2 className="mt-4 text-3xl font-bold uppercase tracking-[0.18em] text-[#583729]">
-          Pagina não encontrada
+          Página não encontrada
         </h2>
         <p className="mt-4 text-base leading-7 text-[#6f6f6f]">
           O caminho solicitado não existe nesta migracao.

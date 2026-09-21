@@ -478,9 +478,9 @@ function FaqModal({ onClose }: { onClose: () => void }) {
         <div className="overflow-y-auto px-6 py-6 sm:px-8">
           <div className="text-zinc-900 mb-10">
             <p className="w-full  flex justify-start">
-              “EU AMO SELOS EMPÓRIO SANTA MARIA – CAÇAROLAS, FRIGIDEIRA E WOK ÉTERNITÉ LE CORDON BLEU®” Antes de participar, consulte Regulamento em: <br />
+              “EU AMO SELOS – CAÇAROLAS, FRIGIDEIRA E WOK ÉTERNITÉ LE CORDON BLEU®” Antes de participar, consulte Regulamento em: <br />
             </p>
-            <Link href="https://emporiosantamaria.com.br" target="_blank">https://emporiosantamaria.com.br</Link>
+            <Link href="https://circulo.emporiosantamaria.com.br" target="_blank">https://circulo.emporiosantamaria.com.br</Link>
 
           </div>
           <div>

@@ -32,22 +32,49 @@ const subnavItems = [
   { href: "#faq", label: "FAQ" },
 ];
 
+const stepsItems = [
+  {
+    number: "1.",
+    text: "Faça suas compras nas lojas físicas St Marche e no site do St Marche, no site emporiosantamaria.com.br, WhatsApp e APP.",
+  },
+  {
+    number: "2.",
+    text: "A cada R$ 40,00 em compras, cliente Marche Lover e Marche Prime recebe 1 selo para acumular.",
+  },
+  {
+    number: "3.",
+    text: "A partir de 30 selos você já pode comprar os itens da coleção Éternité de Ferro Le Cordon Bleu® com descontos especiais!",
+  },
+];
+
 const featureItems = [
   {
-    image: "/images/para-colecionar/frigideira.png",
-    alt: "Frigideira de ferro 26cm Le Cordon Bleu: destinadas ao uso em fogão ou forno, compatíveis com indução, gás, elétricos, vitrocerâmicos e halógenos, cozinha os alimentos de forma uniforme e eficiente.",
+    description:
+      "Destinadas ao uso em fogão ou forno. São compatíveis com fogões por indução, gás, elétricos, vitrocerâmicos e halógenos. Cozinha os alimentos de forma uniforme e eficiente",
+    name: ["Frigideira de", "Ferro 26cm*", "Le Cordon Bleu®"],
+    photo: "/images/para-colecionar/produtos-fotos/frigideira-foto.png",
+    alt: "Frigideira de ferro 26cm Le Cordon Bleu",
   },
   {
-    image: "/images/para-colecionar/wok.png",
-    alt: "Wok de ferro com tampa 26cm Le Cordon Bleu: ampla capacidade para refeições em família, estrutura durável com tampa de vidro temperado e cozimento uniforme que preserva os nutrientes dos alimentos.",
+    description:
+      "Ampla capacidade para refeições em família. Estrutura durável com tampa de vidro temperado. Cozimento uniforme que preserva os nutrientes dos alimentos. Tampa transparente que permite visualizar o preparo.",
+    name: ["Wok de ferro com", "com tampa 26cm*", "Le Cordon Bleu®"],
+    photo: "/images/para-colecionar/produtos-fotos/wok-foto.png",
+    alt: "Wok de ferro com tampa 26cm Le Cordon Bleu",
   },
   {
-    image: "/images/para-colecionar/cacarola-22cm.png",
-    alt: "Caçarola de ferro com tampa 22cm Le Cordon Bleu: produzida em ferro fundido, garante cozimento uniforme e a tampa de ferro mantém o calor e intensifica os sabores.",
+    description:
+      "A combinação perfeita de tradição e resistência. Produzida em ferro fundido, garante cozimento uniforme. Sua tampa de ferro mantém o calor e intensifica os sabores. Ideal para pratos caseiros cheios de sabor e nutrientes. Durabilidade que atravessa gerações",
+    name: ["Caçarola de ferro", "com tampa 22cm*", "Le Cordon Bleu®"],
+    photo: "/images/para-colecionar/produtos-fotos/cacarola-22cm-foto.png",
+    alt: "Caçarola de ferro com tampa 22cm Le Cordon Bleu",
   },
   {
-    image: "/images/para-colecionar/cacarola-26cm.png",
-    alt: "Caçarola de ferro com tampa 26cm Le Cordon Bleu: maior capacidade para receitas familiares, perfeita para ensopados, carnes e cozidos de longa duração.",
+    description:
+      "Maior capacidade para receitas familiares e porções generosas. Perfeita para ensopados, carnes e cozidos de longa duração. Uma peça clássica que une força e elegância.",
+    name: ["Caçarola de ferro", "com tampa 26cm*", "Le Cordon Bleu®"],
+    photo: "/images/para-colecionar/produtos-fotos/cacarola-26cm-foto.png",
+    alt: "Caçarola de ferro com tampa 26cm Le Cordon Bleu",
   },
 ];
 
@@ -161,15 +188,14 @@ export default function ParaColecionarPage() {
         <section id="participar" className={styles.brownSection}>
           <div className={`${styles.container} ${styles.narrow}`}>
             <h2 className={styles.sectionTitle}>Veja como participar</h2>
-            <Image
-              className={styles.stepsCard}
-              src="/images/para-colecionar/passo-a-passo.png"
-              alt="Passo a passo: faça suas compras, acumule selos a cada R$ 40,00 e troque por desconto a partir de 30 selos"
-              width={978}
-              height={231}
-              sizes="(min-width: 978px) 978px, 100vw"
-              style={{ width: "100%", height: "auto" }}
-            />
+            <div className={styles.stepsCard}>
+              {stepsItems.map((step) => (
+                <div className={styles.stepsItem} key={step.number}>
+                  <span className={styles.stepsNumber}>{step.number}</span>
+                  <p>{step.text}</p>
+                </div>
+              ))}
+            </div>
 
             <p className={styles.intro}>
               Prepare-se para uma experiência única e inesquecível! O maior e mais renomado instituto de artes
@@ -180,16 +206,23 @@ export default function ParaColecionarPage() {
 
             <div className={styles.featureList}>
               {featureItems.map((item) => (
-                <Image
-                  key={item.image}
-                  className={styles.featureImage}
-                  src={item.image}
-                  alt={item.alt}
-                  width={850}
-                  height={168}
-                  sizes="(min-width: 850px) 850px, 100vw"
-                  style={{ width: "100%", height: "auto" }}
-                />
+                <div className={styles.featureItem} key={item.photo}>
+                  <p className={styles.featureDescription}>{item.description}</p>
+                  <div className={styles.featureName}>
+                    {item.name.map((line) => (
+                      <span key={line}>{line}</span>
+                    ))}
+                  </div>
+                  <div className={styles.featurePhoto}>
+                    <Image
+                      src={item.photo}
+                      alt={item.alt}
+                      fill
+                      sizes="(min-width: 850px) 239px, 28vw"
+                      style={{ objectFit: "cover", objectPosition: "center" }}
+                    />
+                  </div>
+                </div>
               ))}
             </div>
           </div>
@@ -282,9 +315,10 @@ export default function ParaColecionarPage() {
               className={styles.productsGrid}
               src="/images/para-colecionar/produtos-selos.png"
               alt="Produtos que garantem selos extras na campanha"
-              width={847}
-              height={986}
+              width={1694}
+              height={1972}
               sizes="(min-width: 847px) 847px, 100vw"
+              quality={90}
               style={{ width: "100%", height: "auto" }}
             />
           </div>

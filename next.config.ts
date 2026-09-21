@@ -4,7 +4,7 @@ const nextConfig: NextConfig = {
   devIndicators: false,
   output: "standalone",
   images: {
-    qualities: [75],
+    qualities: [75, 90],
     remotePatterns: [
       {
         protocol: "https",
