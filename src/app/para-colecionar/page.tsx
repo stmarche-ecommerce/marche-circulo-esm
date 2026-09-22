@@ -158,36 +158,28 @@ export default function ParaColecionarPage() {
         />
       </nav>
 
-      <aside className={styles.socialRail} aria-label="Redes sociais">
-        <Link href="https://www.instagram.com/stamariaemporio/" target="_blank" rel="noreferrer" aria-label="Instagram">
-          <FaInstagram size={32} />
-        </Link>
-        <Link href="https://www.facebook.com/p/Santa-Maria-Emp%C3%B3rio-61568774857483/" target="_blank" rel="noreferrer" aria-label="Facebook">
-          <FaFacebookF size={32} />
-        </Link>
-      </aside>
-
       <main>
         <section id="inicio" className={styles.hero}>
+          <Image
+            src="/images/para-colecionar/hero-banner.jpg"
+            alt="Le Cordon Bleu para colecionar — Santa Maria: Eterna Tradição, a cada R$ 40 em compras ganhe 1 selo, exclusivo para clientes Círculo Santa Maria"
+            width={1920}
+            height={512}
+            sizes="100vw"
+            priority
+            style={{ width: "100%", height: "auto", display: "block" }}
+          />
+
+          <aside className={styles.socialRail} aria-label="Redes sociais">
+            <Link href="https://www.instagram.com/stamariaemporio/" target="_blank" rel="noreferrer" aria-label="Instagram">
+              <FaInstagram size={32} />
+            </Link>
+            <Link href="https://www.facebook.com/p/Santa-Maria-Emp%C3%B3rio-61568774857483/" target="_blank" rel="noreferrer" aria-label="Facebook">
+              <FaFacebookF size={32} />
+            </Link>
+          </aside>
+
           <div className={styles.heroInner}>
-            <Image
-              src="/images/para-colecionar/topo-selo.png"
-              alt="Le Cordon Bleu para colecionar — Santa Maria"
-              width={987}
-              height={253}
-              sizes="(min-width: 987px) 987px, 100vw"
-              priority
-              style={{ width: "100%", height: "auto" }}
-            />
-            <Image
-              src="/images/para-colecionar/hero-panelas.png"
-              alt="Coleção Éternité de panelas Le Cordon Bleu, exclusiva para clientes Círculo Santa Maria"
-              width={987}
-              height={880}
-              sizes="(min-width: 987px) 987px, 100vw"
-              priority
-              style={{ width: "100%", height: "auto" }}
-            />
             <div className={styles.heroActions}>
               <p>Cadastre-se para participar da campanha e conheça os descontos<br />exclusivos na loja e no app.</p>
               <Link className={styles.button} href="https://circulo.emporiosantamaria.com.br/criar-conta" target="_blank" rel="noopener noreferrer">
