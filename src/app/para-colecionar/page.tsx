@@ -29,14 +29,13 @@ const subnavItems = [
   { href: "#inicio", label: "Caçarolas, frigideira e wok\nÉternité Le Cordon Bleu®" },
   { href: "#comprar", label: "Compra com e sem desconto" },
   { href: "#regulamento", label: "Regras de participação" },
-  { href: "#produtos-aceleradores", label: "Produtos aceleradores" },
   { href: "#faq", label: "FAQ" },
 ];
 
 const stepsItems = [
   {
     number: "1.",
-    text: "Faça suas compras nas lojas físicas St Marche e no site do St Marche, no site emporiosantamaria.com.br, WhatsApp e APP.",
+    text: "Faça suas compras na lojas físicas do Santa Maria Empório e WhatsApp.",
   },
   {
     number: "2.",
@@ -335,20 +334,6 @@ export default function ParaColecionarPage() {
               <br />
               Produtos sujeitos a disponibilidade nas lojas. Imagens ilustrativas.
             </p>
-
-            <h2 id="produtos-aceleradores" className={`${styles.sectionTitle} ${styles.productsTitle}`}>
-              Confira os produtos que garantem selos extras
-            </h2>
-            <Image
-              className={styles.productsGrid}
-              src="/images/para-colecionar/produtos-selos.png"
-              alt="Produtos que garantem selos extras na campanha"
-              width={1694}
-              height={1972}
-              sizes="(min-width: 847px) 847px, 100vw"
-              quality={90}
-              style={{ width: "100%", height: "auto" }}
-            />
           </div>
         </section>
 
