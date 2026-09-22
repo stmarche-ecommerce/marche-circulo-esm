@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import Script from "next/script";
 import { PT_Sans } from "next/font/google";
 import { FaFacebookF, FaInstagram } from "react-icons/fa";
 import styles from "./para-colecionar.module.css";
@@ -95,7 +96,34 @@ const careItems = [
 
 export default function ParaColecionarPage() {
   return (
-    <div className={styles.page}>
+    <>
+      {/* Meta Pixel Code */}
+      <Script id="meta-pixel" strategy="afterInteractive">
+        {`
+          !function(f,b,e,v,n,t,s)
+          {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+          n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+          if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+          n.queue=[];t=b.createElement(e);t.async=!0;
+          t.src=v;s=b.getElementsByTagName(e)[0];
+          s.parentNode.insertBefore(t,s)}(window, document,'script',
+          'https://connect.facebook.net/en_US/fbevents.js');
+          fbq('init', '493274704876598');
+          fbq('track', 'PageView');
+        `}
+      </Script>
+      <noscript>
+        <img
+          height="1"
+          width="1"
+          style={{ display: "none" }}
+          src="https://www.facebook.com/tr?id=493274704876598&ev=PageView&noscript=1"
+          alt=""
+        />
+      </noscript>
+      {/* End Meta Pixel Code */}
+
+      <div className={styles.page}>
       <nav className={styles.subnav} aria-label="Navegação da campanha Para Colecionar">
         <div className={`${styles.subnavInner} ${styles.container} ${ptSans.className}`}>
           {subnavItems.map((item) =>
@@ -358,6 +386,7 @@ export default function ParaColecionarPage() {
       </main>
 
       <BackToTop />
-    </div>
+      </div>
+    </>
   );
 }
