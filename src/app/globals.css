@@ -438,4 +438,18 @@ textarea {
   .custom-arrow-next {
     right: 8px;
   }
+
+  .custom-arrow {
+    width: 32px;
+    height: 32px;
+  }
+
+  .custom-arrow svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .site-button {
+    padding: 0.7rem 1.15rem;
+  }
 }

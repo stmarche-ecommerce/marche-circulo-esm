@@ -9,6 +9,16 @@ import SparkleOverlay from "../sparkeeoverlay";
 
 const slides = [
   {
+    eyebrow: "Círculo Santa Maria",
+    title: "Le Cordon Bleu para colecionar",
+    description: "A cada R$ 40,00 em compras, ganhe 1 selo e garanta descontos exclusivos na coleção Éternité de ferro fundido.",
+    href: "/para-colecionar",
+    cta: "Participar da campanha",
+    image: "/images/para-colecionar/hero-banner.jpg",
+    mobileImage: "/images/banner-mobile.jpg",
+    hideOverlayContent: true,
+  },
+  {
     eyebrow: "Todos os dias, a partir das 9h",
     title: "Brunch Santa Maria",
     description: "Um convite para desacelerar, descobrir novos sabores e começar o dia celebrando a vida.",
@@ -17,7 +27,6 @@ const slides = [
     image: "/images/branch1.jpg",
   },
   {
-    eyebrow: "Empório",
     title: "Curadoria que transforma a compra em experiência",
     description: "Importados, produção própria e seleção especial em um espaço pensado para inspirar encontros.",
     href: "/emporio",
@@ -85,10 +94,51 @@ const sliderSettings = {
 
 export function HeroCarousel() {
   return (
-    <section className="hero-carousel relative h-[clamp(32rem,72vh,46rem)] overflow-hidden bg-[var(--color-ink)] text-white" aria-label="Destaques do Santa Maria Empório">
+    <section
+      className="hero-carousel relative h-72 overflow-hidden bg-[var(--color-ink)] text-white lg:h-132.5"
+      aria-label="Destaques do Santa Maria Empório"
+    >
       <Slider {...sliderSettings}>
         {slides.map((slide, index) => {
-          const content = (
+          const isBanner = Boolean(slide.hideOverlayContent);
+
+          const content = isBanner ? (
+            <>
+              {/* Mobile: purpose-cropped banner, same height as the other slides */}
+              <div className="absolute inset-0 lg:hidden" aria-hidden="true">
+                <Image
+                  src={slide.mobileImage ?? slide.image}
+                  alt={slide.title}
+                  fill
+                  priority={index === 0}
+                  loading="eager"
+                  quality={90}
+                  sizes="100vw"
+                  className="object-cover"
+                />
+              </div>
+              <div className="absolute inset-0 z-[5] lg:hidden" aria-hidden="true">
+                <SparkleOverlay count={16} colors={["#e8c674", "#f4dfa3", "#ffffff", "#c9a35c"]} />
+              </div>
+
+              {/* Desktop: fills the same fixed height as the other slides */}
+              <div className="absolute inset-0 hidden lg:block" aria-hidden="true">
+                <Image
+                  src={slide.image}
+                  alt=""
+                  fill
+                  priority={index === 0}
+                  loading="eager"
+                  quality={75}
+                  sizes="100vw"
+                  className="object-cover"
+                />
+              </div>
+              <div className="absolute inset-0 z-[5] hidden lg:block" aria-hidden="true">
+                <SparkleOverlay count={16} colors={["#e8c674", "#f4dfa3", "#ffffff", "#c9a35c"]} />
+              </div>
+            </>
+          ) : (
             <>
               <div className="absolute inset-0" aria-hidden="true">
                 <Image
@@ -108,16 +158,18 @@ export function HeroCarousel() {
                 <SparkleOverlay count={16} colors={["#e8c674", "#f4dfa3", "#ffffff", "#c9a35c"]} />
               </div>
 
-              <div className="content-grid relative z-10 flex h-full items-center py-24">
+              <div className="content-grid relative z-10 flex items-center px-10 py-8 lg:h-full lg:px-0 lg:py-24">
                 <div className="max-w-3xl">
-                  <p className="section-eyebrow text-[var(--color-accent-soft)]">{slide.eyebrow}</p>
-                  <h1 className="mt-5 text-4xl font-semibold uppercase tracking-[0.16em] md:text-6xl">
+                  {slide.eyebrow ? (
+                    <p className="section-eyebrow text-[var(--color-accent-soft)]">{slide.eyebrow}</p>
+                  ) : null}
+                  <h1 className="mt-3 text-lg font-semibold uppercase leading-tight tracking-[0.08em] sm:text-xl md:text-3xl lg:mt-5 lg:text-4xl lg:leading-normal lg:tracking-[0.16em]">
                     {slide.title}
                   </h1>
-                  <p className="mt-6 max-w-2xl text-base leading-8 text-white/82 md:text-xl">
+                  <p className="mt-3 max-w-2xl text-sm leading-6 text-white/82 sm:text-base lg:mt-6 lg:text-xl lg:leading-8">
                     {slide.description}
                   </p>
-                  <span className="site-button mt-10 inline-flex">{slide.cta}</span>
+                  <span className="site-button mt-5 inline-flex text-sm lg:mt-10 lg:text-base">{slide.cta}</span>
                 </div>
               </div>
             </>
@@ -132,13 +184,13 @@ export function HeroCarousel() {
                   href={slide.href}
                   target="_blank"
                   rel="noreferrer"
-                  className="hero-carousel__slide relative flex"
+                  className="hero-carousel__slide relative flex h-full"
                   aria-label={accessibleLabel}
                 >
                   {content}
                 </a>
               ) : (
-                <Link href={slide.href} className="hero-carousel__slide relative flex" aria-label={accessibleLabel}>
+                <Link href={slide.href} className="hero-carousel__slide relative flex h-full" aria-label={accessibleLabel}>
                   {content}
                 </Link>
               )}
