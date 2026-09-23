@@ -15,7 +15,6 @@ const slides = [
     href: "/para-colecionar",
     cta: "Participar da campanha",
     image: "/images/para-colecionar/hero-banner.jpg",
-    mobileImage: "/images/banner-mobile.jpg",
     hideOverlayContent: true,
   },
   {
@@ -104,19 +103,7 @@ export function HeroCarousel() {
 
           const content = isBanner ? (
             <>
-              {/* Mobile: purpose-cropped banner, same height as the other slides */}
-              <div className="absolute inset-0 lg:hidden" aria-hidden="true">
-                <Image
-                  src={slide.mobileImage ?? slide.image}
-                  alt={slide.title}
-                  fill
-                  priority={index === 0}
-                  loading="eager"
-                  quality={90}
-                  sizes="100vw"
-                  className="object-cover"
-                />
-              </div>
+              {/* Mobile: image hidden (disproportional crop), just the dark background */}
               <div className="absolute inset-0 z-[5] lg:hidden" aria-hidden="true">
                 <SparkleOverlay count={16} colors={["#e8c674", "#f4dfa3", "#ffffff", "#c9a35c"]} />
               </div>
