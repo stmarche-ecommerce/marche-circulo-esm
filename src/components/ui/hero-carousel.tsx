@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import type { ComponentPropsWithoutRef } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Slider from "react-slick";
@@ -9,13 +10,14 @@ import SparkleOverlay from "../sparkeeoverlay";
 
 const slides = [
   {
-    eyebrow: "Círculo Santa Maria",
-    title: "Le Cordon Bleu para colecionar",
-    description: "A cada R$ 40,00 em compras, ganhe 1 selo e garanta descontos exclusivos na coleção Éternité de ferro fundido.",
+    eyebrow: "",
+    title: "",
+    description: "",
     href: "/para-colecionar",
-    cta: "Participar da campanha",
+    // cta: "Participar da campanha",
     image: "/images/para-colecionar/hero-banner.jpg",
-    hideOverlayContent: true,
+    hideOverlayContent: false,
+    desktopOnly: true,
   },
   {
     eyebrow: "Todos os dias, a partir das 9h",
@@ -92,24 +94,30 @@ const sliderSettings = {
 };
 
 export function HeroCarousel() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 1023px)");
+    const updateIsMobile = () => setIsMobile(mediaQuery.matches);
+    updateIsMobile();
+    mediaQuery.addEventListener("change", updateIsMobile);
+    return () => mediaQuery.removeEventListener("change", updateIsMobile);
+  }, []);
+
+  const visibleSlides = slides.filter((slide) => !(slide.desktopOnly && isMobile));
+
   return (
     <section
       className="hero-carousel relative h-72 overflow-hidden bg-[var(--color-ink)] text-white lg:h-132.5"
       aria-label="Destaques do Santa Maria Empório"
     >
       <Slider {...sliderSettings}>
-        {slides.map((slide, index) => {
+        {visibleSlides.map((slide, index) => {
           const isBanner = Boolean(slide.hideOverlayContent);
 
           const content = isBanner ? (
             <>
-              {/* Mobile: image hidden (disproportional crop), just the dark background */}
-              <div className="absolute inset-0 z-[5] lg:hidden" aria-hidden="true">
-                <SparkleOverlay count={16} colors={["#e8c674", "#f4dfa3", "#ffffff", "#c9a35c"]} />
-              </div>
-
-              {/* Desktop: fills the same fixed height as the other slides */}
-              <div className="absolute inset-0 hidden lg:block" aria-hidden="true">
+              <div className="absolute inset-0" aria-hidden="true">
                 <Image
                   src={slide.image}
                   alt=""
@@ -121,7 +129,7 @@ export function HeroCarousel() {
                   className="object-cover"
                 />
               </div>
-              <div className="absolute inset-0 z-[5] hidden lg:block" aria-hidden="true">
+              <div className="absolute inset-0 z-[5]" aria-hidden="true">
                 <SparkleOverlay count={16} colors={["#e8c674", "#f4dfa3", "#ffffff", "#c9a35c"]} />
               </div>
             </>
