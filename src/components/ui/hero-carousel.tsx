@@ -108,7 +108,7 @@ export function HeroCarousel() {
 
   return (
     <section
-      className="hero-carousel relative h-72 overflow-hidden bg-[var(--color-ink)] text-white lg:h-132.5"
+      className="hero-carousel relative h-72 overflow-hidden bg-[var(--color-ink)] text-white lg:h-auto lg:aspect-15/4"
       aria-label="Destaques do Santa Maria Empório"
     >
       <Slider {...sliderSettings}>
