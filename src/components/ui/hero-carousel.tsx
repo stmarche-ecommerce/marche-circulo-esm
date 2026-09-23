@@ -16,7 +16,7 @@ const slides = [
     href: "/para-colecionar",
     // cta: "Participar da campanha",
     image: "/images/para-colecionar/hero-banner.jpg",
-    hideOverlayContent: false,
+    hideOverlayContent: true,
     desktopOnly: true,
   },
   {
@@ -146,7 +146,7 @@ export function HeroCarousel() {
                   sizes="100vw"
                   className="object-cover"
                 />
-                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(22,15,12,0.18),rgba(22,15,12,0.7)),linear-gradient(90deg,rgba(47,44,82,0.84),rgba(47,44,82,0.36))]" />
+                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(22,15,12,0.1),rgba(22,15,12,0.42)),linear-gradient(90deg,rgba(47,44,82,0.5),rgba(47,44,82,0.2))]" />
               </div>
 
               <div className="absolute inset-0 z-[5]" aria-hidden="true">
