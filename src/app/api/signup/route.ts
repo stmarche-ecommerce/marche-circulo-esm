@@ -1,3 +1,4 @@
+import { randomInt } from "node:crypto";
 import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";
@@ -41,6 +42,28 @@ function resolveUsersApiUrl() {
   return `${base.replace(/\/+$/, "")}/users-v2`;
 }
 
+function generateRandomPassword(length = 20) {
+  const upper = "ABCDEFGHJKLMNPQRSTUVWXYZ";
+  const lower = "abcdefghijkmnopqrstuvwxyz";
+  const digits = "23456789";
+  const symbols = "!@#$%&*?";
+  const all = upper + lower + digits + symbols;
+
+  const pick = (chars: string) => chars[randomInt(chars.length)];
+
+  // garante ao menos um caractere de cada classe (politica de senha do FusionAuth)
+  const chars = [pick(upper), pick(lower), pick(digits), pick(symbols)];
+  while (chars.length < length) chars.push(pick(all));
+
+  // embaralha (Fisher-Yates)
+  for (let i = chars.length - 1; i > 0; i--) {
+    const j = randomInt(i + 1);
+    [chars[i], chars[j]] = [chars[j], chars[i]];
+  }
+
+  return chars.join("");
+}
+
 function resolveUsersApiKey() {
   return (
     process.env.ESM_CUSTOMER_SYNC_API_KEY?.trim() ||
@@ -75,7 +98,7 @@ export async function POST(request: Request) {
         "Content-Type": "application/json",
         "x-api-key": apiKey,
       },
-      body: JSON.stringify(body),
+      body: JSON.stringify({ ...body, password: generateRandomPassword() }),
       cache: "no-store",
       signal: AbortSignal.timeout(20000),
     });
