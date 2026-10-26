@@ -81,7 +81,7 @@ export default function SiteFooter() {
         <div className="mt-16 flex flex-col items-center gap-8 border-t border-dashed border-white/25 pt-8 md:flex-row md:justify-between">
           <p className="max-w-2xl text-center text-sm leading-7 text-[var(--color-cream-muted)] md:text-left">
             Copyright {anoAtual} - SANTA MARIA EMPÓRIO. Todos os direitos reservados. Razão Social HORTUS COMERCIO DE
-            ALIMENTOS S.A. - CNPJ 09.000.493/0002-15
+            ALIMENTOS S.A. - CNPJ 09.000.493/0001-34
           </p>
 
           <a
