@@ -7,12 +7,6 @@ RUN npm ci
 FROM node:20-alpine AS builder
 WORKDIR /app
 
-ARG NEXT_PUBLIC_API_USERS_V2=""
-ARG NEXT_PUBLIC_USERS_V2_API_KEY=""
-
-ENV NEXT_PUBLIC_API_USERS_V2=${NEXT_PUBLIC_API_USERS_V2}
-ENV NEXT_PUBLIC_USERS_V2_API_KEY=${NEXT_PUBLIC_USERS_V2_API_KEY}
-
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
@@ -25,9 +19,15 @@ ENV NODE_ENV=production
 ENV PORT=8080
 ENV HOSTNAME=0.0.0.0
 
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next/standalone ./
-COPY --from=builder /app/.next/static ./.next/static
+RUN addgroup -S app && adduser -S app -G app
+
+COPY --from=builder --chown=app:app /app/public ./public
+COPY --from=builder --chown=app:app /app/.next/standalone ./
+COPY --from=builder --chown=app:app /app/.next/static ./.next/static
+
+RUN mkdir -p /app/.next/cache && chown -R app:app /app/.next/cache
+
+USER app
 
 EXPOSE 8080
 

@@ -4,7 +4,6 @@ import { escapeHtml, getTransporter, parseMailbox, resolveEnvValue } from "@/lib
 interface SignupConfirmationEmailParams {
   email: string;
   name: string;
-  applicationUrl: string;
 }
 
 function getFirstName(name: string) {
@@ -78,9 +77,7 @@ function resolveCopyRecipients(email: string) {
   );
 }
 
-export async function sendSignupConfirmationEmail({ email, name, applicationUrl }: SignupConfirmationEmailParams) {
-  void applicationUrl;
-
+export async function sendSignupConfirmationEmail({ email, name }: SignupConfirmationEmailParams) {
   const from = process.env.SIGNUP_CONFIRMATION_FROM_EMAIL ?? "Santa Maria Empório <automacao@marche.com.br>";
   const replyTo = process.env.SIGNUP_CONFIRMATION_REPLY_TO ?? "contato@emporiosantamaria.com.br";
   const fromMailbox = parseMailbox(from);

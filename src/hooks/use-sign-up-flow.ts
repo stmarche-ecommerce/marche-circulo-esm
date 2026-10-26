@@ -26,11 +26,6 @@ interface SignUpPayload {
   complement: string;
 }
 
-interface SignupConfirmationPayload {
-  email: string;
-  name: string;
-}
-
 type WizardStep = 1 | 2;
 
 type StepConfig = {
@@ -221,28 +216,6 @@ export function useSignUpFlow() {
     setCurrentStep(1);
   };
 
-  const sendSignupConfirmation = async ({ email, name }: SignupConfirmationPayload) => {
-    const startedAt = performance.now();
-    const response = await fetch("/api/signup-confirmation", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, name }),
-    });
-    const finishedAt = performance.now();
-
-    console.info("[signup] /api/signup-confirmation concluido", {
-      durationMs: Math.round(finishedAt - startedAt),
-      status: response.status,
-    });
-
-    if (!response.ok) {
-      const responseBody = (await response.json().catch(() => null)) as { message?: string } | null;
-      throw new Error(responseBody?.message || "Falha ao enviar e-mail de confirmacao.");
-    }
-  };
-
   const handleSubmit = async () => {
     if (submissionLockRef.current || isSubmitting) {
       return;
@@ -285,17 +258,6 @@ export function useSignUpFlow() {
       const isSignupSuccessful = response.ok;
 
       if (isSignupSuccessful) {
-        void sendSignupConfirmation({
-          email: payload.email,
-          name: `${formData.firstName.trim()} ${formData.lastName.trim()}`.trim(),
-        }).catch((emailError) => {
-          console.error("Erro ao enviar e-mail de confirmacao:", emailError);
-          const warningMessage = emailError instanceof Error
-            ? emailError.message
-            : "Cadastro realizado, mas o e-mail de confirmacao nao foi enviado.";
-          toast.warn(warningMessage);
-        });
-
         resetSignUpFlow();
         toast.success("Cadastro realizado com sucesso! Seus dados foram enviados e seu acesso esta em processamento.");
         return;

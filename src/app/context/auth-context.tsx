@@ -1,33 +1,31 @@
 "use client";
 
-import { createContext, ReactNode, useContext, useSyncExternalStore } from "react";
+import { createContext, ReactNode, useContext, useEffect, useState, useSyncExternalStore } from "react";
 import {
   AuthSession,
   AuthUser,
-  clearStoredAuthSession,
+  destroyAuthSession,
   readStoredAuthSession,
+  refreshAuthSession,
   subscribeToAuthSession,
   writeStoredAuthSession,
 } from "@/lib/auth-session";
 
 interface AuthContextType {
   user: AuthUser | null;
-  token?: string;
   loading: boolean;
   isAuthenticated: boolean;
   login: (session: AuthSession) => void;
   updateUser: (updates: Partial<AuthUser>) => void;
-  logout: () => void;
+  logout: () => Promise<void>;
 }
 
 interface AuthSnapshot {
   user: AuthUser | null;
-  token?: string;
 }
 
 const fallbackAuthContext: AuthContextType = {
   user: null,
-  token: undefined,
   loading: false,
   isAuthenticated: false,
   login: (session: AuthSession) => {
@@ -36,16 +34,13 @@ const fallbackAuthContext: AuthContextType = {
   updateUser: () => {
     // no-op fallback for components rendered outside the provider
   },
-  logout: () => {
-    clearStoredAuthSession();
-  },
+  logout: destroyAuthSession,
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const EMPTY_AUTH_STATE: AuthSnapshot = {
   user: null,
-  token: undefined,
 };
 
 let lastAuthSession: AuthSession | null = null;
@@ -67,7 +62,6 @@ function getAuthSnapshot() {
   lastAuthSession = storedSession;
   lastAuthSnapshot = {
     user: storedSession.user,
-    token: storedSession.token,
   };
 
   return lastAuthSnapshot;
@@ -77,31 +71,27 @@ function getAuthServerSnapshot() {
   return EMPTY_AUTH_STATE;
 }
 
-function subscribeToHydration() {
-  return () => undefined;
-}
-
-function getHydrationSnapshot() {
-  return true;
-}
-
-function getHydrationServerSnapshot() {
-  return false;
-}
-
 export function AuthProvider({ children }: { children: ReactNode }) {
   const authState = useSyncExternalStore(
     subscribeToAuthSession,
     getAuthSnapshot,
     getAuthServerSnapshot,
   );
-  const hydrated = useSyncExternalStore(
-    subscribeToHydration,
-    getHydrationSnapshot,
-    getHydrationServerSnapshot,
-  );
+  const [loading, setLoading] = useState(true);
 
-  const loading = !hydrated;
+  useEffect(() => {
+    let cancelled = false;
+
+    void refreshAuthSession().finally(() => {
+      if (!cancelled) {
+        setLoading(false);
+      }
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const login = (session: AuthSession) => {
     writeStoredAuthSession(session);
@@ -117,19 +107,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         ...authState.user,
         ...updates,
       },
-      token: authState.token,
     });
   };
 
-  const logout = () => {
-    clearStoredAuthSession();
-  };
+  const logout = destroyAuthSession;
 
   return (
     <AuthContext.Provider
       value={{
         user: authState.user,
-        token: authState.token,
         loading,
         isAuthenticated: Boolean(authState.user),
         login,

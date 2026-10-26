@@ -223,7 +223,7 @@ export function useProfileForm() {
 
       try {
         setIsLoadingProfile(true);
-        const response = await api.get(`/users-v2?id=${user.id}`);
+        const response = await api.get("/users/me");
         const profile = response.data as ProfileApiResponse;
         const notifications = profile.data?.notifications;
         const nestedAddress = profile.data?.address;
@@ -463,7 +463,7 @@ export function useProfileForm() {
         payload.password = formData.password.trim();
       }
 
-      await api.put(`/users-v2/${cpf}`, payload);
+      await api.put("/users/me", payload);
 
       updateUser({
         name: `${formData.firstName.trim()} ${formData.lastName.trim()}`.trim(),

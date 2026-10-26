@@ -2,7 +2,7 @@
 
 import { ChangeEvent, useState } from "react";
 import { toast } from "react-toastify";
-import { formatCpf } from "@/lib/auth-login";
+import { formatCpf, normalizeCpf } from "@/lib/auth-login";
 import {
   ForgotPasswordFormValues,
   getForgotPasswordErrorMessage,
@@ -35,7 +35,7 @@ export function useForgotPasswordForm() {
 
     try {
       setIsSubmitting(true);
-      const response = await api.get(resolveForgotPasswordEndpoint(formData.cpf));
+      const response = await api.post(resolveForgotPasswordEndpoint(), { cpf: normalizeCpf(formData.cpf) });
       const nextMessage = getForgotPasswordSuccessMessage(response.data);
 
       setSuccessMessage(nextMessage);

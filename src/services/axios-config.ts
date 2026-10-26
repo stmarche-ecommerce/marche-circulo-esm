@@ -1,11 +1,10 @@
 import axios, { AxiosError, AxiosInstance } from "axios";
 import axiosRetry from "axios-retry";
-import { readStoredAuthSession } from "@/lib/auth-session";
 
 const DEFAULT_TIMEOUT = 15000;
 const MAX_RETRIES = 3;
-const USERS_API_BASE_URL = process.env.NEXT_PUBLIC_API_USERS_V2?.trim() ?? "";
-const USERS_API_KEY = process.env.NEXT_PUBLIC_USERS_V2_API_KEY?.trim() ?? "";
+// Chamadas passam pelas rotas /api do proprio Next.js; chave e sessao ficam no servidor.
+const API_BASE_URL = "/api";
 
 export class AxiosConfig {
   private static instance: AxiosInstance;
@@ -18,20 +17,9 @@ export class AxiosConfig {
 
   public static getInstance(): AxiosInstance {
     if (!AxiosConfig.instance) {
-      if (!USERS_API_BASE_URL) {
-        console.warn("[AxiosConfig] Variavel NEXT_PUBLIC_API_USERS_V2 ausente no bundle do cliente.");
-      }
-
-      if (!USERS_API_KEY) {
-        console.warn("[AxiosConfig] Variavel NEXT_PUBLIC_USERS_V2_API_KEY ausente no bundle do cliente.");
-      }
-
       AxiosConfig.instance = axios.create({
-        baseURL: USERS_API_BASE_URL,
+        baseURL: API_BASE_URL,
         timeout: DEFAULT_TIMEOUT,
-        headers: {
-          "x-api-key": USERS_API_KEY,
-        },
       });
 
       axiosRetry(AxiosConfig.instance, {
@@ -43,15 +31,6 @@ export class AxiosConfig {
             `[AxiosConfig] Retry ${retryCount}/${MAX_RETRIES} em ${requestConfig.url} - motivo: ${error.code ?? error.message}`,
           );
         },
-      });
-
-      AxiosConfig.instance.interceptors.request.use((config) => {
-        const session = readStoredAuthSession();
-        if (session?.token) {
-          config.headers.Authorization = `Bearer ${session.token}`;
-        }
-
-        return config;
       });
 
       AxiosConfig.instance.interceptors.response.use(

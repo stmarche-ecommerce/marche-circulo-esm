@@ -26,10 +26,8 @@ jobs:
       TF_STATE_PREFIX: marche-circulo-esm/${{ github.ref_name == 'main' && 'prod' || 'stg' }}
       PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
       IMAGE_REPOSITORY: us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/marche-circulo-esm/marche-circulo-esm-${{ github.ref_name == 'main' && 'prod' || 'stg' }}
-      NEXT_PUBLIC_API_USERS_V2: ${{ github.ref_name == 'main' && secrets.NEXT_PUBLIC_API_USERS_V2_PROD || secrets.NEXT_PUBLIC_API_USERS_V2 }}
-      NEXT_PUBLIC_USERS_V2_API_KEY: ${{ github.ref_name == 'main' && secrets.NEXT_PUBLIC_USERS_V2_API_KEY_PROD || secrets.NEXT_PUBLIC_USERS_V2_API_KEY }}
       TF_VAR_runtime_environment_variables: >-
-        {"NODE_ENV":"production","SMTP_ENDERECO":${{ toJSON(github.ref_name == 'main' && secrets.SMTP_ENDERECO_PROD || secrets.SMTP_ENDERECO) }},"SMTP_PORTA":${{ toJSON(github.ref_name == 'main' && secrets.SMTP_PORTA_PROD || secrets.SMTP_PORTA) }},"SMTP_SENDGRID_TOKEN":${{ toJSON(github.ref_name == 'main' && secrets.SMTP_SENDGRID_TOKEN_PROD || secrets.SMTP_SENDGRID_TOKEN) }},"SMTP_USUARIO":${{ toJSON(github.ref_name == 'main' && secrets.SMTP_USUARIO_PROD || secrets.SMTP_USUARIO) }},"SIGNUP_CONFIRMATION_FROM_EMAIL":${{ toJSON(github.ref_name == 'main' && secrets.SIGNUP_CONFIRMATION_FROM_EMAIL_PROD || secrets.SIGNUP_CONFIRMATION_FROM_EMAIL) }},"SIGNUP_CONFIRMATION_REPLY_TO":${{ toJSON(github.ref_name == 'main' && secrets.SIGNUP_CONFIRMATION_REPLY_TO_PROD || secrets.SIGNUP_CONFIRMATION_REPLY_TO) }}}
+        {"NODE_ENV":"production","USERS_API_URL":${{ toJSON(github.ref_name == 'main' && secrets.NEXT_PUBLIC_API_USERS_V2_PROD || secrets.NEXT_PUBLIC_API_USERS_V2) }},"USERS_API_KEY":${{ toJSON(github.ref_name == 'main' && secrets.NEXT_PUBLIC_USERS_V2_API_KEY_PROD || secrets.NEXT_PUBLIC_USERS_V2_API_KEY) }},"SESSION_SECRET":${{ toJSON(github.ref_name == 'main' && secrets.SESSION_SECRET_PROD || secrets.SESSION_SECRET) }},"SMTP_ENDERECO":${{ toJSON(github.ref_name == 'main' && secrets.SMTP_ENDERECO_PROD || secrets.SMTP_ENDERECO) }},"SMTP_PORTA":${{ toJSON(github.ref_name == 'main' && secrets.SMTP_PORTA_PROD || secrets.SMTP_PORTA) }},"SMTP_SENDGRID_TOKEN":${{ toJSON(github.ref_name == 'main' && secrets.SMTP_SENDGRID_TOKEN_PROD || secrets.SMTP_SENDGRID_TOKEN) }},"SMTP_USUARIO":${{ toJSON(github.ref_name == 'main' && secrets.SMTP_USUARIO_PROD || secrets.SMTP_USUARIO) }},"SIGNUP_CONFIRMATION_FROM_EMAIL":${{ toJSON(github.ref_name == 'main' && secrets.SIGNUP_CONFIRMATION_FROM_EMAIL_PROD || secrets.SIGNUP_CONFIRMATION_FROM_EMAIL) }},"SIGNUP_CONFIRMATION_REPLY_TO":${{ toJSON(github.ref_name == 'main' && secrets.SIGNUP_CONFIRMATION_REPLY_TO_PROD || secrets.SIGNUP_CONFIRMATION_REPLY_TO) }}}
 
     concurrency:
       group: marche-circulo-esm-${{ github.ref_name == 'main' && 'prod' || 'stg' }}-terraform
@@ -67,6 +65,9 @@ jobs:
           SMTP_USUARIO_SELECTED: ${{ github.ref_name == 'main' && secrets.SMTP_USUARIO_PROD || secrets.SMTP_USUARIO }}
           SIGNUP_CONFIRMATION_FROM_EMAIL_SELECTED: ${{ github.ref_name == 'main' && secrets.SIGNUP_CONFIRMATION_FROM_EMAIL_PROD || secrets.SIGNUP_CONFIRMATION_FROM_EMAIL }}
           SIGNUP_CONFIRMATION_REPLY_TO_SELECTED: ${{ github.ref_name == 'main' && secrets.SIGNUP_CONFIRMATION_REPLY_TO_PROD || secrets.SIGNUP_CONFIRMATION_REPLY_TO }}
+          SESSION_SECRET_SELECTED: ${{ github.ref_name == 'main' && secrets.SESSION_SECRET_PROD || secrets.SESSION_SECRET }}
+          USERS_API_URL_SELECTED: ${{ github.ref_name == 'main' && secrets.NEXT_PUBLIC_API_USERS_V2_PROD || secrets.NEXT_PUBLIC_API_USERS_V2 }}
+          USERS_API_KEY_SELECTED: ${{ github.ref_name == 'main' && secrets.NEXT_PUBLIC_USERS_V2_API_KEY_PROD || secrets.NEXT_PUBLIC_USERS_V2_API_KEY }}
         run: |
           set -euo pipefail
           missing=()
@@ -77,7 +78,10 @@ jobs:
             SMTP_SENDGRID_TOKEN_SELECTED \
             SMTP_USUARIO_SELECTED \
             SIGNUP_CONFIRMATION_FROM_EMAIL_SELECTED \
-            SIGNUP_CONFIRMATION_REPLY_TO_SELECTED; do
+            SIGNUP_CONFIRMATION_REPLY_TO_SELECTED \
+            SESSION_SECRET_SELECTED \
+            USERS_API_URL_SELECTED \
+            USERS_API_KEY_SELECTED; do
             if [ -z "${!key}" ]; then
               missing+=("$key")
             fi

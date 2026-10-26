@@ -9,12 +9,13 @@ import {
   type ContactFormFieldErrors,
   type ContactFormValues,
 } from "@/lib/contact-validation";
+import type { ContactDestinationKey } from "@/lib/contact-destinations";
 import { formatPhone, isValidEmail, isValidPhone } from "@/lib/validation";
 import { SubmitButton } from "../button";
 
 type ContactFormProps = {
   defaultSubject?: string;
-  destinationEmail: string;
+  destination: ContactDestinationKey;
 };
 
 function getInitialValues(defaultSubject?: string): ContactFormValues {
@@ -27,10 +28,11 @@ function getInitialValues(defaultSubject?: string): ContactFormValues {
   };
 }
 
-export function ContactForm({ defaultSubject, destinationEmail }: ContactFormProps) {
+export function ContactForm({ defaultSubject, destination }: ContactFormProps) {
   const [formValues, setFormValues] = useState<ContactFormValues>(() => getInitialValues(defaultSubject));
   const [fieldErrors, setFieldErrors] = useState<ContactFormFieldErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [honeypot, setHoneypot] = useState("");
 
   function updateField<K extends keyof ContactFormValues>(field: K, value: ContactFormValues[K]) {
     setFormValues((current) => ({ ...current, [field]: value }));
@@ -59,7 +61,8 @@ export function ContactForm({ defaultSubject, destinationEmail }: ContactFormPro
         },
         body: JSON.stringify({
           ...parsed.data,
-          destinationEmail,
+          destination,
+          website: honeypot,
         }),
       });
 
@@ -86,6 +89,16 @@ export function ContactForm({ defaultSubject, destinationEmail }: ContactFormPro
 
   return (
     <form onSubmit={handleSubmit} noValidate className="grid gap-4 md:grid-cols-2">
+      <input
+        type="text"
+        name="website"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        className="absolute left-[-9999px] h-0 w-0 opacity-0"
+        value={honeypot}
+        onChange={(event) => setHoneypot(event.target.value)}
+      />
       <div>
         <input
           className="site-input"

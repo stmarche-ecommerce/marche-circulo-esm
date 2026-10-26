@@ -326,7 +326,7 @@ function ContactSection({ page }: { page: SitePage }) {
               O formulario abre seu aplicativo de e-mail com a mensagem preenchida.
             </p>
             <div className="mt-8">
-              <ContactForm destinationEmail={page.slug === "contato" ? "sac@emporiosantamaria.com.br" : contact.email ?? "contato@emporiosantamaria.com.br"} defaultSubject={page.title} />
+              <ContactForm destination={page.slug === "contato" ? "sac" : "contato"} defaultSubject={page.title} />
             </div>
           </article>
         </div>

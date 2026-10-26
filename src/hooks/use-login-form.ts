@@ -10,7 +10,6 @@ import {
   formatCpf,
   getLoginErrorMessage,
   LoginFormValues,
-  mapLoginResponseToSession,
   resolveLoginEndpoint,
   validateCpfLoginValues,
 } from "@/lib/auth-login";
@@ -47,12 +46,8 @@ export function useLoginForm() {
       setIsSubmitting(true);
 
       const response = await api.post(resolveLoginEndpoint(), createLoginPayload(formData));
-      const session = mapLoginResponseToSession(response.data, {
-        cpf: formData.login,
-      });
-
-      authenticate(session);
-      router.push("/area-cliente");
+      authenticate({ user: response.data.user });
+      router.push("/");
     } catch (error) {
       toast.error(getLoginErrorMessage(error));
     } finally {
