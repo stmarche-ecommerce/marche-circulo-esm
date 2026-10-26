@@ -20,7 +20,7 @@ const DEFAULT_LOGIN_ERROR =
   "Nao foi possivel realizar o login. Tente novamente.";
 
 export function resolveLoginEndpoint() {
-  return process.env.NEXT_PUBLIC_AUTH_LOGIN_ENDPOINT ?? "/users-v2/login";
+  return "/auth/login";
 }
 
 export function normalizeCpf(value: string) {
@@ -120,10 +120,7 @@ export function mapLoginResponseToSession(
       : [],
   };
 
-  return {
-    user,
-    token: typeof response.token === "string" ? response.token : undefined,
-  };
+  return { user };
 }
 
 export function getLoginErrorMessage(error: unknown) {

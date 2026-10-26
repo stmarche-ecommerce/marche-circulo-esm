@@ -85,8 +85,8 @@ export default function Sidebar({ userName }: SidebarProps) {
     return `${name.slice(0, limit)}...`;
   }
 
-  function handleLogout() {
-    logout();
+  async function handleLogout() {
+    await logout();
     router.replace("/login");
   }
 

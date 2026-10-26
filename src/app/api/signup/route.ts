@@ -1,46 +1,34 @@
 import { randomInt } from "node:crypto";
-import { NextResponse } from "next/server";
+import { after, NextResponse } from "next/server";
+import { z } from "zod";
+
+import { isValidCpf } from "@/lib/auth-login";
+import { guardRequest, jsonError, readJsonBody } from "@/lib/server/request-guards";
+import { callUsersApi, readJsonSafely } from "@/lib/server/users-api";
+import { sendSignupConfirmationEmail } from "@/lib/signup-confirmation-email";
 
 export const runtime = "nodejs";
 
-interface SignupPayload {
-  username: string;
-  email: string;
-  birth_date: string;
-  first_name: string;
-  last_name: string;
-  telephone: string;
-  allow_communications: boolean;
-  data: {
-    origin: string;
-    esm: boolean;
-  };
-  street: string;
-  number: string;
-  district: string;
-  city: string;
-  state: string;
-  zip_code: string;
-  complement: string;
-}
+const short = (max: number) => z.string().trim().max(max);
 
-// function resolveUsersApiUrl() {
-//   return (
-//     process.env.ESM_CUSTOMER_SYNC_URL?.trim() ||
-//     process.env.NEXT_PUBLIC_API_USERS_V2?.trim()
-//   );
-// }
-
-function resolveUsersApiUrl() {
-  const base =
-    process.env.ESM_CUSTOMER_SYNC_URL?.trim() ||
-    process.env.NEXT_PUBLIC_API_USERS_V2?.trim();
-
-  if (!base) return undefined;
-
-  // remove barra final duplicada, se houver
-  return `${base.replace(/\/+$/, "")}/users-v2`;
-}
+// Somente os campos do cadastro; qualquer campo extra e rejeitado (mass assignment).
+const signupSchema = z.strictObject({
+  username: z.string().regex(/^\d{11}$/).refine(isValidCpf),
+  email: z.string().trim().email().max(160),
+  birth_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  first_name: short(80).min(1),
+  last_name: short(120).min(1),
+  telephone: z.string().regex(/^\d{10,11}$/),
+  allow_communications: z.boolean(),
+  data: z.strictObject({ origin: z.string().max(40), esm: z.boolean() }).optional(),
+  street: short(200),
+  number: short(20),
+  district: short(120),
+  city: short(120),
+  state: short(30),
+  zip_code: z.string().regex(/^\d{0,8}$/),
+  complement: short(120),
+});
 
 function generateRandomPassword(length = 20) {
   const upper = "ABCDEFGHJKLMNPQRSTUVWXYZ";
@@ -64,76 +52,76 @@ function generateRandomPassword(length = 20) {
   return chars.join("");
 }
 
-function resolveUsersApiKey() {
-  return (
-    process.env.ESM_CUSTOMER_SYNC_API_KEY?.trim() ||
-    process.env.NEXT_PUBLIC_USERS_V2_API_KEY?.trim()
-  );
+function isDuplicateRegistration(status: number, body: unknown) {
+  if (status === 409) return true;
+
+  const message = JSON.stringify(body ?? "").toLowerCase();
+  return message.includes("already exists") || message.includes("username") || message.includes("telephone");
 }
 
 export async function POST(request: Request) {
   const startedAt = performance.now();
 
+  const blocked = guardRequest(request, { scope: "signup", limit: 5, windowMs: 60 * 60_000 });
+  if (blocked) return blocked;
+
+  const parsed = signupSchema.safeParse(await readJsonBody(request));
+  if (!parsed.success) {
+    return jsonError("Revise os dados informados para concluir o cadastro.", 400);
+  }
+
   try {
-    const apiUrl = resolveUsersApiUrl();
-    const apiKey = resolveUsersApiKey();
+    const upstreamResponse = await callUsersApi("/users-v2", {
+      method: "POST",
+      body: { ...parsed.data, data: { origin: "App", esm: true }, password: generateRandomPassword() },
+    });
 
-    if (!apiUrl || !apiKey) {
-      console.warn("[api/signup] configuracao ausente", {
-        hasApiUrl: Boolean(apiUrl),
-        hasApiKey: Boolean(apiKey),
-      });
-
-      return NextResponse.json(
-        { message: "Configuracao do servico de cadastro indisponivel." },
-        { status: 500 },
-      );
+    if (!upstreamResponse) {
+      return jsonError("Configuracao do servico de cadastro indisponivel.", 500);
     }
 
-    const body = (await request.json()) as SignupPayload;
+    if (!upstreamResponse.ok) {
+      const upstreamBody = await readJsonSafely(upstreamResponse);
 
-    const upstreamResponse = await fetch(apiUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": apiKey,
-      },
-      body: JSON.stringify({ ...body, password: generateRandomPassword() }),
-      cache: "no-store",
-      signal: AbortSignal.timeout(20000),
+      console.warn("[api/signup] cadastro recusado pelo servico", { status: upstreamResponse.status });
+
+      if (isDuplicateRegistration(upstreamResponse.status, upstreamBody)) {
+        return jsonError("Ja existe um cadastro com estes dados.", 409);
+      }
+
+      return upstreamResponse.status >= 400 && upstreamResponse.status < 500
+        ? jsonError("Nao foi possivel validar os dados do cadastro.", 400)
+        : jsonError("Nao foi possivel concluir o cadastro agora.", 502);
+    }
+
+    const { email, first_name, last_name } = parsed.data;
+
+    // O e-mail de boas-vindas so sai apos o cadastro real, sem endpoint publico de envio.
+    after(async () => {
+      try {
+        await sendSignupConfirmationEmail({
+          email,
+          name: `${first_name} ${last_name}`.trim(),
+        });
+      } catch (error) {
+        console.error("Signup confirmation email failed:", error);
+      }
     });
 
-    const responseText = await upstreamResponse.text();
-    const contentType = upstreamResponse.headers.get("content-type") ?? "application/json";
-
-    return new NextResponse(responseText, {
-      status: upstreamResponse.status,
-      headers: {
-        "content-type": contentType,
-      },
-    });
+    return NextResponse.json({ success: true }, { status: upstreamResponse.status });
   } catch (error) {
-    const finishedAt = performance.now();
+    const totalDurationMs = Math.round(performance.now() - startedAt);
 
     if (error instanceof Error && error.name === "TimeoutError") {
-      console.error("[api/signup] timeout", {
-        totalDurationMs: Math.round(finishedAt - startedAt),
-      });
-
-      return NextResponse.json(
-        { message: "O servico de cadastro demorou mais do que o esperado para responder." },
-        { status: 504 },
-      );
+      console.error("[api/signup] timeout", { totalDurationMs });
+      return jsonError("O servico de cadastro demorou mais do que o esperado para responder.", 504);
     }
 
     console.error("[api/signup] Falha ao criar cadastro", {
-      totalDurationMs: Math.round(finishedAt - startedAt),
+      totalDurationMs,
       error: error instanceof Error ? error.message : String(error),
     });
 
-    return NextResponse.json(
-      { message: "Nao foi possivel concluir o cadastro agora." },
-      { status: 500 },
-    );
+    return jsonError("Nao foi possivel concluir o cadastro agora.", 500);
   }
 }

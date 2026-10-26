@@ -1,5 +1,5 @@
 import axios from "axios";
-import { isValidCpf, normalizeCpf } from "@/lib/auth-login";
+import { isValidCpf } from "@/lib/auth-login";
 
 export interface ForgotPasswordFormValues {
   cpf: string;
@@ -13,8 +13,8 @@ interface ForgotPasswordApiResponse {
 const DEFAULT_FORGOT_PASSWORD_ERROR =
   "Nao foi possivel solicitar a recuperacao de senha. Tente novamente.";
 
-export function resolveForgotPasswordEndpoint(cpf: string) {
-  return `/users-v2/${normalizeCpf(cpf)}/forgot-password`;
+export function resolveForgotPasswordEndpoint() {
+  return "/auth/forgot-password";
 }
 
 export function validateForgotPasswordValues(values: ForgotPasswordFormValues) {
