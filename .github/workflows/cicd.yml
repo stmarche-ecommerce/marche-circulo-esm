@@ -110,7 +110,12 @@ jobs:
             local address="$1"
             local resource_id="$2"
 
-            if terraform state list -no-color 2>/dev/null | grep -qx "$address"; then
+            # Captura a lista antes do grep: com `grep -q` em pipe + pipefail, o SIGPIPE
+            # do terraform faz o teste falhar mesmo quando o recurso ja esta no state.
+            local tracked_resources
+            tracked_resources="$(terraform state list -no-color || true)"
+
+            if grep -qx "$address" <<<"$tracked_resources"; then
               echo "$address already tracked in Terraform state."
               return
             fi
