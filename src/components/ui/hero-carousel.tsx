@@ -20,6 +20,15 @@ const slides = [
     desktopOnly: true,
   },
   {
+    eyebrow: "",
+    title: "Ceia e Réveillon 2026",
+    description: "Confira o catálogo de Natal e Réveillon do Empório Santa Maria.",
+    href: "https://issuu.com/st_marche/docs/esm-natal-2026?fr=sMGZiMDkzNjU4MzI",
+    image: "/images/emporio-santa-maria-ceia-e-reveillon-2026.png",
+    hideOverlayContent: true,
+    external: true,
+  },
+  {
     eyebrow: "Todos os dias, a partir das 9h",
     title: "Brunch Santa Maria",
     description: "Um convite para desacelerar, descobrir novos sabores e começar o dia celebrando a vida.",
