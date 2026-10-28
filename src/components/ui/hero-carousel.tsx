@@ -26,6 +26,7 @@ const slides = [
     href: "https://issuu.com/st_marche/docs/esm-natal-2026?fr=sMGZiMDkzNjU4MzI",
     image: "/images/emporio-santa-maria-ceia-e-reveillon-2026.png",
     hideOverlayContent: true,
+    desktopOnly: true,
     external: true,
   },
   {
