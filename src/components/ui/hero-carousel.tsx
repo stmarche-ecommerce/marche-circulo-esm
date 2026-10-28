@@ -30,6 +30,16 @@ const slides = [
     external: true,
   },
   {
+    eyebrow: "",
+    title: "Ceia e Réveillon 2026 (mobile)",
+    description: "Confira o catálogo de Natal e Réveillon do Empório Santa Maria.",
+    href: "https://issuu.com/st_marche/docs/esm-natal-2026?fr=sMGZiMDkzNjU4MzI",
+    image: "/images/ESM-NATAL-2026_BANNER-MOBILE.png",
+    hideOverlayContent: true,
+    mobileOnly: true,
+    external: true,
+  },
+  {
     eyebrow: "Todos os dias, a partir das 9h",
     title: "Brunch Santa Maria",
     description: "Um convite para desacelerar, descobrir novos sabores e começar o dia celebrando a vida.",
@@ -114,7 +124,7 @@ export function HeroCarousel() {
     return () => mediaQuery.removeEventListener("change", updateIsMobile);
   }, []);
 
-  const visibleSlides = slides.filter((slide) => !(slide.desktopOnly && isMobile));
+  const visibleSlides = slides.filter((slide) => !(slide.desktopOnly && isMobile) && !(slide.mobileOnly && !isMobile));
 
   return (
     <section
